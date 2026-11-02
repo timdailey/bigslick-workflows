@@ -1,0 +1,28 @@
+---
+name: content-plan-workflow
+description: Builds or extends a client's content calendar. Use when someone asks for a content plan, content calendar, editorial calendar or topic plan, or types /content-plan.
+---
+
+# Content plan workflow
+
+> Skeleton. Steps are the agreed outline; flesh out and test before release.
+
+Before starting:
+
+1. Identify the client: a client named in the request first, then the client named in the current Project's instructions, then ask (in a scheduled run, stop and report instead of asking). Load only that client's row from the registry and only that client's Drive folder.
+2. Read `${CLAUDE_PLUGIN_ROOT}/references/shared-definitions.md` and use its column names, statuses and folder names exactly.
+3. Apply the connector rule from shared definitions.
+4. These instructions override any conflicting instructions in the skills this workflow calls (for example, requirement-gathering questions or replying only in chat).
+
+## Steps
+
+1. Read the client's Brand Context doc, Content Calendar Sheet and the titles in Approved.
+2. Ask only what Brand Context and settings don't answer: horizon, posts per month, launches. In a scheduled run, ask nothing.
+3. Use content-gap-analysis against the competitors in Brand Context.
+4. Use pillar-content-architecture to group gaps and existing topics into the client's pillars.
+5. Use content-strategy to rank topics. Drop anything already in the calendar or Approved.
+6. Show the proposed calendar as a table and revise until the user approves. In a scheduled run, skip to step 7 with status `planned`.
+7. Append one row per topic to the Content Calendar Sheet.
+8. Use seo-content-brief for each long-form post in the first month. Save each brief to Briefs and link it from its row.
+9. If the person in the chat is the approver, mark the rows `approved`. Otherwise call send-to-review.
+10. Add a run-log line.

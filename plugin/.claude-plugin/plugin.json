@@ -1,0 +1,7 @@
+{
+  "name": "bigslick-workflows",
+  "version": "0.1.0",
+  "description": "Big Slick content workflows: plan, write, review and publish marketing content for one or many clients, with Google Drive as the only required connector.",
+  "author": { "name": "Tangyslice Collective" },
+  "keywords": ["marketing", "content", "workflows", "big-slick"]
+}

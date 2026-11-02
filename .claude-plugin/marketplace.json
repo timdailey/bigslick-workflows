@@ -1,0 +1,11 @@
+{
+  "name": "bigslick-workflows",
+  "owner": { "name": "Tangyslice Collective" },
+  "plugins": [
+    {
+      "name": "bigslick-workflows",
+      "source": "./plugin",
+      "description": "Big Slick content workflows: plan, write, review and publish marketing content for one or many clients. Requires the Big Slick core and content bundles, and the Google Drive connector."
+    }
+  ]
+}
