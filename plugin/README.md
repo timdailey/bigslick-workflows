@@ -23,6 +23,6 @@ Shared names (registry, folders, calendar columns, statuses) are in `references/
 
 - Big Slick core and the content, SEO and strategy bundles
 - Google Drive connector (with Google Docs and Sheets)
-- DataForSEO, added as a custom connector (`https://mcp.dataforseo.com/mcp`, OAuth sign-in). DataForSEO bills per call.
+- DataForSEO, added as a custom connector (`https://mcp.dataforseo.com/mcp`, OAuth sign-in). Each client uses its own DataForSEO account; DataForSEO bills per call.
 
 Everything else is optional.
