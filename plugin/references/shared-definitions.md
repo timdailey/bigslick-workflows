@@ -96,7 +96,7 @@ Skills find sections by their exact heading text. Keep the headings (level 2) as
 4. `Content pillars` (one level-3 heading per pillar)
 5. `Competitors`
 6. `Claims library` (a table, below)
-7. `Voices` (one level-3 heading per author: `Voice: <Author Name>`)
+7. `Voices` (one level-3 heading per author: `Voice: <Author Name>`; the template writes it as `Voice: [Author Name]`)
 8. `Style rules` (house style, banned words, formatting)
 
 ### Claims library table

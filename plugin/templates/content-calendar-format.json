@@ -1,0 +1,266 @@
+{
+ "note": "Sheets batchUpdate requests for the Content Calendar. Replace __SHEET_ID__ with the first sheet's id (an integer) before sending.",
+ "requests": [
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__SHEET_ID__",
+     "title": "Calendar",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "columnCount": 18
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 18
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 1,
+     "endColumnIndex": 2
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 2,
+     "endColumnIndex": 3
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "blog_post"
+       },
+       {
+        "userEnteredValue": "guide"
+       },
+       {
+        "userEnteredValue": "case_study"
+       },
+       {
+        "userEnteredValue": "gated_asset"
+       },
+       {
+        "userEnteredValue": "social_post"
+       },
+       {
+        "userEnteredValue": "newsletter"
+       },
+       {
+        "userEnteredValue": "email"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 3,
+     "endColumnIndex": 4
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "blog"
+       },
+       {
+        "userEnteredValue": "linkedin"
+       },
+       {
+        "userEnteredValue": "x"
+       },
+       {
+        "userEnteredValue": "community"
+       },
+       {
+        "userEnteredValue": "newsletter"
+       },
+       {
+        "userEnteredValue": "email"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 13,
+     "endColumnIndex": 14
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "planned"
+       },
+       {
+        "userEnteredValue": "topic_approved"
+       },
+       {
+        "userEnteredValue": "topic_declined"
+       },
+       {
+        "userEnteredValue": "drafted"
+       },
+       {
+        "userEnteredValue": "in_review"
+       },
+       {
+        "userEnteredValue": "approved"
+       },
+       {
+        "userEnteredValue": "declined"
+       },
+       {
+        "userEnteredValue": "scheduled"
+       },
+       {
+        "userEnteredValue": "ready_to_post"
+       },
+       {
+        "userEnteredValue": "published"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 14,
+     "endColumnIndex": 15
+    },
+    "rule": {
+     "condition": {
+      "type": "NUMBER_GREATER_THAN_EQ",
+      "values": [
+       {
+        "userEnteredValue": "1"
+       }
+      ]
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 15,
+     "endColumnIndex": 16
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "yes"
+       },
+       {
+        "userEnteredValue": "no"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 4,
+     "endIndex": 5
+    },
+    "properties": {
+     "pixelSize": 320
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 16,
+     "endIndex": 17
+    },
+    "properties": {
+     "pixelSize": 240
+    },
+    "fields": "pixelSize"
+   }
+  }
+ ]
+}
