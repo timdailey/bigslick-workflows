@@ -17,7 +17,7 @@ Content workflows for Big Slick. Works for one company or a consultant with many
 | publish-approved | Hourly: files approved content and schedules it if possible |
 | bigslick-setup | Adds a company or client |
 
-Shared names (registry, folders, calendar columns, statuses) are in `references/shared-definitions.md`.
+Shared names (registry, folders, calendar columns, statuses) are in `references/shared-definitions.md`. The connector check and fallbacks every workflow runs are in `references/connector-rule.md`.
 
 ## Requirements
 

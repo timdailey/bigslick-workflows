@@ -11,14 +11,14 @@ Before starting:
 
 1. Identify the client: a client named in the request first, then the client named in the current Project's instructions, then ask (in a scheduled run, stop and report instead of asking). Load only that client's row from the registry and only that client's Drive folder.
 2. Read `${CLAUDE_PLUGIN_ROOT}/references/shared-definitions.md` and use its column names, statuses and folder names exactly.
-3. Check the required services (Google Drive and DataForSEO); if either isn't connected, stop and say which. Then apply the connector rule from shared definitions.
+3. Run the connector check in `${CLAUDE_PLUGIN_ROOT}/references/connector-rule.md` before any other work. If Google Drive or DataForSEO is missing, stop as that file says. Note which optional connectors are active for this client, and use the file's fallback for every step that would need one that isn't.
 4. These instructions override any conflicting instructions in the skills this workflow calls (for example, requirement-gathering questions or replying only in chat).
 
 ## Steps
 
 1. Read the client's Brand Context doc, Content Calendar (tab `Calendar`) and the file names in Approved.
 2. Ask only what Brand Context and settings don't answer: horizon, posts per month, launches. In a scheduled run, ask nothing.
-3. Pull keyword volume, difficulty and current SERP results for the client's pillars and competitors with seo-dataforseo, using the registry's `seo_location`, `seo_language` and `seo_budget_per_run`. Then use content-gap-analysis against the competitors in Brand Context.
+3. If `granola` is active, pull topics from the client's recent calls; if not, plan without them. Pull keyword volume, difficulty and current SERP results for the client's pillars and competitors with seo-dataforseo, using the registry's `seo_location`, `seo_language` and `seo_budget_per_run`. Then use content-gap-analysis against the competitors in Brand Context.
 4. Use pillar-content-architecture to group gaps and existing topics into the client's pillars.
 5. Use content-strategy to rank topics. Drop anything already in the calendar or Approved.
 6. Show the proposed calendar as a table and revise until the user approves. In a scheduled run, skip to step 7 with status `planned`.

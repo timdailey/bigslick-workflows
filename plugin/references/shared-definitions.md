@@ -198,7 +198,7 @@ Two services are required to use Big Slick:
 - **Google Drive** (with Docs and Sheets): every file, the registry and the calendar.
 - **DataForSEO**: keyword, SERP, competitor and AI-visibility data. Added in Claude as a custom connector (`https://mcp.dataforseo.com/mcp`) and signed in with OAuth, so there are no API keys to manage. Each client connects its own DataForSEO account and pays for its own usage. DataForSEO bills per call, so each run stays within the client's `seo_budget_per_run`.
 
-If a required service isn't connected, stop and say which one, before doing any work. Everything else is optional. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
+If a required service isn't connected, stop and say which one, before doing any work. Everything else is optional. The exact check, the fallback for each optional connector and what to log are in `connector-rule.md`. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
 
 ## 10. Decisions taken in v1.0
 
