@@ -18,7 +18,7 @@ description: Sets up Big Slick for a new company or client. Use when someone say
    Record every new file and folder ID in the client's registry row.
 4. Build the Brand Context doc with company-onboarding (writes to Drive).
 5. Capture voices with brand-voice-extractor: ask each author to paste 10-15 posts.
-6. Publish the client's review page and dashboard from the templates.
+6. Publish the client's review page from `templates/review-page.html`: replace every `__CLIENT_NAME__` with the client's display name, publish it as an artifact with `capabilities: {"db": {}, "user": {"scopes": ["profile"]}}` and icon `checklist`, and record its URL in the registry's `review_page_url`. Don't seed the database; send-to-review fills it. Tell the user to share the page with each person in `reviewers` at **Contributor** or above (the Share menu): Viewers and Commenters can read the page but not decide. Then publish the dashboard from its template.
 7. Create the scheduled tasks for the chosen workflows and cadence. Each task names its client.
 8. Write Project instructions for the user to paste into a new Claude Project for this client.
 9. Run one workflow end to end with the user as reviewer.

@@ -1,0 +1,303 @@
+<title>__CLIENT_NAME__ Content Review</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,500;6..72,600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/*
+  Big Slick review page template.
+  Reads and writes the `reviews` collection defined in shared-definitions.md §8.
+  bigslick-setup replaces __CLIENT_NAME__ and publishes one copy per client.
+  The page has no settings of its own; everything else comes from the rows.
+*/
+:root {
+  --bg: #f7f6f2; --surface: #ffffff; --fg: #1f2128; --muted: #626673; --line: #e2e0d8;
+  --ink: #2c4fa3; --ok: #1f7a4d; --ok-bg: #e6f3ec; --no: #b23a2e; --no-bg: #f8e9e6;
+  --warn: #8a5a00; --warn-bg: #fbf1dc; --chip: #efede6;
+  --serif: "Newsreader", Georgia, "Times New Roman", serif;
+  --sans: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #15171c; --surface: #1d2027; --fg: #e8e8ec; --muted: #9da1ad; --line: #2e323b;
+  --ink: #8fb0f5; --ok: #6fd3a0; --ok-bg: #18342a; --no: #f08b7f; --no-bg: #3a2220;
+  --warn: #f0c46c; --warn-bg: #342b17; --chip: #272a32; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #15171c; --surface: #1d2027; --fg: #e8e8ec; --muted: #9da1ad; --line: #2e323b;
+  --ink: #8fb0f5; --ok: #6fd3a0; --ok-bg: #18342a; --no: #f08b7f; --no-bg: #3a2220;
+  --warn: #f0c46c; --warn-bg: #342b17; --chip: #272a32; color-scheme: dark }
+
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--sans); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 48px; }
+main { max-width: 760px; margin: 0 auto; display: grid; gap: 20px; }
+header { display: grid; gap: 4px; }
+.eyebrow { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+h1 { font-family: var(--serif); font-weight: 600; font-size: 1.9rem; line-height: 1.15; margin: 0; text-wrap: balance; }
+.lede { margin: 0; color: var(--muted); max-width: 62ch; }
+
+nav { display: flex; gap: 6px; flex-wrap: wrap; border-bottom: 1px solid var(--line); }
+nav button { font: inherit; font-weight: 500; background: none; border: 0; color: var(--muted); padding: 8px 12px; cursor: pointer;
+  border-bottom: 2px solid transparent; margin-bottom: -1px; }
+nav button[aria-selected="true"] { color: var(--fg); border-bottom-color: var(--ink); }
+nav .count { font-family: var(--mono); font-size: 12px; margin-left: 4px; color: var(--muted); }
+
+.notice { border: 1px solid var(--line); background: var(--surface); border-radius: 8px; padding: 12px 14px; color: var(--muted); }
+.notice.warn { background: var(--warn-bg); border-color: transparent; color: var(--warn); }
+
+#list { display: grid; gap: 12px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 16px 18px; display: grid; gap: 10px; min-width: 0; }
+.slug { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.kind { font-family: var(--sans); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 4px; background: var(--chip); color: var(--fg); }
+.card h2 { font-family: var(--serif); font-weight: 500; font-size: 1.3rem; line-height: 1.25; margin: 0; text-wrap: balance; overflow-wrap: anywhere; }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 13px; color: var(--muted); }
+.meta b { font-weight: 500; color: var(--fg); }
+.doc-link { color: var(--ink); font-weight: 500; text-decoration: none; width: fit-content; }
+.doc-link:hover { text-decoration: underline; }
+.flags { margin: 0; padding: 10px 12px 10px 30px; background: var(--warn-bg); color: var(--warn); border-radius: 6px; font-size: 13px; }
+.flags-title { font-weight: 600; margin: 0 0 2px -18px; list-style: none; }
+
+.actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.btn { font: inherit; font-weight: 600; font-size: 14px; border-radius: 6px; padding: 8px 16px; cursor: pointer; border: 1px solid var(--line); background: var(--surface); color: var(--fg); }
+.btn.yes { background: var(--ok); border-color: var(--ok); color: var(--surface); }
+.btn.no { color: var(--no); border-color: var(--no); }
+.btn.no.solid { background: var(--no); color: var(--surface); }
+.btn.quiet { border-color: transparent; color: var(--muted); padding-inline: 8px; font-weight: 500; }
+.btn:disabled { opacity: .5; cursor: default; }
+.reason { display: grid; gap: 6px; }
+.reason label { font-size: 13px; font-weight: 500; }
+textarea { font: inherit; width: 100%; min-height: 76px; resize: vertical; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
+.err { color: var(--no); font-size: 13px; margin: 0; }
+
+.outcome { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; font-size: 14px; }
+.outcome.yes { background: var(--ok-bg); color: var(--ok); }
+.outcome.no { background: var(--no-bg); color: var(--no); }
+.outcome .who { font-size: 13px; opacity: .9; }
+.outcome q { color: var(--fg); quotes: "\201C" "\201D"; }
+.synced { font-size: 12px; color: var(--muted); }
+footer { font-size: 12px; color: var(--muted); }
+</style>
+
+<main>
+  <header>
+    <span class="eyebrow">Big Slick · Content review</span>
+    <h1>__CLIENT_NAME__</h1>
+    <p class="lede">Topics and drafts waiting for a decision. Open the doc, then approve or decline. A decline needs a reason, which goes back to the writer for the redraft.</p>
+  </header>
+
+  <nav role="tablist" aria-label="Filter">
+    <button role="tab" data-tab="waiting" aria-selected="true">Waiting<span class="count" id="c-waiting"></span></button>
+    <button role="tab" data-tab="decided" aria-selected="false">Decided<span class="count" id="c-decided"></span></button>
+    <button role="tab" data-tab="all" aria-selected="false">All<span class="count" id="c-all"></span></button>
+  </nav>
+
+  <div id="status" class="notice">Loading reviews…</div>
+  <div id="list"></div>
+
+  <footer>Decisions reach the Content Calendar on the next hourly sync. You can change a decision until it syncs.</footer>
+</main>
+
+<script>
+(() => {
+  const $ = (s, el = document) => el.querySelector(s);
+  const statusEl = $("#status"), listEl = $("#list");
+  const TYPE = { blog_post: "Blog post", guide: "Guide", case_study: "Case study", gated_asset: "Gated asset",
+    social_post: "Social post", newsletter: "Newsletter", email: "Email" };
+  const CHANNEL = { blog: "Blog", linkedin: "LinkedIn", x: "X", community: "Community", newsletter: "Newsletter", email: "Email" };
+  const AFTER = { scheduled: "Scheduled", ready_to_post: "Ready to post", published: "Published" };
+
+  let tab = "waiting", rows = [], db = null, user = null, me = null, canWrite = null, readOnly = false;
+  const open = new Map();   // doc id -> {mode: "decline"|"change", text, error, busy}
+
+  try { const t = localStorage.getItem("bs-review-tab"); if (["waiting","decided","all"].includes(t)) tab = t; } catch (e) {}
+
+  document.querySelectorAll("nav button").forEach(b => b.addEventListener("click", () => {
+    tab = b.dataset.tab;
+    try { localStorage.setItem("bs-review-tab", tab); } catch (e) {}
+    render();
+  }));
+
+  const isWaiting = r => r.status === "in_review" && !r.decision;
+  const isDecided = r => !!r.decision;
+  const fmtDate = d => {
+    if (!d) return "";
+    const dt = new Date(d.length === 10 ? d + "T12:00:00" : d);
+    return isNaN(dt) ? d : dt.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
+  };
+  const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+
+  async function render() {
+    document.querySelectorAll("nav button").forEach(b => b.setAttribute("aria-selected", String(b.dataset.tab === tab)));
+    $("#c-waiting").textContent = rows.filter(isWaiting).length || "";
+    $("#c-decided").textContent = rows.filter(isDecided).length || "";
+    $("#c-all").textContent = rows.length || "";
+
+    let shown = tab === "waiting" ? rows.filter(isWaiting) : tab === "decided" ? rows.filter(isDecided) : rows.slice();
+    if (tab === "decided") shown.sort((a, b) => String(b.decided_at || "").localeCompare(String(a.decided_at || "")));
+    else shown.sort((a, b) => String(a.publish_date || "9999").localeCompare(String(b.publish_date || "9999")) || a._id.localeCompare(b._id));
+
+    const ids = [...new Set(shown.map(r => r.decided_by).filter(Boolean))];
+    const people = ids.length && user ? await user.profiles(ids) : {};
+
+    listEl.replaceChildren();
+    if (!shown.length && statusEl.hidden) {
+      listEl.append(el("div", "notice", tab === "waiting" ? "Nothing is waiting for review." : "No decisions yet."));
+    }
+    shown.forEach(r => listEl.append(card(r, people)));
+  }
+
+  function card(r, people) {
+    const c = el("article", "card");
+    const slug = el("div", "slug");
+    slug.append(el("span", "kind", r.kind === "topic" ? "Topic" : "Draft v" + (r.version || 1)), el("span", null, r.item_id || r._id));
+    c.append(slug, el("h2", null, r.title || "(untitled)"));
+
+    const meta = el("div", "meta");
+    const add = (k, v) => { if (!v) return; const s = el("span"); s.append(k + " ", el("b", null, v)); meta.append(s); };
+    add("", [TYPE[r.content_type] || r.content_type, CHANNEL[r.channel] || r.channel].filter(Boolean).join(" · "));
+    add("By", r.author);
+    add("Publish", fmtDate(r.publish_date));
+    c.append(meta);
+
+    if (r.doc_link) {
+      const a = el("a", "doc-link", r.kind === "topic" ? "Open the brief ↗" : "Open the draft ↗");
+      a.href = r.doc_link; a.target = "_blank"; a.rel = "noopener";
+      c.append(a);
+    }
+
+    const flags = Array.isArray(r.claims_flags) ? r.claims_flags.filter(Boolean) : [];
+    if (flags.length) {
+      const ul = el("ul", "flags");
+      ul.append(el("li", "flags-title", `Claims check: ${flags.length} to look at`));
+      flags.forEach(f => ul.append(el("li", null, String(f))));
+      c.append(ul);
+    }
+
+    const state = open.get(r._id);
+    if (r.decision && !(state && state.mode)) c.append(outcome(r, people));
+    if (r.synced_at) {
+      c.append(el("div", "synced", "Synced to the calendar " + fmtDate(r.synced_at) + (AFTER[r.status] ? " · " + AFTER[r.status] : "")));
+    } else if (!readOnly && (isWaiting(r) || (r.decision && r.status !== "in_review"))) {
+      c.append(controls(r, state));
+    }
+    return c;
+  }
+
+  function outcome(r, people) {
+    const yes = r.decision === "yes";
+    const box = el("div", "outcome " + (yes ? "yes" : "no"));
+    box.append(el("strong", null, yes ? (r.kind === "topic" ? "Topic approved" : "Approved") : (r.kind === "topic" ? "Topic declined" : "Declined")));
+    if (!yes && r.reason) { const p = el("div"); p.append(el("q", null, r.reason)); box.append(p); }
+    const who = people[r.decided_by];
+    box.append(el("div", "who", [who && who.isMe ? "You" : (who && who.name) || "A reviewer", fmtDate(r.decided_at)].filter(Boolean).join(" · ")));
+    return box;
+  }
+
+  function controls(r, state) {
+    const wrap = el("div", "reason");
+    const s = state || {};
+    if (r.decision && !s.mode) {
+      const row = el("div", "actions");
+      const b = el("button", "btn quiet", "Change decision");
+      b.onclick = () => { open.set(r._id, { mode: "change" }); render(); };
+      row.append(b); wrap.append(row); return wrap;
+    }
+    if (s.mode === "decline") {
+      const id = "reason-" + r._id;
+      const lab = el("label", null, r.kind === "topic" ? "Why decline this topic?" : "What needs to change?");
+      lab.htmlFor = id;
+      const ta = el("textarea"); ta.id = id; ta.value = s.text || "";
+      ta.placeholder = r.kind === "topic" ? "e.g. We covered this in March; pick a different angle." : "e.g. The second section overstates the uptime figure.";
+      ta.oninput = () => { s.text = ta.value; };
+      const row = el("div", "actions");
+      const send = el("button", "btn no solid", "Decline");
+      const back = el("button", "btn quiet", "Cancel");
+      send.disabled = back.disabled = !!s.busy;
+      send.onclick = () => {
+        if (!(s.text || "").trim()) { s.error = "Add a reason so the writer knows what to fix."; render(); return; }
+        decide(r, "no", s.text.trim());
+      };
+      back.onclick = () => { open.set(r._id, { mode: r.decision ? "change" : undefined }); render(); };
+      row.append(send, back);
+      wrap.append(lab, ta, row);
+      if (s.error) wrap.append(el("p", "err", s.error));
+      if (!s.focused) { s.focused = true; setTimeout(() => ta.focus(), 0); }
+      return wrap;
+    }
+    const row = el("div", "actions");
+    const yes = el("button", "btn yes", r.kind === "topic" ? "Approve topic" : "Approve");
+    const no = el("button", "btn no", "Decline…");
+    yes.disabled = no.disabled = !!s.busy;
+    yes.onclick = () => decide(r, "yes", "");
+    no.onclick = () => { open.set(r._id, { mode: "decline", text: r.reason || "" }); render(); };
+    row.append(yes, no);
+    if (s.mode === "change") { const back = el("button", "btn quiet", "Keep current"); back.onclick = () => { open.delete(r._id); render(); }; row.append(back); }
+    wrap.append(row);
+    if (s.error) wrap.append(el("p", "err", s.error));
+    return wrap;
+  }
+
+  async function decide(r, decision, reason) {
+    const s = open.get(r._id) || {};
+    s.busy = true; s.error = ""; open.set(r._id, s); render();
+    try {
+      const ref = db.collection("reviews").doc(r._id);
+      const cur = await ref.get();                 // pin the version this reviewer saw
+      const d = cur.exists ? cur.data() : null;
+      if (!d) throw { code: "gone" };
+      if (d.version !== r.version || d.synced_at || !(d.status === "in_review" || d.status === "approved" || d.status === "declined")) throw { code: "stale" };
+      await ref.update({
+        decision, reason: decision === "no" ? reason : "",
+        status: decision === "yes" ? "approved" : "declined",
+        decided_by: me || "", decided_at: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
+      });
+      open.delete(r._id);
+    } catch (e) {
+      s.busy = false;
+      s.error = e && e.code === "stale" ? "This item changed or already synced since you opened it. The page now shows its latest state."
+        : e && e.code === "gone" ? "This item is no longer on the review page."
+        : e && e.code === "invalid_argument" ? "You don't have permission to decide here. Ask the page owner to make you a Contributor."
+        : "That didn't save. Try again in a moment.";
+      if (e && e.code === "invalid_argument") { readOnly = true; showReadOnly(); }
+      open.set(r._id, s);
+    }
+    render();
+  }
+
+  function showReadOnly() {
+    statusEl.hidden = false; statusEl.className = "notice";
+    statusEl.textContent = "You can view this page but not decide. Ask the page owner to give you Contributor access.";
+  }
+
+  (async () => {
+    db = await window.claude?.use?.("db");
+    user = await window.claude?.use?.("user");
+    if (!db) {
+      statusEl.className = "notice warn";
+      statusEl.textContent = "Reviews can't load here. Open this page in Claude while signed in, with access from the page owner.";
+      return;
+    }
+    me = user ? await user.id() : null;
+    canWrite = user ? await user.can("data.write") : null;
+    readOnly = canWrite === false;
+
+    const timer = setTimeout(() => {
+      statusEl.hidden = false; statusEl.className = "notice warn";
+      statusEl.textContent = rows.length ? "Can't reach the review database right now; this list may be out of date." : "Can't reach the review database yet. Check your connection; the page will fill in when it answers.";
+    }, 10000);
+
+    db.collection("reviews").onSnapshot(snap => {
+      rows = snap.docs.map(d => Object.assign({ _id: d.id }, d.data()));
+      if (!snap.metadata.fromCache) {
+        clearTimeout(timer);
+        if (readOnly) showReadOnly(); else statusEl.hidden = true;
+      }
+      render();
+    }, err => {
+      clearTimeout(timer);
+      statusEl.hidden = false; statusEl.className = "notice warn";
+      statusEl.textContent = err && err.code === "revoked" ? "Your access to this page changed. Reload to see what you can do now." : "The review list stopped updating. Reload the page to reconnect.";
+    });
+  })();
+})();
+</script>

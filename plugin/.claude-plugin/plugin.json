@@ -1,7 +1,7 @@
 {
   "name": "bigslick-workflows",
-  "version": "0.4.1",
-  "description": "Big Slick content workflows: plan, write, review and publish marketing content for one or many clients, Requires Google Drive and DataForSEO.",
+  "version": "0.5.0",
+  "description": "Big Slick content workflows: plan, write, review and publish marketing content for one or many clients. Requires Google Drive and DataForSEO.",
   "author": { "name": "Tangyslice Collective" },
   "keywords": ["marketing", "content", "workflows", "big-slick"]
 }

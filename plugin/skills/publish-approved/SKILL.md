@@ -16,13 +16,13 @@ Before starting:
 
 ## Steps
 
-1. Read `reviews` documents that have a `decision` but no `synced_at`, plus calendar rows whose `approve` column is filled in (fallback).
+1. Query the review page at `review_page_url` (ArtifactData, collection `reviews`) for documents with `status` `approved` or `declined` and no `synced_at`, plus calendar rows whose `approve` column is filled in (fallback). For a calendar decision, also write it to the matching review document (`decision`, `reason`, `status`, `decided_at`; `decided_by` blank) so the page stops showing it as waiting.
 2. Topic decisions: set the calendar row to `topic_approved` or `topic_declined`.
 3. Draft approvals: set `approved`, copy the final version to Approved and fill `final_link`. Then publish by item type, using the connector rule's fallbacks:
    - Social post: if `typefully` or `taplio` is active, schedule it and set `scheduled`; otherwise set `ready_to_post`.
    - Blog post or guide: if `hubspot` is active, also create it as a draft post in HubSpot for a person to publish; either way make sure the Approved doc has title, slug, meta description and body, and set `ready_to_post`.
    - Newsletter or email: if `mailchimp`, `mailerlite` or `kit` is active, also create it there as a draft for a person to send; either way make sure the Approved doc has subject line, preview text and body, and set `ready_to_post`.
 4. Draft declines: set `declined` and copy the reason to the calendar row's `reason`, for the redraft and the learning loop.
-5. Set `synced_at` on each review document handled.
+5. On each review document handled, set `synced_at` and, for drafts, the final `status` (`scheduled` or `ready_to_post`) in one update. Once `synced_at` is set the page locks the decision.
 6. Pin every database write to the version read.
 7. Add a row to the registry's Run Log tab.

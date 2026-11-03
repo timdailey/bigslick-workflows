@@ -16,6 +16,6 @@ Before starting:
 
 ## Steps
 
-1. Write one document per item to the client's review page database, collection `reviews`, using the id format and fields in shared definitions, with the claims-check result in `claims_flags`.
+1. Write one document per item to the review page at the registry's `review_page_url` (ArtifactData `set`, collection `reviews`), using the id format and fields in shared definitions §8, with the claims-check result in `claims_flags` and `status` = `in_review`. Leave out `decision`, `reason`, `decided_by`, `decided_at` and `synced_at`. A redraft is a new document (`<item_id>-v<version>`), so the declined version stays on the page as history. If a document with the same id already exists, read it and pin the write to its version; never overwrite one that has a `decision`. Write several items in one batch.
 2. For drafts, set the calendar row status from `drafted` to `in_review`. Topics stay `planned` until decided.
 3. If `gmail` or `slack` is active, send the reviewer one message listing what's waiting, with the review page link. If neither is active, send nothing (connector rule fallback): the review page and the Content Calendar show what's waiting.
