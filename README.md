@@ -20,5 +20,5 @@ Install the Big Slick core and the content, SEO and strategy bundles first, and 
 
 ## Rules
 
-- No client names in any tracked file. Use `<client>` in examples. Client data lives in each client's Drive folder, never here.
+- No real client names in any tracked file. Use `<client>` or an obviously fictional name such as `acme` in examples. Client data lives in each client's Drive folder, never here.
 - The shared definitions (`plugin/references/shared-definitions.md`) mirror the Big Slick Shared Definitions Google Doc in the BigSlick Harness folder. Change the doc first, then this copy.

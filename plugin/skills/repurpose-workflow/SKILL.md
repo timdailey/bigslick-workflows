@@ -21,4 +21,4 @@ Before starting:
 3. Hand each social post to social-workflow so it gets the author's voice and platform rules.
 4. Save the newsletter section and email blurb to Drafts.
 5. Add calendar rows for each derived piece, then call send-to-review.
-6. Add a run-log line.
+6. Add a row to the registry's Run Log tab.

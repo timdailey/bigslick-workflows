@@ -16,8 +16,10 @@ Before starting:
 
 ## Steps
 
-1. Read decisions from the review page database, plus any `Yes` in the Calendar Sheet's approve column (fallback).
-2. For each approval: copy the final version to Approved. If a social scheduler is connected and the item is a social post, schedule it and set status `scheduled`; otherwise set `ready to post`.
-3. For each decline: set status `declined` and keep the reason in notes for the redraft and the learning loop.
-4. Pin every database write to the version read.
-5. Add a run-log line.
+1. Read `reviews` documents that have a `decision` but no `synced_at`, plus calendar rows whose `approve` column is filled in (fallback).
+2. Topic decisions: set the calendar row to `topic_approved` or `topic_declined`.
+3. Draft approvals: set `approved`, copy the final version to Approved and fill `final_link`. If a social scheduler is connected and listed for the client and the item is a social post, schedule it and set `scheduled`; otherwise set `ready_to_post`.
+4. Draft declines: set `declined` and copy the reason to the calendar row's `reason`, for the redraft and the learning loop.
+5. Set `synced_at` on each review document handled.
+6. Pin every database write to the version read.
+7. Add a row to the registry's Run Log tab.

@@ -16,13 +16,13 @@ Before starting:
 
 ## Steps
 
-1. Read the client's Brand Context doc, Content Calendar Sheet and the titles in Approved.
+1. Read the client's Brand Context doc, Content Calendar (tab `Calendar`) and the file names in Approved.
 2. Ask only what Brand Context and settings don't answer: horizon, posts per month, launches. In a scheduled run, ask nothing.
 3. Use content-gap-analysis against the competitors in Brand Context.
 4. Use pillar-content-architecture to group gaps and existing topics into the client's pillars.
 5. Use content-strategy to rank topics. Drop anything already in the calendar or Approved.
 6. Show the proposed calendar as a table and revise until the user approves. In a scheduled run, skip to step 7 with status `planned`.
-7. Append one row per topic to the Content Calendar Sheet.
+7. Append one row per topic to the Content Calendar, with a new `item_id` and status `planned`.
 8. Use seo-content-brief for each long-form post in the first month. Save each brief to Briefs and link it from its row.
-9. If the person in the chat is the approver, mark the rows `approved`. Otherwise call send-to-review.
-10. Add a run-log line.
+9. If the person in the chat is listed in the registry's `approver_in_chat`, set the rows to `topic_approved`. Otherwise call send-to-review with kind `topic`.
+10. Add a row to the registry's Run Log tab.

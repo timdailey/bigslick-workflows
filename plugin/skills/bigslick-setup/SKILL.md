@@ -10,8 +10,8 @@ description: Sets up Big Slick for a new company or client. Use when someone say
 ## Steps
 
 1. Check connectors: Google Drive (required). List optional connectors and offer to connect any the client wants.
-2. Create or update the client registry Sheet and add the client's row.
-3. Create the client's Drive folder from the layout in shared definitions.
+2. If they don't exist yet, create the `Big Slick` admin folder and the `Big Slick Registry` Sheet (tabs `Clients` and `Run Log`). Add the client's row, with every column in shared definitions.
+3. Create the client's folder under `Big Slick/Clients/`, with the files and subfolders in shared definitions, and record their IDs in the registry row.
 4. Build the Brand Context doc with company-onboarding (writes to Drive).
 5. Capture voices with brand-voice-extractor: ask each author to paste 10-15 posts.
 6. Publish the client's review page and dashboard from the templates.

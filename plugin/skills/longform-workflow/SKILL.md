@@ -17,16 +17,16 @@ Before starting:
 ## Inputs
 
 - content type: blog post or guide (MVP); case study, gated asset (V1)
-- topic: the next `approved` calendar row with a brief, or a topic typed into the chat
+- topic: the next `topic_approved` calendar row with a brief (earliest `publish_date` first), or a topic typed into the chat
 
 ## Steps
 
 1. Load the brief, or create one with seo-content-brief if the topic came from the chat.
 2. Draft with write-blog using the content type's template and the brand voice.
 3. Run editorial-qa, brand-review and claims-check. Fix what they find.
-4. Save the draft to Drafts and link it from the calendar row (add a row if the topic came from the chat). Set status `in review`.
+4. Save the draft to Drafts using the file name format in shared definitions, link it from the calendar row (add a row if the topic came from the chat) and set status `drafted`.
 5. Call send-to-review.
-6. Add a run-log line.
+6. Add a row to the registry's Run Log tab.
 
 ## Content type templates
 

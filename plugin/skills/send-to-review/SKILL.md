@@ -16,6 +16,6 @@ Before starting:
 
 ## Steps
 
-1. Write one review row per item to the client's review page database (fields in shared definitions), with a link to the Drive file and the claims-check result.
-2. Set the calendar row status to `in review`.
+1. Write one document per item to the client's review page database, collection `reviews`, using the id format and fields in shared definitions, with the claims-check result in `claims_flags`.
+2. For drafts, set the calendar row status from `drafted` to `in_review`. Topics stay `planned` until decided.
 3. If Gmail or Slack is connected, send the reviewer one message listing what's waiting, with the review page link. Otherwise do nothing more: the review page and Calendar Sheet show what's waiting.

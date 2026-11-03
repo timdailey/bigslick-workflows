@@ -23,9 +23,9 @@ A calendar row, a topic typed into the chat, or a repurposing request (source do
 1. Load the author's voice section from Brand Context.
 2. Draft the post using the platform rules below.
 3. Run claims-check.
-4. Save to Drafts, link from the calendar row, set status `in review`.
+4. Save to Drafts using the file name format in shared definitions, link it from the calendar row and set status `drafted`.
 5. Call send-to-review.
-6. Add a run-log line.
+6. Add a row to the registry's Run Log tab.
 
 ## Platform rules
 
