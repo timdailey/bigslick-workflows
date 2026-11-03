@@ -1,0 +1,372 @@
+{
+ "note": "Sheets batchUpdate requests for the Big Slick Registry. Create the sheet from registry-clients.csv, add a second sheet and write registry-run-log.csv into it, then replace __CLIENTS_SHEET_ID__ and __RUNLOG_SHEET_ID__ with the two sheet ids (integers) and send.",
+ "requests": [
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "title": "Clients",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "frozenColumnCount": 1,
+      "columnCount": 24
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.frozenColumnCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 24
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 2,
+     "endColumnIndex": 3
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "active"
+       },
+       {
+        "userEnteredValue": "paused"
+       },
+       {
+        "userEnteredValue": "archived"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 15,
+     "endColumnIndex": 16
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "monthly"
+       },
+       {
+        "userEnteredValue": "quarterly"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 16,
+     "endColumnIndex": 17
+    },
+    "rule": {
+     "condition": {
+      "type": "NUMBER_GREATER_THAN_EQ",
+      "values": [
+       {
+        "userEnteredValue": "0"
+       }
+      ]
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 17,
+     "endColumnIndex": 18
+    },
+    "rule": {
+     "condition": {
+      "type": "NUMBER_GREATER_THAN_EQ",
+      "values": [
+       {
+        "userEnteredValue": "0"
+       }
+      ]
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 20,
+     "endColumnIndex": 21
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "1.1"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLIENTS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 23,
+     "endColumnIndex": 24
+    },
+    "rule": {
+     "condition": {
+      "type": "NUMBER_GREATER_THAN_EQ",
+      "values": [
+       {
+        "userEnteredValue": "1"
+       }
+      ]
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "title": "Run Log",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "columnCount": 7
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 7
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 2,
+     "endColumnIndex": 3
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "content-plan-workflow"
+       },
+       {
+        "userEnteredValue": "longform-workflow"
+       },
+       {
+        "userEnteredValue": "social-workflow"
+       },
+       {
+        "userEnteredValue": "repurpose-workflow"
+       },
+       {
+        "userEnteredValue": "claims-check"
+       },
+       {
+        "userEnteredValue": "send-to-review"
+       },
+       {
+        "userEnteredValue": "publish-approved"
+       },
+       {
+        "userEnteredValue": "bigslick-setup"
+       },
+       {
+        "userEnteredValue": "refresh-workflow"
+       },
+       {
+        "userEnteredValue": "campaigns-workflow"
+       },
+       {
+        "userEnteredValue": "learning-loop"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 3,
+     "endColumnIndex": 4
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "chat"
+       },
+       {
+        "userEnteredValue": "scheduled"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 4,
+     "endColumnIndex": 5
+    },
+    "rule": {
+     "condition": {
+      "type": "NUMBER_GREATER_THAN_EQ",
+      "values": [
+       {
+        "userEnteredValue": "0"
+       }
+      ]
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 5,
+     "endColumnIndex": 6
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "ok"
+       },
+       {
+        "userEnteredValue": "partial"
+       },
+       {
+        "userEnteredValue": "failed"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__RUNLOG_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 6,
+     "endIndex": 7
+    },
+    "properties": {
+     "pixelSize": 480
+    },
+    "fields": "pixelSize"
+   }
+  }
+ ]
+}
