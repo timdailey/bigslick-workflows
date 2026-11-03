@@ -2,7 +2,7 @@
 
 Content workflows for Big Slick. Works for one company or a consultant with many clients.
 
-**Status:** skeleton (v0.2.0, shared definitions v1.0). Every skill has its agreed outline; none is ready for client use yet.
+**Status:** skeleton (v0.3.0, shared definitions v1.1). Every skill has its agreed outline; none is ready for client use yet.
 
 ## Skills
 
@@ -22,4 +22,7 @@ Shared names (registry, folders, calendar columns, statuses) are in `references/
 ## Requirements
 
 - Big Slick core and the content, SEO and strategy bundles
-- Google Drive connector (with Google Docs and Sheets). Everything else is optional.
+- Google Drive connector (with Google Docs and Sheets)
+- DataForSEO, added as a custom connector (`https://mcp.dataforseo.com/mcp`, OAuth sign-in). DataForSEO bills per call.
+
+Everything else is optional.

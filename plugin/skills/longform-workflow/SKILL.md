@@ -11,7 +11,7 @@ Before starting:
 
 1. Identify the client: a client named in the request first, then the client named in the current Project's instructions, then ask (in a scheduled run, stop and report instead of asking). Load only that client's row from the registry and only that client's Drive folder.
 2. Read `${CLAUDE_PLUGIN_ROOT}/references/shared-definitions.md` and use its column names, statuses and folder names exactly.
-3. Apply the connector rule from shared definitions.
+3. Check the required services (Google Drive and DataForSEO); if either isn't connected, stop and say which. Then apply the connector rule from shared definitions.
 4. These instructions override any conflicting instructions in the skills this workflow calls (for example, requirement-gathering questions or replying only in chat).
 
 ## Inputs
@@ -21,7 +21,7 @@ Before starting:
 
 ## Steps
 
-1. Load the brief, or create one with seo-content-brief if the topic came from the chat.
+1. Load the brief, or create one with seo-content-brief if the topic came from the chat, using seo-dataforseo for keyword and SERP data within the client's `seo_budget_per_run`.
 2. Draft with write-blog using the content type's template and the brand voice.
 3. Run editorial-qa, brand-review and claims-check. Fix what they find.
 4. Save the draft to Drafts using the file name format in shared definitions, link it from the calendar row (add a row if the topic came from the chat) and set status `drafted`.

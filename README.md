@@ -11,7 +11,7 @@ The workflow layer on top of [Big Slick](https://github.com/frankdays/bigslick).
 /plugin install bigslick-workflows
 ```
 
-Install the Big Slick core and the content, SEO and strategy bundles first, and connect Google Drive. Everything else is optional.
+Install the Big Slick core and the content, SEO and strategy bundles first. Two services are required: Google Drive, and DataForSEO as a custom connector (`https://mcp.dataforseo.com/mcp`, OAuth sign-in). Everything else is optional.
 
 ## Layout
 

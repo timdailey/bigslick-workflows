@@ -9,7 +9,7 @@ description: Sets up Big Slick for a new company or client. Use when someone say
 
 ## Steps
 
-1. Check connectors: Google Drive (required). List optional connectors and offer to connect any the client wants.
+1. Check the required services: Google Drive, and DataForSEO as a custom connector at `https://mcp.dataforseo.com/mcp` (signed in with OAuth). Stop until both work. Then list optional connectors and offer to connect any the client wants. Ask for the client's SEO market (location and language) and a per-run DataForSEO call budget for the registry.
 2. If they don't exist yet, create the `Big Slick` admin folder and the `Big Slick Registry` Sheet (tabs `Clients` and `Run Log`). Add the client's row, with every column in shared definitions.
 3. Create the client's folder under `Big Slick/Clients/`, with the files and subfolders in shared definitions, and record their IDs in the registry row.
 4. Build the Brand Context doc with company-onboarding (writes to Drive).

@@ -1,6 +1,6 @@
 # Big Slick Shared Definitions
 
-Version 1.0 · Nov 3, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
+Version 1.1 · Nov 3, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
 
 Workflows never call each other. They hand off through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
 
@@ -67,7 +67,10 @@ A single-company install is the same layout with one client.
 | cadence_social | number | posts per week, per author | setup, people |
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
-| schema_version | text | `1.0` | setup |
+| schema_version | text | `1.1` | setup |
+| seo_location | text | DataForSEO location name, e.g. `United States` | setup, people |
+| seo_language | text | DataForSEO language name, e.g. `English` | setup, people |
+| seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
 
 The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run.
 
@@ -188,12 +191,22 @@ Collection `reviews`, one document per item version. Document id: `<item_id>-v<v
 
 The review page writes the decision; publish-approved copies it to the calendar row (§7) and sets `synced_at`. Every write pins the version it read.
 
-## 9. Connector rule
+## 9. Required services and connector rule
 
-Google Drive (with Docs and Sheets) is required. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
+Two services are required to use Big Slick:
+
+- **Google Drive** (with Docs and Sheets): every file, the registry and the calendar.
+- **DataForSEO**: keyword, SERP, competitor and AI-visibility data. Added in Claude as a custom connector (`https://mcp.dataforseo.com/mcp`) and signed in with OAuth, so there are no API keys to manage. DataForSEO bills per call, so each run stays within the client's `seo_budget_per_run`.
+
+If a required service isn't connected, stop and say which one, before doing any work. Everything else is optional. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
 
 ## 10. Decisions taken in v1.0
 
 - Topics and drafts have separate approval statuses (§7).
 - All per-client settings live in the registry `Clients` tab. The review page has no settings of its own.
 - The registry lives in a `Big Slick` admin folder, with client folders under `Clients`.
+
+## 11. Changes in v1.1
+
+- DataForSEO is a required service alongside Google Drive (§9).
+- Registry columns `seo_location`, `seo_language` and `seo_budget_per_run` added (§3).
