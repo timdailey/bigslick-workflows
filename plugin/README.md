@@ -2,7 +2,7 @@
 
 Content workflows for Big Slick. Works for one company or a consultant with many clients.
 
-**Status:** skeleton (v0.3.0, shared definitions v1.1). Every skill has its agreed outline; none is ready for client use yet.
+**Status:** skeleton (v0.3.0, shared definitions v1.2). Every skill has its agreed outline; none is ready for client use yet.
 
 ## Skills
 

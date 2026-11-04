@@ -18,6 +18,8 @@ Before starting:
 
 1. Load the claims library from the client's Brand Context doc only. Never use another client's claims.
 2. List every factual claim, number, customer name and comparison in the draft.
-3. Mark each as supported (matches the library), unsupported (no match) or conflicting (contradicts the library).
-4. Rewrite or remove unsupported and conflicting claims, or flag them for the reviewer if they can't be fixed.
-5. Return the list with the draft so send-to-review can show it.
+3. Match each one to a row in the claims library, then mark it:
+   - **Supported:** an `approved` row whose `expires_on` is blank or later than today (in the client's timezone), or a `must_qualify` row that also passes that date check and whose qualifier from `notes` appears in the draft.
+   - **Flag:** `candidate` (not yet approved), `forbidden`, `expired`, `missing qualifier`, `unsupported` (no matching row), `conflicting` (contradicts a row) or `logo not approved` (the draft shows a customer's logo and that row's `logo_ok` isn't `yes`). Naming a customer doesn't need `logo_ok`.
+4. Rewrite or remove flagged claims where you can, and leave the rest for the reviewer. Keep the flag either way, so the reviewer sees what changed.
+5. Return the flags with the draft, one line each with the `claim_id` (if any), the claim as drafted and the flag, so send-to-review can show them in `claims_flags`.

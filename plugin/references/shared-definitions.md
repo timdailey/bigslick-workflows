@@ -1,6 +1,6 @@
 # Big Slick Shared Definitions
 
-Version 1.1 · Nov 3, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
+Version 1.2 · Nov 4, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
 
 Workflows never call each other. They hand off through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
 
@@ -26,10 +26,11 @@ Big Slick/
         ├── Content Calendar      (Google Sheet: tab Calendar)
         ├── Briefs/
         ├── Drafts/
-        └── Approved/
+        ├── Approved/
+        └── Research/             (outside-in runs for this client only)
 ```
 
-A single-company install is the same layout with one client.
+A single-company install is the same layout with one client. `Research/` is used only during onboarding, by outside-in-report. Find it by name under `client_folder_id`, and create it if a client set up before v1.2 doesn't have one.
 
 ### File names
 
@@ -58,7 +59,7 @@ A single-company install is the same layout with one client.
 | drafts_folder_id | Drive ID | | setup |
 | approved_folder_id | Drive ID | | setup |
 | review_page_url | URL | the client's review page | setup |
-| reviewers | list | emails | setup, people |
+| reviewers | list | emails; the only reviewer list | setup, people |
 | approver_in_chat | list | emails of people whose go-ahead in a chat counts as approval | setup, people |
 | channels | list | values from §5 | setup, people |
 | content_types | list | values from §5 | setup, people |
@@ -67,12 +68,12 @@ A single-company install is the same layout with one client.
 | cadence_social | number | posts per week, per author | setup, people |
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
-| schema_version | text | `1.1` | setup |
+| schema_version | text | `1.2` | setup |
 | seo_location | text | DataForSEO location name, e.g. `United States` | setup, people |
 | seo_language | text | DataForSEO language name, e.g. `English` | setup, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
 
-The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run.
+The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; client-context reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and onboarding fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
 
 ### Tab `Run Log` (one row per run, newest at the bottom)
 
@@ -80,15 +81,15 @@ The registry is the one home for settings. Runs read it on every start, so a cha
 | --- | --- | --- |
 | run_at | timestamp | UTC |
 | client | text | registry slug |
-| workflow | value | skill name, e.g. `content-plan-workflow` |
+| workflow | value | skill name, e.g. `content-plan-workflow`, `company-onboarding`, `outside-in-report` |
 | trigger | value | `chat` or `scheduled` |
 | items | number | calendar rows created or updated |
 | result | value | `ok`, `partial`, `failed` |
-| note | text | one line; what failed and where, if anything |
+| note | text | one line; what failed and where, if anything. `company-onboarding` and `outside-in-report` also give the duration and, for outside-in, the paid spend, e.g. `14 min; $3.12 paid research` |
 
 ## 4. Brand Context doc
 
-Skills find sections by their exact heading text. Keep the headings (level 2) as written; add content under them freely.
+Skills find sections by their exact heading text. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
 
 1. `Company facts`
 2. `Audience and ICP`
@@ -98,19 +99,61 @@ Skills find sections by their exact heading text. Keep the headings (level 2) as
 6. `Claims library` (a table, below)
 7. `Voices` (one level-3 heading per author: `Voice: <Author Name>`; the template writes it as `Voice: [Author Name]`)
 8. `Style rules` (house style, banned words, formatting)
+9. `Visual identity`
+10. `Marketing plan`
+11. `SME profiles` (one level-3 heading per SME)
+12. `Content inventory`
+13. `AI visibility baseline`
+14. `Team map` (who holds each marketing lane and decision rights; no reviewer list)
+15. `Sources and intake` (a table, below)
+
+### Provenance tags
+
+Every fact in Brand Context ends with one tag, written exactly like this:
+
+| Tag | Meaning | Drafting skills may |
+| --- | --- | --- |
+| `[confirmed]` | The client said so or approved it | State it plainly |
+| `[sourced A: <url>]` | Outside-in evidence, grade A | State it plainly |
+| `[sourced B: <url>]` | Outside-in evidence, grade B | State it with a hedge |
+| `[sourced C: <url>]` | Outside-in evidence, grade C | State it with a hedge |
+| `[assumed]` | Inference, not yet confirmed | State it with a hedge |
+| `[TBD: <owner>]` | Unknown; the named person owns the answer | Never fill it in |
+
+Grade A is the company's own live website. Grade B is a credible third party: major press, an analyst or a review platform. Outside-in records enter as `sourced`, never `confirmed`; the client confirms them at sign-off.
 
 ### Claims library table
 
 | Column | Meaning |
 | --- | --- |
 | claim_id | `C-001`, `C-002`, … never reused |
-| claim | The approved wording |
+| claim | The exact wording |
 | source | Link or document that proves it |
-| owner | Who approved it |
-| approved_on | Date |
-| notes | Limits, e.g. "US customers only", or an expiry date |
+| owner | Who approved it, or `outside-in` for a claim a credible source confirmed |
+| approved_on | Date; blank until `status` is `approved` |
+| notes | Limits, e.g. "US customers only". For a `must_qualify` row, the qualifier wording a draft must include |
+| status | `approved`, `candidate`, `forbidden`, `must_qualify` |
+| provenance | One provenance tag |
+| last_checked | Date the source was last re-checked; blank for a claim the company approved |
+| expires_on | Date, or blank if none. A claim a credible source confirmed expires 12 months after `last_checked` |
+| logo_ok | `yes`, `no`, or blank for a claim that names no customer. Only the company can set `yes` |
 
-`claims-check` treats anything in a draft that isn't backed by this table as unsupported.
+A row is `approved` in one of two ways: the company approved it (provenance `[confirmed]`), or a grade A or B source confirms it and it passed outside-in's independent re-check. Everything else outside-in or intake finds is `candidate` until the company approves it, which sets `status` to `approved` and `provenance` to `[confirmed]`.
+
+`claims-check` passes a claim only if it matches an `approved` row, or a `must_qualify` row with its qualifier in the draft, and `expires_on` is blank or later than today. A `candidate`, `forbidden` or expired row is a flag, and so is anything in a draft that this table doesn't back. A claim may name a customer without `logo_ok`; showing their logo needs `logo_ok` = `yes`.
+
+### Sources and intake table
+
+One row per item onboarding asked for.
+
+| Column | Meaning |
+| --- | --- |
+| item | The requested item |
+| tier | `must`, `should`, `nice` |
+| status | `received`, `coming_later`, `does_not_exist`, `big_slick_to_build`, `left_tbd` |
+| owner | Who is responsible for it |
+| date | Date it is due, or date it was received |
+| location | Link to the item in Drive, once received |
 
 ## 5. Value lists
 
@@ -145,6 +188,8 @@ One row per content item. Never delete a row; set its status instead.
 | approve | value | `yes`, `no` or blank: the fallback for reviewers without Claude access | people |
 | reason | text | required when `approve` is `no` | people |
 | updated_at | timestamp | last change by a run | every workflow |
+| sme_approve | value | `yes`, `no` or blank: the fallback for an SME without Claude access (§8) | people |
+| sme_reason | text | required when `sme_approve` is `no` | people |
 
 ## 7. Statuses
 
@@ -182,6 +227,9 @@ Collection `reviews`, one document per item version. Document id: `<item_id>-v<v
 | publish_date | date | | send-to-review |
 | doc_link | URL | brief (topic) or draft | send-to-review |
 | claims_flags | list | claim problems found by claims-check, one line each; empty if none | send-to-review |
+| sme_verdict | value | `approve`, `approve_with_edits`, `revise`, `reject`; absent until sme-content-review has run | send-to-review |
+| sme_flags | list | issues found by sme-content-review, one line each with its severity (Blocker, Major, Minor); empty if none | send-to-review |
+| reviewer_decisions | list | one entry per required reviewer, each with `reviewer`, `decision`, `reason`, `decided_by` and `decided_at` | send-to-review, review page, publish-approved |
 | status | value | `in_review`, `approved`, `declined`, then `scheduled`, `ready_to_post`, `published` | send-to-review, review page, publish-approved |
 | decision | value | `yes`, `no`, or absent until decided | review page |
 | reason | text | required when decision is `no` | review page |
@@ -191,6 +239,10 @@ Collection `reviews`, one document per item version. Document id: `<item_id>-v<v
 
 The review page writes the decision; publish-approved copies it to the calendar row (§7) and sets `synced_at`. Every write pins the version it read.
 
+sme-content-review runs on every long-form and LinkedIn draft. A piece under an SME's byline, or in an SME's topics where the review finds a Blocker or a Major on a technical claim, lists that SME as a reviewer on the item, so the SME's yes is the approval.
+
+send-to-review writes one `reviewer_decisions` entry with `reviewer` = `any`, which anyone in the registry `reviewers` column can fill, plus one entry with the SME's email when the piece lists an SME. `reason` is required on a `no`. The item-level `decision`, `reason`, `decided_by`, `decided_at` and `status` then record the outcome: `approved` once every entry is `yes`, `declined` as soon as any entry is `no`. SMEs approve like any other reviewer: on the review page, or in the calendar's `sme_approve` column (`approve` fills the `any` entry).
+
 ## 9. Required services and connector rule
 
 Two services are required to use Big Slick:
@@ -198,7 +250,11 @@ Two services are required to use Big Slick:
 - **Google Drive** (with Docs and Sheets): every file, the registry and the calendar.
 - **DataForSEO**: keyword, SERP, competitor and AI-visibility data. Added in Claude as a custom connector (`https://mcp.dataforseo.com/mcp`) and signed in with OAuth, so there are no API keys to manage. Each client connects its own DataForSEO account and pays for its own usage. DataForSEO bills per call, so each run stays within the client's `seo_budget_per_run`.
 
-If a required service isn't connected, stop and say which one, before doing any work. Everything else is optional. The exact check, the fallback for each optional connector and what to log are in `connector-rule.md`. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
+If a required service isn't connected, stop and say which one, before doing any work.
+
+**Onboarding-only services.** outside-in-report also needs Tavily and Perplexity, paid for by the client. It checks them and DataForSEO before spending anything; if one is missing it stops and names it, and onboarding carries on with the client's documents. The day-to-day workflows don't need either service.
+
+Everything else is optional. The exact check, the fallback for each optional connector and what to log are in `connector-rule.md`. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
 
 ## 10. Decisions taken in v1.0
 
@@ -210,3 +266,12 @@ If a required service isn't connected, stop and say which one, before doing any 
 
 - DataForSEO is a required service alongside Google Drive (§9).
 - Registry columns `seo_location`, `seo_language` and `seo_budget_per_run` added (§3).
+
+## 12. Changes in v1.2
+
+- Brand Context keeps the first 8 headings and adds 7 after them (§4). Publishing cadence stays in the registry (§3).
+- Claims library gains `status`, `provenance`, `last_checked`, `expires_on` and `logo_ok`, and claims-check passes only approved, unexpired rows (§4).
+- Provenance tags and a Sources and intake table are defined (§4).
+- The registry `reviewers` column is the only reviewer list (§3). The Run Log gains `company-onboarding` and `outside-in-report`, with duration and spend in `note` (§3).
+- SMEs approve as listed reviewers, and `reviews` gains `sme_verdict` and `sme_flags` (§8). `reviewer_decisions` holds one entry per required reviewer (§8), and the calendar gains `sme_approve` and `sme_reason` (§6).
+- Tavily and Perplexity are onboarding-only services (§9), and each client folder gains `Research/` (§2).
