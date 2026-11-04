@@ -1,16 +1,16 @@
 # Context Pack MVP: Build Plan for Claude Code
 
-Version: 4 November 2026 (outside-in in the MVP; builds to shared definitions v1.2). Source: "Big Slick Context Pack MVP Plan" doc.
-Estimate: about 26.5 hours (3.3 days). Judgement estimate, not measured.
+Version: 4 November 2026 (outside-in and SME content review in the MVP; builds to shared definitions v1.2). Source: "Big Slick Context Pack MVP Plan" doc.
+Estimate: about 34 hours (4.25 days). Judgement estimate, not measured.
 
 ## How to use this file
 
 1. Read this whole file, then `plugin/references/shared-definitions.md` (registry and Run Log in §3, Brand Context in §4, review page fields in §8, services in §9) and `plugin/templates/README.md`.
 2. Read the current `SKILL.md` for each skill you are about to change before editing it. Where each skill lives:
-   - **This repo:** shared definitions, templates, bigslick-setup, claims-check.
+   - **This repo:** shared definitions, templates, the review page, bigslick-setup, claims-check, send-to-review, longform-workflow and social-workflow. T7 adds sme-content-review here.
    - **Big Slick core (frankdays/bigslick):** client-context, client-onboarding, company-onboarding, brand-voice-extractor. T4 adds the shipped outside-in-report here.
-   - **Frank's personal Claude skills:** outside-in-report today, the starting point for T4.
-3. Work through the tasks in order, T1 to T6. Each task ends with "Done when" checks. Do not start the next task until those pass.
+   - **Frank's personal Claude skills:** outside-in-report (the starting point for T4), and the client-specific SME review skill and vcmo-content-review (the starting points for T7).
+3. Work through the tasks in order, T1 to T7. Each task ends with "Done when" checks. Do not start the next task until those pass.
 4. Commit after each task, with the task ID in the message.
 5. Do not build anything listed under "Out of scope". If a task seems to need it, stop and ask.
 6. No real client or company names in any tracked file (repo rule). Use `acme` in examples.
@@ -27,7 +27,7 @@ This plan was first written against an earlier draft spec. These decisions recon
 | 4 | Reviewer list | The registry `reviewers` column is the only reviewer list. The review page keeps no settings |
 | 5 | Run log | Use the §3 Run Log columns. `workflow` is `company-onboarding` or `outside-in-report`; duration and outside-in spend go in `note` |
 | 6 | Registry | Already exists, written by bigslick-setup. client-context reads the `Clients` tab by the `client` slug |
-| 7 | SME approval (MVP) | No new review fields. A piece under an SME's byline lists that SME in the item's reviewers, so the SME's yes is the approval. SME-specific fields arrive with sme-content-review in V1 |
+| 7 | SME review and approval | sme-content-review runs on every long-form and LinkedIn draft. A piece under an SME's byline, or in an SME's topics where the review finds a Blocker or a Major on a technical claim, lists that SME in the item's reviewers, so the SME's yes is the approval. Add two `reviews` fields (§8): `sme_verdict` (`approve`, `approve_with_edits`, `revise`, `reject`) and `sme_flags` (a list, one line per issue with its severity), written by send-to-review and shown on the review page |
 | 8 | Provenance tags | Defined in §4: `[confirmed]`, `[sourced A: <url>]`, `[sourced B: <url>]`, `[sourced C: <url>]`, `[assumed]`, `[TBD: <owner>]` |
 | 9 | Research tools and storage | DataForSEO stays the required connector (§9). Add Tavily and Perplexity as onboarding-only services that outside-in needs; the day-to-day workflows do not. Add a `Research/` folder to each client folder (§2) for outside-in runs |
 
@@ -57,8 +57,11 @@ It is built from the client's own documents, their Drive folder, their website's
 | company-onboarding | Core | Interview-first; writes 10 files to local disk | Writes Brand Context to the client's Drive folder; adds intake, reconcile, gap questions, sign-off and provenance tags | T3, T5 |
 | outside-in-report | Frank's personal skills, shipped to core | Prospecting report on a company and 7 rivals, rendered as two Docs | Ships in Big Slick core with a new pack mode: the company and 5 competitors, a $15 cap, graded records written into Brand Context | T4 |
 | brand-voice-extractor | Core | One brand voice | One `Voice:` section per author (executives and SMEs), from 10 to 15 samples each | T6 |
+| sme-content-review | This repo (new) | Two personal skills: a client-specific SME review and vcmo-content-review | One generic review step: humanize and persona-safety passes on every draft, plus an SME's expert lens when an SME owns the topic | T7 |
+| send-to-review, review page | This repo | Writes and shows `claims_flags` | Also writes and shows `sme_verdict` and `sme_flags`; adds the SME as a reviewer (decision 7) | T7 |
+| longform-workflow, social-workflow | This repo | claims-check is the last check | sme-content-review runs right after claims-check | T7 |
 
-The client-specific SME review skill and vcmo-content-review are not touched (V1).
+sme-content-review is the only new skill. Once it ships, Frank retires the two personal skills it replaces.
 
 ---
 
@@ -74,16 +77,16 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 | # | Heading | Holds | Main source | Read by |
 |---|---|---|---|---|
 | 1 | Company facts | What they sell, business model, commercial frame, size, funding | All phases | Every skill |
-| 2 | Audience and ICP | Firmographics, buying committee, triggers, customer language | Docs, reviews, outside-in, gap questions | content-gap-analysis, content-strategy, seo-content-brief |
-| 3 | Products and positioning | Products and solution boundaries, naming and trademarks, category, core argument, value props with proof, objections | Docs, sales deck, site, outside-in | write-blog, LinkedIn Content Engine, brand-review, claims-check |
+| 2 | Audience and ICP | Firmographics, buying committee, triggers, customer language | Docs, reviews, outside-in, gap questions | content-gap-analysis, content-strategy, seo-content-brief, sme-content-review |
+| 3 | Products and positioning | Products and solution boundaries, naming and trademarks, category, core argument, value props with proof, objections | Docs, sales deck, site, outside-in | write-blog, LinkedIn Content Engine, brand-review, claims-check, sme-content-review |
 | 4 | Content pillars | One level-3 heading per pillar | Marketing plan, gap questions | content-plan-workflow |
 | 5 | Competitors | The 5 competitors: where each wins and loses, credit where due | Outside-in (T4), battlecards, sales deck | content-gap-analysis, content-strategy |
-| 6 | Claims library | The claims table (decision 3) | Docs, website, outside-in, client sign-off | claims-check, write-blog |
-| 7 | Voices | One `Voice: <Author Name>` per executive or SME: topics, stance, samples, channel rules | LinkedIn posts, uploads (T6) | linkedin-workflow, thread-writer |
+| 6 | Claims library | The claims table (decision 3) | Docs, website, outside-in, client sign-off | claims-check, write-blog, sme-content-review |
+| 7 | Voices | One `Voice: <Author Name>` per executive or SME: topics, stance, audiences, samples, channel rules | LinkedIn posts, uploads (T6) | social-workflow, thread-writer, sme-content-review |
 | 8 | Style rules | Voice rules, banned words, registers, house style | Brand guidelines | write-blog, editorial-qa, brand-review |
 | 9 | Visual identity | Logo use, colors, type, imagery, template links | Brand guidelines | lead-magnets, brand-review |
 | 10 | Marketing plan | Annual and quarterly goals, KPIs, themes, campaigns, launch dates | Client plans | content-strategy, content-calendar, performance-report |
-| 11 | SME profiles | MVP: name, role, topics owned and not owned, byline pieces. Full profile in V1 | Org chart, intake | send-to-review (decision 7); sme-content-review (V1) |
+| 11 | SME profiles | One level-3 heading per SME: who they are and why they are credible, topics owned and not owned, reviewer convictions as numbered rules, red lines, how to phrase findings, review scope, weekly capacity | Org chart, intake, outside-in area 11, their published content (T7) | sme-content-review, send-to-review |
 | 12 | Content inventory | Existing assets by funnel stage, top performers, stale pages, keyword targets | Drive folder, website resources, analytics, outside-in | content-gap-analysis, pillar-content-architecture |
 | 13 | AI visibility baseline | Prompt set, mention share against the 5 competitors, questions rivals win | Outside-in area 8 (T4) | content-gap-analysis, content-strategy; ai-search-workflow in V1 |
 | 14 | Team map | Who holds each marketing lane and decision rights | Org chart | bigslick-setup |
@@ -133,7 +136,7 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 | Item | Feeds | Tier |
 |---|---|---|
 | Brand guidelines (voice and visual) | Style rules, Visual identity | Must |
-| Subject-matter experts: names, roles, topics they own | SME profiles, Team map | Must |
+| Subject-matter experts: names, roles, topics they own, weekly review capacity | SME profiles (T7), Team map | Must |
 | Annual marketing plan | Marketing plan, Content pillars | Must |
 | Current quarterly plan | Marketing plan | Must |
 | Approved claims and proof: statistics with sources, nameable customers, logo permissions, certifications | Claims library | Must |
@@ -199,7 +202,7 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 | 7 Peer reviews | Audience and ICP (customer language), Competitors |
 | 8 LLM visibility | AI visibility baseline |
 | 9 llms.txt and robots.txt, 10 Localization, 15 Video recency, 16 Trust pages | Content inventory |
-| 11 Authorship, 12 Founder story | Voices (candidate authors), Products and positioning |
+| 11 Authorship, 12 Founder story | Voices (candidate authors), SME profiles (public record), Products and positioning |
 | 13 Martech stack | Kept in the run folder for V1 (Stack and channels) |
 | 14 Paid media mix, 17 Defunct or acquired sites | Competitors |
 
@@ -239,7 +242,7 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 **Build:**
 
 1. For each author from intake, read their 10 to 15 most recent LinkedIn posts through ConnectSafely from their profile URL, plus any uploaded writing samples.
-2. Write one `Voice: <Author Name>` section per author under Voices: topics, stance, sample excerpts and channel rules. For LinkedIn the channel rules are: one idea, a hook in line one, no link in the body, and a real closing question. Add each author to the registry `authors` column with the same name.
+2. Write one `Voice: <Author Name>` section per author under Voices: topics, stance, the audiences who read them (such as buyer, investor or candidate, used by the persona-safety pass in T7), sample excerpts and channel rules. For LinkedIn the channel rules are: one idea, a hook in line one, no link in the body, and a real closing question. Add each author to the registry `authors` column with the same name.
 3. If ConnectSafely can't read an author's posts, use the uploads and mark what's missing as `[TBD: <author>]`.
 
 **Done when:**
@@ -248,24 +251,60 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 
 ---
 
+## T7. sme-content-review: one generic expert review (7.5 h)
+
+**Goal:** one review step for every long-form and LinkedIn draft. Every draft gets the humanize and persona-safety passes; when an SME owns the draft's topic, that SME's expert lens runs too. The skill holds nothing specific to a client or person; everything specific comes from Brand Context.
+
+**Start from two of Frank's personal skills:**
+
+- **The client-specific SME review skill: keep the method.** Three checks, owned versus contributed content, a severity per issue, one verdict, and the ground rules. Remove every client claim, product rule and SME detail; those now come from Brand Context.
+- **vcmo-content-review: keep the reusable passes.** The humanize pass (AI vocabulary, scaffolding, rhythm and the genericness test), the persona-safety pass, and the channel checks, now read from each author's `Voice:` section. Drop the author's own voice and positioning. The engagement feedback loop moves to learning-loop in V1.
+
+**Build:**
+
+1. Create `plugin/skills/sme-content-review/SKILL.md` in this repo, next to claims-check. No client or person names anywhere in it.
+2. **How a review runs:**
+    1. Classify the piece as owned marketing or contributed (bylined, external). The bar is stricter for contributed pieces.
+    2. Technical accuracy through the SME's profile. Skipped when no SME covers the topic.
+    3. Claims overreach, using claims-check's result against the claims library.
+    4. Messaging and ICP fit, against Audience and ICP and Products and positioning.
+    5. Humanize pass.
+    6. Persona-safety pass: read the draft as each audience the author's `Voice:` section names.
+    7. A severity per issue (Blocker, Major, Minor) and one verdict: `approve`, `approve_with_edits`, `revise` or `reject`.
+3. **Ground rules:** an expert lens, never an impersonation (no first person, no invented quotes); when unsure, flag rather than pass.
+4. **SME profile writer** (no interview or questionnaire). For each SME from intake, write a level-3 heading under SME profiles from: name, role and topics owned and not owned (org chart, intake); public record such as bio, LinkedIn, papers, talks and posts (outside-in area 11); their published content on the company site, blog and elsewhere; and weekly review capacity (intake or a gap question). The profile holds who they are and why they are credible, reviewer convictions as numbered rules, red lines, how to phrase findings (false, unsubstantiated or imprecise), and review scope.
+5. **Wire it in.** longform-workflow runs it right after claims-check (write-blog, editorial-qa, brand-review, claims-check, sme-content-review, then send-to-review). social-workflow runs it right after claims-check for LinkedIn posts.
+6. **Route and show it (decision 7).** send-to-review writes `sme_verdict` and `sme_flags`, and adds the SME to the item's reviewers for byline pieces and for pieces in their topics with a Blocker or a Major on a technical claim. The review page shows both fields next to `claims_flags`.
+7. **Calibration happens in the pilot, not this build.** The SME reads and approves their profile before go-live. For the first two weeks every piece in their topics goes to them, and each No and its reason is used to adjust the profile by hand.
+
+**Done when:**
+- The skill text has no client, person or real company names.
+- A draft in an SME's topic with a planted false technical claim gets a Blocker and a `revise` or `reject` verdict.
+- A draft on a topic no SME owns gets only the claims, fit, humanize and persona-safety checks.
+- A byline piece lists the SME as a reviewer, and the review page shows `sme_verdict` and `sme_flags`.
+- Long-form and LinkedIn runs call sme-content-review right after claims-check.
+
+---
+
 ## Decided rules to build to
 
 - **Which claims a draft may use.** A claim the company approved, or one a credible source confirms (grade A: the company's own live website; grade B: major press, an analyst or a review platform) that also passed outside-in's independent re-check. Everything else is unapproved: grade C findings, anything not re-checked, forbidden claims and expired claims. A source-confirmed claim expires 12 months after `last_checked`. Naming a customer is fine when a credible source shows them; using their logo needs the company's approval (`logo_ok`).
 - **Reviewers.** The registry `reviewers` column is the only reviewer list send-to-review uses.
-- **SMEs approve** through the same approval workflow as every other reviewer: the review page, or the `approve` column in the Content Calendar for anyone without Claude access. In the MVP, a piece under an SME's byline lists that SME as a reviewer (decision 7).
-- **MVP review chains** (in the workflows, not this build): long-form runs write-blog, editorial-qa, brand-review, claims-check, then send-to-review. LinkedIn runs the draft, claims-check, then send-to-review.
+- **SMEs approve** through the same approval workflow as every other reviewer: the review page, or the `approve` column in the Content Calendar for anyone without Claude access. An SME reviews every piece under their byline, on any channel, plus any piece in their topics where sme-content-review finds a Blocker or a Major on a technical claim (decision 7).
+- **MVP review chains:** long-form runs write-blog, editorial-qa, brand-review, claims-check, sme-content-review, then send-to-review. LinkedIn runs the draft, claims-check, sme-content-review, then send-to-review. T7 wires in the new step.
 - **Workflow input map** (issue 1): each workflow hands over its answers up front from Brand Context and the registry. Tim's by-hand content-plan run on the test client finds the questions each skill asks.
 
 ## Out of scope (V1 or pilot)
 
 | Item | Where it goes |
 |---|---|
-| sme-content-review, generalizing the client-specific SME review skill, retiring vcmo-content-review, the full SME profile writer, SME fields on review rows | V1 |
+| learning-loop proposing SME profile changes from each No, and the engagement feedback loop | V1 |
 | Metrics baseline, Stack and channels sections | V1 |
 | Mem0 as the context store | V1 |
 | Full-flow validation and three smoke-run drafts | Pilot |
+| SME calibration: profile sign-off and the first two weeks of reviews | Pilot |
 | Brand Context size decision (issue 8): summary at the top or section-by-section reads | Pilot, using T1's check |
-| Removing duplicate checks across editorial-qa, brand-review and claims-check (issue 9) | Pilot |
+| Removing duplicate checks across editorial-qa, brand-review, claims-check and sme-content-review (issue 9) | Pilot |
 
 ## Estimate
 
@@ -277,8 +316,9 @@ The client-specific SME review skill and vcmo-content-review are not touched (V1
 | T4 Ship outside-in-report with pack mode, one real run | 2.5 | 4.5 | 7 |
 | T5 Reconcile, gap questions, sign-off | 1.5 | 2.5 | 4 |
 | T6 Author voices | 0.5 | 1.5 | 2 |
-| **Total** | **10** | **16.5** | **26.5** |
+| T7 sme-content-review, review fields and chain wiring | 3 | 4.5 | 7.5 |
+| **Total** | **13** | **21** | **34** |
 
-T1 grows by 1.5 hours for the spec and claims-check changes, and T4 by 1 hour for shipping and generalizing the skill.
+T7 is the original 6-hour SME review estimate plus 1.5 hours for the two review fields, send-to-review routing and the workflow wiring. T1 grows by 1.5 hours for the spec and claims-check changes, and T4 by 1 hour for shipping and generalizing the skill.
 
-Suggested days: day 1 T1 and T2; day 2 T3, then start T4 (start the real outside-in run early so it finishes while you work); day 3 the rest of T4, T5, and T6 into the morning of day 4.
+Suggested days: day 1 T1 and T2; day 2 T3, then start T4 (start the real outside-in run early so it finishes while you work); day 3 the rest of T4 and most of T5; day 4 the rest of T5, T6 and most of T7; the morning of day 5 the rest of T7.
