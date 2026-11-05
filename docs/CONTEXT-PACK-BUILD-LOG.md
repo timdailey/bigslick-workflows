@@ -97,6 +97,44 @@ Found along the way:
 - **Drive labels a Sheet's text as sample data,** which may hide rows in a long tab. It reads both tabs by name, but client-context now prefers Sheets tools.
 - **Size.** This 13,526-word doc is 118,000 characters, and one read exceeded Claude Code's tool output limit and went to a file. The Claims library and Content inventory are 65% of it. This is real evidence for the pilot's size decision: most runs need neither section.
 
+## T4. outside-in-report
+
+Status: **built and tested, committed to core `main` as `c84afd3`, not pushed. One Done-when is open:** report mode hasn't been run on a test company, because that's a separate paid run. The skill is in core at `core/skills/outside-in-report/`, with a new `references/pack-mode.md`, and company-onboarding step 8 now calls it.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| No mention of Frank, prospecting-only framing or real company names | Pass | Searched the skill's files, and the gate passes. `signatures.json` keeps marketing tool names, which aren't clients |
+| Report mode still produces its two Docs on a test company | **Not run** | Needs a further paid run. The stages for it are unchanged from the source skill, apart from generalising |
+| One real pack run finishes under $15 | Pass | $7.02 logged, 47% of the cap. 96 minutes for six vendors. The planner estimated $13.15 |
+| Every record lands in its mapped section with its grade and a `sourced` tag | Pass, with one change | 1,070 records, A 831, B 176, C 63. Every added line has a tag, checked from the doc's text. 388 records landed and 682 were left out, mostly rolled up into findings. So "every record lands" became "every finding lands", and the rest stays in the ledger. Martech stays in the run folder as planned |
+| A missing research tool stops outside-in, names the tool, and intake carries on | Pass, dry run | A blind agent assumed Perplexity was missing. It stopped before any spend and named the tool. It gave a `failed` Run Log row, and step 8 carried on with the client's documents |
+| A second run on the same client reuses that client's run | Pass, dry run | A blind agent found the run folder, chose reuse and expected $0.00 of spend. It stopped at the decision |
+| A second client with an overlapping competitor doesn't reuse | Pass, dry run | A blind agent looked only under that client's own folder, found no run and chose a full run. It ran no search for the shared competitor |
+
+**Ledger storage.** Split `evidence/<vendor>.json` in `Research/` worked, so pack mode uses it. The Drive connector takes file content as inline text. Files up to 142 KB saved, but a 195 KB file stopped at record 51 of 307 with no error. That file is now split in two, read back byte for byte, and the failed upload is in the trash. Pack mode now splits anything over 100 KB and reads every file back.
+
+**The first pass wasn't safe enough, and the doc was corrected by hand.** I checked the doc's text instead of relying on the agent's report:
+
+- **19 `approved` rows went back to `candidate`.** Applied as written, "grade A or B, verified" approved rows the doc itself disagreed with, rows that made no sense alone, and customer names with a condition on use. One row had no record behind its wording, though the text is on the live page. claims-check would have passed all of them. The agent's own 20 holds were sound but were judgment, not rule, so pack mode now has an explicit hold list. Final count: 39 `approved`, 80 `candidate`, 55 `forbidden`. All 39 are grade A.
+- **`forbidden` rows and `[confirmed]` facts held.** All 55 rows are unchanged and all 105 `[confirmed]` lines are intact, except the two below.
+- **A barred customer name had leaked into four sections.** This came from T3, not this run: a content inventory title and URL, a disagreement line, two `[confirmed]` lines and a URL in a source tag. Each now uses the `claim_id`, or another source, and intake and pack mode now cover titles and URLs. The two `[confirmed]` lines were reworded on purpose. The name now appears only in `forbidden` rows.
+
+Limits:
+
+- **Wording changed after the paid run.** The hold list, what may be left out, the split size and the reuse wording came from the run and its dry runs, and no paid run has used them. The doc was brought into line by hand.
+- **The three no-spend tests are dry runs.** Each stopped where the plan allows, with no writes.
+- **Spend is partly estimated.** $4.35 came from DataForSEO cost lines, 23 of them themselves estimates, and $2.67 from planning rates. Two deep-research calls timed out and are logged at $1.00 each. I saw no invoices.
+- **Thin areas:** analyst standing, peer reviews (one review site blocked search), paid search, the client's funding history and web archive checks. The Run Log row says so, with `result` = `partial`.
+- **The five competitors were the agent's picks.** The doc marks the final five `[TBD]`, and sign-off confirms them.
+- **`acme` now has a client folder.** Its row had none, which is how the blank-folder gap showed up. Pack mode now stops and logs that, instead of guessing.
+
+Found along the way:
+
+- **Size.** The doc grew from 118,000 to about 190,000 characters, and `Competitors` went from 1,300 to 36,000. That's with 459 records rolled up. More evidence for the pilot's size decision.
+- **Shared browser.** Three collection agents used the browser despite their brief and disturbed the browser agent. `SKILL.md` now says one at a time. Stage 6 re-checked what they touched.
+- **Prompt set endpoint.** `prompt-set.md` named a path DataForSEO's docs don't list. Fixed to `llm_mentions/search/live`.
+- **Text aimed at agents.** One rival's `llms.txt` invites AI agents to connect to an MCP endpoint. Nobody connected, and it isn't in the doc.
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
@@ -112,6 +150,6 @@ These override the plan where they differ.
 
 ## Still needed
 
-- DataForSEO, Tavily, Perplexity, ConnectSafely and Google Sheets are all connected in this session. T4 needs a paid run of up to $15. The DataForSEO scheduled-run check is still open.
+- DataForSEO, Tavily, Perplexity, ConnectSafely and Google Sheets are all connected in this session. T4 still needs a paid report-mode run on a test company. The DataForSEO scheduled-run check is still open.
 
 v1.2 doesn't list ConnectSafely as a service, though the plan doc puts it on the setup checklist. T6 handles it being missing, so this only affects the checklist.
