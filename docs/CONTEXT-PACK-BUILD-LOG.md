@@ -139,6 +139,36 @@ Found along the way:
 - **Prompt set endpoint.** `prompt-set.md` named a path DataForSEO's docs don't list. Fixed to `llm_mentions/search/live`.
 - **Text aimed at agents.** One rival's `llms.txt` invites AI agents to connect to an MCP endpoint. Nobody connected, and it isn't in the doc.
 
+## T5. Reconcile, gap questions and sign-off
+
+Status: **built and tested on a copy of the test client's doc, committed to core `main` as `8c27995`, not pushed.** The steps are in a new core file, `company-onboarding/references/sign-off.md`. `drive-intake.md` now points to it, and `bigslick-setup` waits for sign-off before it creates scheduled tasks. The test client's real doc wasn't touched: it was last changed on 5 November at 03:13 UTC, before this task.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| The conflict list shows the planted doc-versus-site mismatch | Pass | A late file, written for this test, said the company was founded two years later than the site says. A fresh agent that wasn't told about it listed it as `D-040` and cleared the founding year from `Company facts`. Checked from the doc's text |
+| Gap questions cover only empty must items | Pass, with one exception | Six questions, each on a must item with something still missing, plus two on blank registry cells (`reviewers`, `cadence_plan`), as T3 allows. Facts the late file gave, such as turnaround and SME capacity, weren't asked again. Must items already complete and every `should` or `nice` item weren't asked about |
+| A sign-off with one correction changes only that section, and approved claims flip | Pass | A section-by-section diff from the doc's text: one line changed in `Team map`, four rows in `Claims library`, and the new `Sign-off log` in `Sources and intake`. The other twelve sections and the front matter are identical. All four rows read `approved` and `[confirmed]` |
+
+A second simulated reply also passed: a conflict settled, a competitor swapped, one claim refused, one reworded, two approved with conditions, a logo granted, two gap answers and one section confirmed. All 55 original `forbidden` rows are unchanged. The copy ended at 43 `approved`, 2 `must_qualify`, 74 `candidate` and 56 `forbidden`.
+
+Decisions in the skill:
+
+- **Conflicts leave the sections.** The plan says not to pick one, so a disputed fact becomes a `[TBD: <owner>]` line naming the item, even if it was `[confirmed]`. This replaces T3's rule of using the later date, and the later date now only appears on the list.
+- **Sign-off confirms what the client actually answered.** A yes to the doc doesn't retag anything. Otherwise "changes only that section" couldn't hold, and the client can't have checked every line. A line becomes `[confirmed]` if they answered it or named its section as right.
+- **A no on a claim makes it `forbidden`.** A yes to a row with a condition in `notes` makes it `must_qualify`, unless they drop the condition. The message shows conditions, so they see them before answering.
+- **Gap questions go in the sign-off message,** so the client gets one message, not two.
+- **Write to the doc moved ahead of outside-in** in `drive-intake.md`, because pack mode writes into the doc and checks what's already there.
+
+Limits:
+
+- **Tested on a copy, with a simulated client.** The doc is `Brand Context (T5 TEST copy)`, next to the planted file, and Run Log rows 4 to 6 start `TEST on T5 copy.` The real doc still has the old `Disagreements` lines and no D-numbers. Run this on it before the pilot.
+- **Wording changed after the test runs.** The two agents' reports led to fixes, including held rows and `owner`, conditions in the message, logo scope, and removed competitors. None has been rerun. The copy still has two results of the older wording: rows at `approved` that the rule now makes `must_qualify`, and tags on six log lines.
+- **Not tested:** a late item against a doc that has already been through section 1, gap answers changing a section, or a real client reading the message.
+- **The message is long:** about 27,000 characters, with 49 conflicts and 83 candidate claims. The skill now allows the lists to go in a linked Google Doc, and doesn't rank them. Expect pushback from a client, and shorten this in the pilot if so.
+- **Clearing a name is partial.** A disputed name or term that runs through the doc is cleared only where a line states it, so other lines still use it until the client answers.
+- **One person's answer counts.** The message also goes to anyone the doc names as owning claims or messaging, but the skill doesn't say whose answer wins if they differ.
+- **A swapped competitor costs a fresh pack run,** because pack mode has no single-competitor run. Shared figures that counted the old competitor stay until then, and the skill says to report them.
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
