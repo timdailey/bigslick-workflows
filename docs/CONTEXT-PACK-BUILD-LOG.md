@@ -161,13 +161,26 @@ Decisions in the skill:
 
 Limits:
 
-- **Tested on a copy, with a simulated client.** The doc is `Brand Context (T5 TEST copy)`, next to the planted file, and Run Log rows 4 to 6 start `TEST on T5 copy.` The real doc still has the old `Disagreements` lines and no D-numbers. Run this on it before the pilot.
+- **Tested on a copy, with a simulated client.** The doc is `Brand Context (T5 TEST copy)`, next to the planted file, and Run Log rows 4 to 6 start `TEST on T5 copy.` The real doc was reconciled afterwards: see below.
 - **Wording changed after the test runs.** The two agents' reports led to fixes, including held rows and `owner`, conditions in the message, logo scope, and removed competitors. None has been rerun. The copy still has two results of the older wording: rows at `approved` that the rule now makes `must_qualify`, and tags on six log lines.
 - **Not tested:** a late item against a doc that has already been through section 1, gap answers changing a section, or a real client reading the message.
 - **The message is long:** about 27,000 characters, with 49 conflicts and 83 candidate claims. The skill now allows the lists to go in a linked Google Doc, and doesn't rank them. Expect pushback from a client, and shorten this in the pilot if so.
 - **Clearing a name is partial.** A disputed name or term that runs through the doc is cleared only where a line states it, so other lines still use it until the client answers.
 - **One person's answer counts.** The message also goes to anyone the doc names as owning claims or messaging, but the skill doesn't say whose answer wins if they differ.
 - **A swapped competitor costs a fresh pack run,** because pack mode has no single-competitor run. Shared figures that counted the old competitor stay until then, and the skill says to report them.
+
+### Reconcile on the test client's real doc
+
+Run after T7, on 5 November, through sections 1 to 3 of `sign-off.md`. A backup is in the client's folder. Nothing was sent, so there's no Run Log row, and sign-off itself hasn't happened.
+
+Result, checked from the doc's text against a snapshot: 51 conflict items, numbered to `D-054`, 25 `see D-` lines in sections, and 82 `candidate`, 37 `approved` and 55 `forbidden` rows. All 55 `forbidden` rows are unchanged, and two rows moved from `approved` to `candidate`. The lists are in a separate Doc in the client's folder, `Sign-off lists (draft, not sent)`, because they're too long for a message.
+
+Two rules were wrong, and my review of the first pass caught both:
+
+- **Clearing a disputed ban loosened it.** The first pass cleared red lines and "never say" rules, so a draft could have said what the client's guidelines forbid. Bans now stay, with the item's ID beside them. So a restored ban shows one side of an open item, by design.
+- **A competitor's own inconsistent figures aren't for the client to settle.** Six items were removed and their lines restored, leaving a gap in the numbering that the message explains. Four stay, because the client's metrics sheet is on one side.
+
+Open: `C-075` is a `candidate` with the same 10× figure as `forbidden` row `C-150`, from a different document. It's still in the lists for the client to answer.
 
 ## T6. brand-voice-extractor
 
