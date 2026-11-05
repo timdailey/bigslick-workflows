@@ -169,6 +169,29 @@ Limits:
 - **One person's answer counts.** The message also goes to anyone the doc names as owning claims or messaging, but the skill doesn't say whose answer wins if they differ.
 - **A swapped competitor costs a fresh pack run,** because pack mode has no single-competitor run. Shared figures that counted the old competitor stay until then, and the skill says to report them.
 
+## T6. brand-voice-extractor
+
+Status: **built and tested once, committed to core `main` as `7900e7d`, not pushed.** It's a patch, as decided: `overlay/patches/brand-voice-extractor/` keeps the upstream text, adds a pointer near the top, and adds `references/author-voices.md`. `bigslick-setup` step 5 now reads posts from the profile URL, instead of asking authors to paste them, and names the bundle the skill ships in, `bigslick-strategy`.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| Two test authors produce two clearly different `Voice:` sections | Pass | A fresh agent read 15 posts for one author and 6 for the other through ConnectSafely. One argues from a single trial readout, dry and sceptical, and keeps the company out of the body. The other works from conference takeaways and the founder's journey, warm and diplomatic, with bullets and thanks. I read both |
+| Both names are in the registry `authors` column | Pass | Read from the Sheet, spelled as in the headings |
+| An author with no readable posts gets a section from uploads, with the gaps tagged TBD | Pass | A fictional author on the Acme test client, with one upload of three samples. The posts call failed with a 500, and the section came from the upload, with `LinkedIn posts still needed [TBD: Jordan]`. Nothing from the other client appears in it |
+
+Also checked from the doc's text: only `Voices` and `Sources and intake` changed in the test client's doc, every line in `Voices` ends with a tag, and no capitalized term from a `forbidden` row appears there. The agent turned down one excerpt because it named a `forbidden` company, and others for quoting someone else or using a phrase `Style rules` bans.
+
+Limits:
+
+- **The test wrote to the real test doc,** not a copy, because the posts are real and no client answer was simulated.
+- **Profile URLs came from a people search of mine, not from the client,** because the test client's files hold none. My brief called them client-given, so the agent tagged them `[confirmed]`. I changed both to `[assumed]`. The skill itself never searches by name, because a namesake's posts would pass as the author's.
+- **One author has six posts,** so the LinkedIn intake item stays `left_tbd`, with a line under `Received in part`.
+- **A client rule conflicts with the posts.** The rule says that author never names the company and writes 100 to 150 words; five of the six posts name it, and most run longer. The rule stands and a Channel rules line flags it. The skill now sends this to `Disagreements`, but the test's limits kept it out, so it isn't on that list yet.
+- **The failed call was a made-up profile URL returning a 500.** A real but private or empty account hasn't been tried.
+- **Wording changed after the test, not rerun:** post counts, retrying a failed call, the profile line, rule conflicts, more excerpt limits, and loading named sections rather than the whole doc.
+- **Possible ghost-writing isn't settled.** The agent noticed two posts by one author close almost identically. It's unverified, and the skill now says to report anything like that.
+- **Not in `plugin/`.** The skill stays in the `strategy` bundle, so a client running setup needs that bundle installed.
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
