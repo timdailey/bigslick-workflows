@@ -16,9 +16,10 @@ description: Sets up Big Slick for a new company or client. Use when someone say
    - `Content Calendar`: a Google Sheet created from `content-calendar.csv`, then formatted with the requests in `content-calendar-format.json` (put the new sheet's id in place of `__SHEET_ID__`).
    - Empty `Briefs`, `Drafts`, `Approved` and `Research` folders.
    Record every new file and folder ID in the client's registry row, except `Research`, which has no column: skills find it by name.
-4. Build the Brand Context doc with company-onboarding (writes to Drive), through to the client's sign-off. Steps 5 and 6 can run while it's out.
+4. Build the Brand Context doc with company-onboarding (writes to Drive), through to the client's sign-off. Steps 5 to 7 can run while it's out.
 5. Capture voices with brand-voice-extractor, from the `bigslick-strategy` bundle: it reads each author's LinkedIn posts from the profile URL intake collected, plus any uploaded samples.
-6. Publish the client's review page from `templates/review-page.html`: replace every `__CLIENT_NAME__` with the client's display name, publish it as an artifact with `capabilities: {"db": {}, "user": {"scopes": ["profile"]}}` and icon `checklist`, and record its URL in the registry's `review_page_url`. Don't seed the database; send-to-review fills it. Tell the user to share the page with each person in `reviewers` at **Contributor** or above (the Share menu): Viewers and Commenters can read the page but not decide. Then publish the dashboard from its template.
-7. Once the client has signed off, create the scheduled tasks for the chosen workflows and cadence. Each task names its client.
-8. Write Project instructions for the user to paste into a new Claude Project for this client.
-9. Run one workflow end to end with the user as reviewer.
+6. Write each SME's profile with sme-content-review's profile writer.
+7. Publish the client's review page from `templates/review-page.html`: replace every `__CLIENT_NAME__` with the client's display name, publish it as an artifact with `capabilities: {"db": {}, "user": {"scopes": ["profile", "email"]}}` and icon `checklist`, and record its URL in the registry's `review_page_url`. Don't seed the database; send-to-review fills it. Tell the user to share the page with each person in `reviewers` at **Contributor** or above (the Share menu): Viewers and Commenters can read the page but not decide. Then publish the dashboard from its template.
+8. Once the client has signed off, create the scheduled tasks for the chosen workflows and cadence. Each task names its client.
+9. Write Project instructions for the user to paste into a new Claude Project for this client.
+10. Run one workflow end to end with the user as reviewer.

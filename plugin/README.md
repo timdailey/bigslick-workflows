@@ -13,6 +13,7 @@ Content workflows for Big Slick. Works for one company or a consultant with many
 | social-workflow | Social posts per author voice; LinkedIn first |
 | repurpose-workflow | One published piece into social posts, newsletter and email |
 | claims-check | Checks a draft against that client's claims library |
+| sme-content-review | Reviews a draft through an SME's lens, with humanize and persona-safety passes, and writes SME profiles |
 | send-to-review | Writes review rows and alerts the reviewer |
 | publish-approved | Hourly: files approved content and schedules it if possible |
 | bigslick-setup | Adds a company or client |

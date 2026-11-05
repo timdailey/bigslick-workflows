@@ -192,6 +192,41 @@ Limits:
 - **Possible ghost-writing isn't settled.** The agent noticed two posts by one author close almost identically. It's unverified, and the skill now says to report anything like that.
 - **Not in `plugin/`.** The skill stays in the `strategy` bundle, so a client running setup needs that bundle installed.
 
+## T7. sme-content-review
+
+Status: **built and tested, committed on this branch, not pushed.** The new skill is `plugin/skills/sme-content-review/`, with `references/humanize.md`, `persona-safety.md` and `profile-writer.md`. longform-workflow and social-workflow run it right after claims-check, and `bigslick-setup` runs the profile writer. send-to-review now writes `sme_verdict`, `sme_flags` and `reviewer_decisions`, publish-approved handles `sme_approve`, and the review page shows the fields and takes one decision per reviewer.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| The skill text has no client, person or real company names | Pass | Searched the skill and its three references for the test client, its people and its field's terms: none |
+| A draft in an SME's topic with a planted false technical claim gets a Blocker and `revise` or `reject` | Pass | The draft called a diffusion measure a percentage of intact fibers. Three `technical` Blockers both times, with `reject` on the first run and `revise` on the second |
+| A draft on a topic no SME owns gets only the claims, fit, humanize and persona-safety checks | Pass | `sme_name` blank, and every flag on the page document is `claims`, `fit`, `humanize` or `persona`. Channel didn't run either, because the test author has no `Voice:` section |
+| A byline piece lists the SME as a reviewer, and the review page shows `sme_verdict` and `sme_flags` | Pass, not on the live page | The page document for the byline post has two `reviewer_decisions` entries, read back from the test page's database. Ten tests of the page's code pass, in Node with a fake DOM and database. See limits |
+| Long-form and LinkedIn runs call sme-content-review right after claims-check | Pass, from the text | It's the next step after claims-check in both workflows. No workflow has run end to end, because both are still skeletons |
+
+The false-claim draft also lists the SME through the second route, a Blocker on a technical claim, and the booth draft correctly lists no one.
+
+The page tests cover showing the verdict and flags, listing the SME, a reviewer's yes leaving the item in review, the SME's yes approving it, the SME's no declining it, another viewer being told it's waiting, the no-email case, older documents and changing a decision.
+
+Decisions:
+
+- **The page can see emails.** The 4 November note says it can't. The `user` capability gives addresses under the `email` scope, so the page now keeps an SME's entry for that SME, and setup declares the scope. If a viewer's organization withholds the address, the entry opens after the `any` entry and `decided_by` records who filled it. The calendar's `sme_approve` remains the fallback.
+- **One person can't fill both entries,** so an SME who is also in `reviewers` still needs a second reviewer.
+- **The review never stops a run.** Even a `reject` goes to the reviewer. The workflows apply only the `humanize` and `channel` fixes themselves.
+- **A check that didn't run shows as a Minor `not checked` line in `sme_flags`,** because the page has no other place to show it.
+- **An opinion is not an unsupported claim.** The first run gave a sound opinion post four Majors, so it could never reach `approve`. `unsupported` is now a Minor at most on the author's opinion, a `Voice:` stance, general knowledge in the field, or a `[confirmed]` or `[sourced A: <url>]` fact. On a rerun the same post got `approve`.
+
+Limits:
+
+- **The live page wasn't viewed.** The built-in browser isn't signed in to Claude, and `ref.set` on the real database hasn't run. The test page and its three items are in place: https://claude.ai/artifact/3mqNCTj6tG39ij974FtLxq. Open it once, and Approve one item, before the pilot.
+- **publish-approved's fallback wasn't run.** `sme_approve` handling is new wording only, and there's no test calendar row.
+- **The final wording wasn't rerun.** Two small additions came after the last review. `Content pillars` was added to the load list, and a rule says the author's section beats `Style rules`.
+- **`reject` versus `revise` varies.** The same draft got each on separate runs. Both are allowed, but it shows the line still takes judgment.
+- **Register depends on `Style rules`.** The test client's rules put an "educational blog" in the contributed register without defining it, which raised three findings to Major on the second run.
+- **The profile is a first draft.** It's in the test client's real doc, with 8 convictions from 13 pages and 15 posts, and all `[assumed]`. One conviction rests on one post, and two lean on blogs that read as marketing-written. `Review email` and capacity are `[TBD: <owner>]`, so until an email is filled in, send-to-review can't list this SME. The test used a placeholder. The SME reads and approves it in the pilot, as planned.
+- **Findings aren't reviewed by a real expert.** The technical findings are a model's reading of the science, checked only against the planted error.
+- **claims-check, send-to-review and the workflows are still marked as skeletons.**
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
@@ -201,7 +236,7 @@ These override the plan where they differ.
 | T4 | outside-in-report ships in the public core repo, report mode included | Core's rules limit it to infrastructure and bar new marketing skills, so T4 must amend those rules in that repo's `CLAUDE.md` |
 | T2, T3 | The local-disk route stays in core | Overrides T2 steps 5 and 6. client-context gains the registry and Drive route and keeps its local route, and client-onboarding stays for local installs. No script or release test changes |
 | T6 | brand-voice-extractor changes through a patch | Lives in `overlay/patches/` in core, accepting the merge cost at upstream refreshes |
-| T7 | Per-reviewer decisions | `reviews` gains `reviewer_decisions` and the calendar gains `sme_approve` and `sme_reason`, in both copies of v1.2. An `any` entry keeps today's behaviour for a piece with no SME. T7 updates send-to-review, the review page and publish-approved. The page knows user IDs, not emails, so it can't restrict an SME's entry to that SME; it records who decided in `decided_by` |
+| T7 | Per-reviewer decisions | `reviews` gains `reviewer_decisions` and the calendar gains `sme_approve` and `sme_reason`, in both copies of v1.2. An `any` entry keeps today's behaviour for a piece with no SME. T7 updates send-to-review, the review page and publish-approved. T7 found the page can read emails under the `email` scope, so it does restrict an SME's entry, and `decided_by` still records who decided |
 | T3, T7 | The `[internal]` tag is dropped on purpose | Nothing blocks pricing or roadmap budgets by tag. To keep one out of drafts, record it as a `forbidden` claim |
 | T3 to T7 | Test with the test client's documents in the BigSlick Harness folder | Harness holds the source documents. Tim's `Templates/Big Slick Registry` stays blank; tests use their own registry |
 

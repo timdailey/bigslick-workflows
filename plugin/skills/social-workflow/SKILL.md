@@ -23,9 +23,10 @@ A calendar row, a topic typed into the chat, or a repurposing request (source do
 1. Load the author's voice section from Brand Context.
 2. Draft the post using the platform rules below.
 3. Run claims-check.
-4. Save to Drafts using the file name format in shared definitions, link it from the calendar row and set status `drafted`.
-5. Call send-to-review.
-6. Add a row to the registry's Run Log tab.
+4. For a LinkedIn post, run sme-content-review right after claims-check. Apply its `humanize` and `channel` fixes, and leave the rest for the reviewer.
+5. Save to Drafts using the file name format in shared definitions, link it from the calendar row and set status `drafted`.
+6. Call send-to-review with the claims-check flags and any sme-content-review result.
+7. Add a row to the registry's Run Log tab.
 
 ## Platform rules
 

@@ -69,6 +69,8 @@ nav .count { font-family: var(--mono); font-size: 12px; margin-left: 4px; color:
 textarea { font: inherit; width: 100%; min-height: 76px; resize: vertical; padding: 8px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
 .err { color: var(--no); font-size: 13px; margin: 0; }
 
+.signoffs { display: grid; gap: 2px; font-size: 13px; color: var(--muted, inherit); }
+.signoffs b { font-weight: 600; }
 .outcome { display: grid; gap: 4px; padding: 10px 12px; border-radius: 6px; font-size: 14px; }
 .outcome.yes { background: var(--ok-bg); color: var(--ok); }
 .outcome.no { background: var(--no-bg); color: var(--no); }
@@ -104,9 +106,10 @@ footer { font-size: 12px; color: var(--muted); }
   const TYPE = { blog_post: "Blog post", guide: "Guide", case_study: "Case study", gated_asset: "Gated asset",
     social_post: "Social post", newsletter: "Newsletter", email: "Email" };
   const CHANNEL = { blog: "Blog", linkedin: "LinkedIn", x: "X", community: "Community", newsletter: "Newsletter", email: "Email" };
+  const VERDICT = { approve: "Approve", approve_with_edits: "Approve with edits", revise: "Revise", reject: "Reject" };
   const AFTER = { scheduled: "Scheduled", ready_to_post: "Ready to post", published: "Published" };
 
-  let tab = "waiting", rows = [], db = null, user = null, me = null, canWrite = null, readOnly = false;
+  let tab = "waiting", rows = [], db = null, user = null, me = null, canWrite = null, readOnly = false, myEmail = null;
   const open = new Map();   // doc id -> {mode: "decline"|"change", text, error, busy}
 
   try { const t = localStorage.getItem("bs-review-tab"); if (["waiting","decided","all"].includes(t)) tab = t; } catch (e) {}
@@ -119,6 +122,24 @@ footer { font-size: 12px; color: var(--muted); }
 
   const isWaiting = r => r.status === "in_review" && !r.decision;
   const isDecided = r => !!r.decision;
+  // A document without reviewer_decisions is an older item: treat it as one "any" entry.
+  const entriesOf = r => Array.isArray(r.reviewer_decisions) && r.reviewer_decisions.length ? r.reviewer_decisions
+    : [{ reviewer: "any", decision: r.decision, reason: r.reason, decided_by: r.decided_by, decided_at: r.decided_at }];
+  const isSme = e => e.reviewer !== "any";
+  const isMyEmail = e => !!myEmail && String(e.reviewer).toLowerCase() === myEmail;
+  // Which entry this viewer's decision fills, or -1 if it's someone else's turn. An SME's entry is theirs
+  // when the page can see emails; otherwise it opens once the "any" entry is filled, and decided_by records who.
+  function targetEntry(r) {
+    const list = entriesOf(r);
+    const own = list.findIndex(e => e.decision && e.decided_by && e.decided_by === me);
+    if (own >= 0) return own;
+    const mine = list.findIndex(e => isSme(e) && !e.decision && isMyEmail(e));
+    if (mine >= 0) return mine;
+    const open = list.findIndex(e => !isSme(e) && !e.decision);
+    if (open >= 0) return open;
+    if (!myEmail) { const sme = list.findIndex(e => isSme(e) && !e.decision); if (sme >= 0) return sme; }
+    return r.decision ? list.findIndex(e => !isSme(e) || isMyEmail(e)) : -1;
+  }
   const fmtDate = d => {
     if (!d) return "";
     const dt = new Date(d.length === 10 ? d + "T12:00:00" : d);
@@ -136,7 +157,7 @@ footer { font-size: 12px; color: var(--muted); }
     if (tab === "decided") shown.sort((a, b) => String(b.decided_at || "").localeCompare(String(a.decided_at || "")));
     else shown.sort((a, b) => String(a.publish_date || "9999").localeCompare(String(b.publish_date || "9999")) || a._id.localeCompare(b._id));
 
-    const ids = [...new Set(shown.map(r => r.decided_by).filter(Boolean))];
+    const ids = [...new Set(shown.flatMap(r => [r.decided_by, ...entriesOf(r).map(e => e.decided_by)]).filter(Boolean))];
     const people = ids.length && user ? await user.profiles(ids) : {};
 
     listEl.replaceChildren();
@@ -173,6 +194,28 @@ footer { font-size: 12px; color: var(--muted); }
       c.append(ul);
     }
 
+    const smeFlags = Array.isArray(r.sme_flags) ? r.sme_flags.filter(Boolean) : [];
+    if (r.sme_verdict || smeFlags.length) {
+      const ul = el("ul", "flags");
+      const verdict = VERDICT[r.sme_verdict] || r.sme_verdict || "no verdict";
+      ul.append(el("li", "flags-title", `Expert review: ${verdict}` + (smeFlags.length ? `, ${smeFlags.length} to look at` : "")));
+      smeFlags.forEach(f => ul.append(el("li", null, String(f))));
+      c.append(ul);
+    }
+
+    const entries = entriesOf(r);
+    if (entries.length > 1) {
+      const box = el("div", "signoffs");
+      entries.forEach(e => {
+        const line = el("div");
+        const who = people[e.decided_by];
+        const state = !e.decision ? "Waiting" : (e.decision === "yes" ? "Approved" : "Declined") + (e.decided_by ? " by " + ((who && who.isMe) ? "you" : (who && who.name) || "a reviewer") : "");
+        line.append(el("b", null, isSme(e) ? "SME " + e.reviewer + ": " : "Reviewer: "), state);
+        box.append(line);
+      });
+      c.append(box);
+    }
+
     const state = open.get(r._id);
     if (r.decision && !(state && state.mode)) c.append(outcome(r, people));
     if (r.synced_at) {
@@ -196,7 +239,10 @@ footer { font-size: 12px; color: var(--muted); }
   function controls(r, state) {
     const wrap = el("div", "reason");
     const s = state || {};
-    if (r.decision && !s.mode) {
+    const idx = targetEntry(r);
+    if (idx < 0) { wrap.append(el("p", null, "Waiting for the other reviewer.")); return wrap; }
+    const filled = entriesOf(r)[idx].decision;
+    if (filled && !s.mode) {
       const row = el("div", "actions");
       const b = el("button", "btn quiet", "Change decision");
       b.onclick = () => { open.set(r._id, { mode: "change" }); render(); };
@@ -217,7 +263,7 @@ footer { font-size: 12px; color: var(--muted); }
         if (!(s.text || "").trim()) { s.error = "Add a reason so the writer knows what to fix."; render(); return; }
         decide(r, "no", s.text.trim());
       };
-      back.onclick = () => { open.set(r._id, { mode: r.decision ? "change" : undefined }); render(); };
+      back.onclick = () => { open.set(r._id, { mode: filled ? "change" : undefined }); render(); };
       row.append(send, back);
       wrap.append(lab, ta, row);
       if (s.error) wrap.append(el("p", "err", s.error));
@@ -246,11 +292,21 @@ footer { font-size: 12px; color: var(--muted); }
       const d = cur.exists ? cur.data() : null;
       if (!d) throw { code: "gone" };
       if (d.version !== r.version || d.synced_at || !(d.status === "in_review" || d.status === "approved" || d.status === "declined")) throw { code: "stale" };
-      await ref.update({
-        decision, reason: decision === "no" ? reason : "",
-        status: decision === "yes" ? "approved" : "declined",
-        decided_by: me || "", decided_at: new Date().toISOString().replace(/\.\d+Z$/, "Z"),
-      });
+      const i = targetEntry(d);
+      if (i < 0) throw { code: "stale" };
+      const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
+      const list = entriesOf(d).map(e => Object.assign({}, e));
+      Object.assign(list[i], { decision, reason: decision === "no" ? reason : "", decided_by: me || "", decided_at: now });
+      const declined = list.find(e => e.decision === "no");
+      const next = Object.assign({}, d, { reviewer_decisions: list });
+      if (declined || list.every(e => e.decision === "yes")) {
+        Object.assign(next, { decision: declined ? "no" : "yes", reason: declined ? declined.reason : "",
+          status: declined ? "declined" : "approved", decided_by: me || "", decided_at: now });
+      } else {
+        delete next.decision; delete next.reason; delete next.decided_by; delete next.decided_at;
+        next.status = "in_review";
+      }
+      await ref.set(next);
       open.delete(r._id);
     } catch (e) {
       s.busy = false;
@@ -277,7 +333,9 @@ footer { font-size: 12px; color: var(--muted); }
       statusEl.textContent = "Reviews can't load here. Open this page in Claude while signed in, with access from the page owner.";
       return;
     }
-    me = user ? await user.id() : null;
+    const viewer = user ? await user.me() : null;
+    me = viewer ? viewer.id : null;
+    myEmail = viewer && viewer.email ? viewer.email.toLowerCase() : null;
     canWrite = user ? await user.can("data.write") : null;
     readOnly = canWrite === false;
 
