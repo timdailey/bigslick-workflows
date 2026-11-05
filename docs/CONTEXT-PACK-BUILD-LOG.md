@@ -33,6 +33,41 @@ Status: **all four checks recorded.** Two caveats: claims-check has only had a d
 
 Found in the dry run; none changed a result: whether an image placeholder counts as a claim, whether a changed number is `conflicting` or `unsupported`, and what to return when there are no flags.
 
+## T2. client-context
+
+Status: **passing with the limits below, committed to core `main` as `17036c4`, not pushed.** The plan's checks that no local paths remain and that client-onboarding is retired no longer apply, because the local route stays. client-context gains a registry and Drive route ahead of it, plus the isolation rules. client-onboarding stays for local installs, so the skill count stays at 262 and no script or release test changes.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| A request naming client B loads B's doc and names B before working | Pass | A separate agent followed the skill against a real test registry in Drive. Each client's run opened only that client's doc and saw only its marker fact, and the announcement named the right client |
+| A request matching no client stops with a clear message | Pass | Stopped and named what it searched for, with no fallback to local files |
+| Local paths and client-onboarding | Replaced by a decision | A scheduled run never falls back to a local path. Scenario 6 stopped and named the missing column |
+
+Also passed: choosing the real registry over a same-named template, stopping on an archived client, and asking when no client is named and several are active. Core's release gate passes: 262 skills, T1 to T9 and F1.
+
+The first dry run found three wording gaps: use only the matched row because Drive returns the whole tab, treat several active rows as no match, and never name other clients in a stop message. Review then found that a scheduled run on a local install with no registry would stop instead of using its pack, so the no-fallback rule now applies only once a registry is found.
+
+A second agent reran all six scenarios on the final wording, plus two scheduled runs: an unknown client, which stopped and named the client as missing, and no registry, which was simulated. Both stop messages named no other client. Limits: one agent ran every scenario, so it had already seen all the rows, and the stop wording is its own because the skill sets the content, not the text.
+
+The rerun exposed two problems in core, both now fixed:
+
+- **The release gate wrote to the real home folder.** F1 in `scripts/test.sh` ran `activate_client.sh __testco`, which overwrote `~/.claude/product-marketing.md` with the blank template, then deleted `core/clients/_active` and `.agents`. It now runs on a throwaway copy with its own `HOME`. A gate run after the fix left the home file and `core/clients/` unchanged. What that file held before the first gate run on 4 November is unknown. Client packs in `core/clients/` weren't touched.
+- **A blank template counted as a pack.** Section 3 used the first file that existed, so a literal run announced `{CLIENT NAME}`, and a pack for another company would have loaded too. It now skips a blank template, and skips any other company's pack when the request names a client. The wording before this fix predates T2.
+
+A third agent then tested this and section filtering blind, on the final wording. Both earlier runs had used a doc holding only the sections the request named, so they proved nothing about filtering.
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Blank template on the home path | Pass | Skipped, reached "nothing found" |
+| Filled pack for another company | Pass | Skipped, its marker fact not used |
+| Filled pack for the named client | Pass | Loaded and named the client |
+| One section named, from a four-section doc | Pass | Kept only that section, dropped the marker fact in another |
+| Two sections named | Pass | Kept both, dropped the other two |
+
+Limit: to skip another company's pack the agent has to open it first, so the marker fact reached its context even though it wasn't used. The local route can't avoid that.
+
+The test registry came from a CSV, so it isn't formatted by `registry-format.json`, and the skills haven't yet been run from a scheduled task.
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
