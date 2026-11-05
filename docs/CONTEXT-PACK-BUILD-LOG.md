@@ -68,6 +68,35 @@ Limit: to skip another company's pack the agent has to open it first, so the mar
 
 The test registry came from a CSV, so it isn't formatted by `registry-format.json`, and the skills haven't yet been run from a scheduled task.
 
+## T3. company-onboarding
+
+Status: **built and tested once on real files, committed to core `main` as `8abf532`, not pushed.** Two registry cells stayed blank because the test client's files don't hold the answers. The skill now routes any client in the registry to a new `references/drive-intake.md`. The local route is unchanged.
+
+| Done when | Result | Evidence |
+| --- | --- | --- |
+| Brand Context is populated in the client's folder | Pass | A separate agent ran the skill on the test client's 25 Drive files and website. All fifteen headings are intact, no prompts remain, and the doc is 13,526 words |
+| The unplaced list and Sources and intake are filled in | Pass | 8 files unplaced, all project files rather than client material. 16 intake rows: 6 `received`, 10 `left_tbd` |
+| Website claims have `status` = `candidate`, never `approved` | Pass | Checked from the doc's text, not the agent's report: 152 rows, 97 `candidate`, 55 `forbidden`, none `approved`. All 62 website rows are `candidate` or `forbidden`, with `last_checked` set |
+| Registry `reviewers` and cadence columns are filled | Partial | `channels`, `cadence_blog` and `cadence_social` written through Sheets. `reviewers` and `cadence_plan` are blank: the files give no emails or plan frequency, so the skill asks instead of guessing |
+| The Run Log row is written | Pass | Written through Sheets, `result` = `partial` |
+
+The agent found 30 or so disagreements between the client's documents and their website, logged in the doc. That list is what T5's conflict step starts from.
+
+Limits:
+
+- **Wording changed after the run, not rerun.** The agent's questions led to fixes in `drive-intake.md`: when a confidential document can be used, what happens to partly received items, which tag a claim row takes, and how to handle undated disagreements. The filled doc mostly already follows them.
+- **`outside-in-report` didn't run,** so step 8 only took its "not available" path. The follow-up messages were written but not sent, and every question was treated as unanswered.
+- **The first run predated the Sheets connection.** The agent reported the registry values and I wrote them afterwards.
+- **Website reading.** Tavily returned 429 on batches of 5 and 20 URLs, so the agent fetched pages directly. T4 should fetch in small batches.
+- **Partial read.** One deck's last slides were cut off in the read.
+
+Found along the way:
+
+- **`registry-format.json` rejected onboarding rows.** T1 added `company-onboarding` and `outside-in-report` to the Run Log's values but not to the strict dropdown. Fixed in the template and the test registry.
+- **Google Sheets wasn't connected in this session until T3,** so T1's `registry-format.json` had never been applied. It now has been, on the test registry: `Clients` and `Run Log` tabs, frozen headers and dropdowns.
+- **Drive labels a Sheet's text as sample data,** which may hide rows in a long tab. It reads both tabs by name, but client-context now prefers Sheets tools.
+- **Size.** This 13,526-word doc is 118,000 characters, and one read exceeded Claude Code's tool output limit and went to a file. The Claims library and Content inventory are 65% of it. This is real evidence for the pilot's size decision: most runs need neither section.
+
 ## Decisions taken on 4 November
 
 These override the plan where they differ.
@@ -83,6 +112,6 @@ These override the plan where they differ.
 
 ## Still needed
 
-- T3 to T7 test runs need DataForSEO, Tavily, Perplexity and ConnectSafely access, and T4 a paid run of up to $15. The DataForSEO scheduled-run check is still open.
+- DataForSEO, Tavily, Perplexity, ConnectSafely and Google Sheets are all connected in this session. T4 needs a paid run of up to $15. The DataForSEO scheduled-run check is still open.
 
 v1.2 doesn't list ConnectSafely as a service, though the plan doc puts it on the setup checklist. T6 handles it being missing, so this only affects the checklist.
