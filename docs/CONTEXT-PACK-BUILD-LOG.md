@@ -99,12 +99,12 @@ Found along the way:
 
 ## T4. outside-in-report
 
-Status: **built and tested, committed to core `main` as `c84afd3`, not pushed. One Done-when is open:** report mode hasn't been run on a test company, because that's a separate paid run. The skill is in core at `core/skills/outside-in-report/`, with a new `references/pack-mode.md`, and company-onboarding step 8 now calls it.
+Status: **built and tested, and every Done-when has been run.** Committed to core `main` as `c84afd3`, with the fixes from the report-mode run in `932ecdc`, not pushed. The skill is in core at `core/skills/outside-in-report/`, with a new `references/pack-mode.md`, and company-onboarding step 8 now calls it.
 
 | Done when | Result | Evidence |
 | --- | --- | --- |
 | No mention of Frank, prospecting-only framing or real company names | Pass | Searched the skill's files, and the gate passes. `signatures.json` keeps marketing tool names, which aren't clients |
-| Report mode still produces its two Docs on a test company | **Not run** | Needs a further paid run. The stages for it are unchanged from the source skill, apart from generalising |
+| Report mode still produces its two Docs on a test company | Pass | A real run on a public company that isn't a client: eight vendors, 676 records, $4.09 logged of a $10 cap. I read the five-page edition in full and checked the companion's outline against `layouts.md`. Five-page is 2,048 words by the agent's count, inside the target. Companion is about 11,400 words, with all 17 areas |
 | One real pack run finishes under $15 | Pass | $7.02 logged, 47% of the cap. 96 minutes for six vendors. The planner estimated $13.15 |
 | Every record lands in its mapped section with its grade and a `sourced` tag | Pass, with one change | 1,070 records, A 831, B 176, C 63. Every added line has a tag, checked from the doc's text. 388 records landed and 682 were left out, mostly rolled up into findings. So "every record lands" became "every finding lands", and the rest stays in the ledger. Martech stays in the run folder as planned |
 | A missing research tool stops outside-in, names the tool, and intake carries on | Pass, dry run | A blind agent assumed Perplexity was missing. It stopped before any spend and named the tool. It gave a `failed` Run Log row, and step 8 carried on with the client's documents |
@@ -122,6 +122,8 @@ Status: **built and tested, committed to core `main` as `c84afd3`, not pushed. O
 Limits:
 
 - **Wording changed after the paid run.** The hold list, what may be left out, the split size and the reuse wording came from the run and its dry runs, and no paid run has used them. The doc was brought into line by hand.
+- **Report mode review.** The fresh-eyes review made seven must-fix changes, including a false "leads" claim and an overstated AI rank, so the review earns its place. Those fixes weren't reviewed again, and the companion had no fresh-eyes review, which the skill doesn't require.
+- **Report mode request volume.** One agent sent about 600 spaced requests to one rival's site and 266 to another's, well over the briefed batch size. The orchestrating agent also tried one `curl` with a browser user agent on a site that blocks fetches. It got a 403 and didn't repeat it. Neither got past a block, but the skill says only "small, spaced batches", with no ceiling.
 - **The three no-spend tests are dry runs.** Each stopped where the plan allows, with no writes.
 - **Spend is partly estimated.** $4.35 came from DataForSEO cost lines, 23 of them themselves estimates, and $2.67 from planning rates. Two deep-research calls timed out and are logged at $1.00 each. I saw no invoices.
 - **Thin areas:** analyst standing, peer reviews (one review site blocked search), paid search, the client's funding history and web archive checks. The Run Log row says so, with `result` = `partial`.
@@ -132,6 +134,8 @@ Found along the way:
 
 - **Size.** The doc grew from 118,000 to about 190,000 characters, and `Competitors` went from 1,300 to 36,000. That's with 459 records rolled up. More evidence for the pilot's size decision.
 - **Shared browser.** Three collection agents used the browser despite their brief and disturbed the browser agent. `SKILL.md` now says one at a time. Stage 6 re-checked what they touched.
+- **`budget.py`.** Its log is relative to the current folder, so `status` from the wrong folder printed $0.00 and exit 0, and parallel agents could overwrite entries. Both real runs needed a lock of their own. It now stops if there's no log and locks each write. Eight parallel writes all landed.
+- **Report mode wording.** Stage 4 now uploads only `scores.json` and `config.json`, and `links.md` waits for the Docs. A 228 MB zip can't go in chat, so the skill gives its path. Strategic prompts now come from scoping, because that agent runs alongside collection.
 - **Prompt set endpoint.** `prompt-set.md` named a path DataForSEO's docs don't list. Fixed to `llm_mentions/search/live`.
 - **Text aimed at agents.** One rival's `llms.txt` invites AI agents to connect to an MCP endpoint. Nobody connected, and it isn't in the doc.
 
@@ -150,6 +154,6 @@ These override the plan where they differ.
 
 ## Still needed
 
-- DataForSEO, Tavily, Perplexity, ConnectSafely and Google Sheets are all connected in this session. T4 still needs a paid report-mode run on a test company. The DataForSEO scheduled-run check is still open.
+- DataForSEO, Tavily, Perplexity, ConnectSafely and Google Sheets are all connected in this session. The DataForSEO scheduled-run check is still open.
 
 v1.2 doesn't list ConnectSafely as a service, though the plan doc puts it on the setup checklist. T6 handles it being missing, so this only affects the checklist.
