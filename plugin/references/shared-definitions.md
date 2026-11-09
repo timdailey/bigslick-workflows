@@ -24,6 +24,9 @@ Big Slick/
     └── <Client Name>/
         ├── Brand Context         (Google Doc)
         ├── Content Calendar      (Google Sheet: tab Calendar)
+        ├── Onboarding Checklist  (Google Sheet: tab Checklist)
+        ├── Onboarding Questionnaire (Google Sheet: tab Questions; shared with the client contact)
+        ├── Intake/               (the client's documents; shared with the client contact)
         ├── Briefs/
         ├── Drafts/
         ├── Approved/
@@ -41,6 +44,41 @@ A single-company install is the same layout with one client. `Research/` is used
 | Approved | `<date> <title> (<item_id>)` | `2026-11-19 Meeting-free mornings (acme-0042)` |
 
 `<date>` is the planned publish date. The `(<item_id>)` suffix is how a run finds an item's files; never remove it. A declined draft stays in Drafts; the redraft is a new file with the next version number.
+
+### Intake and the onboarding questionnaire
+
+`Intake/` holds every document the client provides. The client puts files there, and onboarding saves a copy there of any file that arrives another way (uploaded in chat, forwarded by email), so a later run can find it. `Sources and intake` in Brand Context lists each file read, with the modified time read, under `Files read`, so a later pass reads only what's new or changed.
+
+`Onboarding Questionnaire` collects what is an answer rather than a document: one row per question, with `question_id`, `question`, `why_we_ask`, `answer`, `answered_by`, `answered_on` and `feeds`. bigslick-setup creates it from `templates/onboarding-questionnaire.csv` and fills in `contact`, `website` and `location`. The client fills in the rest. company-onboarding reads every answer into the place its `feeds` column names, tagged `[confirmed]`. The intake request links to both. setup shares only these two with the client contact, after the user agrees. Neither has a registry column: find them by name under `client_folder_id`.
+
+### Onboarding checklist
+
+`Onboarding Checklist` is a Google Sheet in the client's folder, tab `Checklist`, one row per onboarding step in process order. bigslick-setup creates it from `templates/onboarding-checklist.csv` and keeps it until go-live. Find it by name under `client_folder_id`, like `Research/`; it has no registry column. It shows where onboarding stands. `Sources and intake` in Brand Context stays the record of each requested item, and the checklist only summarises it.
+
+| Column | Values / format |
+| --- | --- |
+| step_id | fixed id from the template; never change, reuse or reorder |
+| phase | `1 Connect`, `2 Intake`, `3 Sign-off`, `4 Go live` |
+| step | what the step is, in plain words |
+| owner | `big_slick` (Claude does it), `user` (the person running setup), `client` (someone at the client) |
+| status | `not_started`, `in_progress`, `waiting`, `done`, `skipped`, `blocked` |
+| waiting_on | who or what the step needs, with a date if one was given; blank unless `waiting` or `blocked` |
+| detail | one line of progress, e.g. `6 of 9 must items received; 3 unplaced files` |
+| link | the doc, folder, page or message the step produced |
+| updated_at | when a run last changed the row |
+
+The skill that does a step updates its row when it starts and when it finishes or stops: `in_progress` while working, `waiting` when it needs someone, `blocked` when a stop needs fixing first, `done` when its outcome is in place, `skipped` when it doesn't apply (for example `sme_profiles` for a client with no SMEs). Update only the rows below that the skill owns, and never mark a row `done` that the outcome doesn't support.
+
+| Rows | Updated by |
+| --- | --- |
+| `connectors`, `location`, `drive_setup`, `review_page`, `pillars`, `strategy`, `scheduled_tasks`, `project`, `first_run` | bigslick-setup (`location` also by company-onboarding, if setup left it blank) |
+| `intake_request`, `documents`, `website`, `reconcile`, `signoff_sent`, `signoff_applied` | company-onboarding (`drive-intake.md`, `sign-off.md`) |
+| `research` | outside-in-report in pack mode |
+| `voices` | brand-voice-extractor |
+| `sme_profiles` | sme-content-review's profile writer |
+| `pillars`, `strategy` | also content-plan-workflow, when the client confirms in chat |
+
+After updating it, show the user the checklist in the chat as a table (step, status, waiting on, detail), with a link to the Sheet. When the user comes back to onboarding, start by reading and showing it, then carry on from the first row that isn't `done` or `skipped`.
 
 ## 3. Big Slick Registry
 
@@ -275,3 +313,8 @@ Everything else is optional. The exact check, the fallback for each optional con
 - The registry `reviewers` column is the only reviewer list (§3). The Run Log gains `company-onboarding` and `outside-in-report`, with duration and spend in `note` (§3).
 - SMEs approve as listed reviewers, and `reviews` gains `sme_verdict` and `sme_flags` (§8). `reviewer_decisions` holds one entry per required reviewer (§8), and the calendar gains `sme_approve` and `sme_reason` (§6).
 - Tavily and Perplexity are onboarding-only services (§9), and each client folder gains `Research/` (§2).
+- Each client folder gains an `Onboarding Checklist` Sheet, updated by every onboarding step and shown to the user as it goes (§2).
+- Each client folder gains `Intake/` and an `Onboarding Questionnaire` Sheet, both shared with the client contact and both linked from the intake request (§2).
+- Onboarding messages to the client are drafted, never sent: a Gmail draft when `gmail` is active, otherwise text in the chat.
+- Claims don't hold up onboarding: the claims item is a `should`, and sign-off doesn't wait for answers on claims.
+- Outside-in research starts as soon as the website URL and location are known, and writes to Brand Context after intake.

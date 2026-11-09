@@ -6,7 +6,9 @@
 | --- | --- | --- |
 | `brand-context.md` | `Brand Context` (Google Doc) | Create from the markdown so headings and the claims table convert. Fill it with company-onboarding, brand-voice-extractor and sme-content-review's profile writer. |
 | `content-calendar.csv` | `Content Calendar` (Google Sheet) | Create from the CSV, then apply `content-calendar-format.json` (tab name `Calendar`, frozen header, dropdowns). |
-| — | `Briefs/`, `Drafts/`, `Approved/`, `Research/` | Empty folders. |
+| `onboarding-checklist.csv` | `Onboarding Checklist` (Google Sheet) | Create from the CSV, then apply `onboarding-checklist-format.json` (tab name `Checklist`, frozen header, dropdowns, a colour per status). One row per onboarding step; each onboarding skill updates its own rows, as shared definitions §2 says. Kept after go-live as the record. |
+| `onboarding-questionnaire.csv` | `Onboarding Questionnaire` (Google Sheet) | Create from the CSV, then apply `onboarding-questionnaire-format.json` (tab name `Questions`, answer column shaded). Setup fills in `contact`, `website` and `location`; the client answers the rest. Shared with the client contact, and linked from the intake request. |
+| — | `Intake/`, `Briefs/`, `Drafts/`, `Approved/`, `Research/` | Empty folders. `Intake/` is shared with the client contact and holds every document they provide. |
 | `registry-clients.csv`, `registry-run-log.csv` | `Big Slick Registry` (Google Sheet, tabs `Clients` and `Run Log`) | One per install, in the `Big Slick` admin folder. Create from the Clients CSV, add a second sheet with the Run Log header, then apply `registry-format.json`. |
 | `review-page.html` | The client's review page (artifact) | Replace `__CLIENT_NAME__`, publish with the `db` and `user` (scopes `profile` and `email`) capabilities, store the URL in `review_page_url`. Reviewers need Contributor access to decide. Reads and writes the `reviews` collection in shared definitions §8. |
 

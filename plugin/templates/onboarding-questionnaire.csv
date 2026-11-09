@@ -1,0 +1,14 @@
+question_id,question,why_we_ask,answer,answered_by,answered_on,feeds
+contact,Who is our main contact for onboarding? Name and email.,We send questions and drafts to this person.,,,,Onboarding messages (setup fills this in)
+website,Your website address.,"We research your site, your content and your competitors from it.",,,,"Outside-in research, Content inventory"
+location,"The country or region whose search results matter most to you, and the language, if not the main one there.",Keyword and search data are pulled for this market.,,,,"Registry seo_location, seo_language"
+reviewers,Who approves content before it's published? One per line: name and email.,They get a review page where they approve or decline each piece.,,,,Registry reviewers
+authors,"Who will publish under their own name, such as executives or experts? One per line: name and LinkedIn profile URL.",We learn each author's voice from their recent LinkedIn posts.,,,,"Registry authors, Voices"
+smes,"Experts who should check technical content? One per line: name, role, topics they own, email for reviews, and hours a week they can give.",Content in their topics goes to them for approval.,,,,"SME profiles, Team map"
+pillars,"The 3 to 5 themes your content should be about, and the products or services to promote.",Every content plan is built on these.,,,,"Content pillars, Products and positioning"
+cadence_blog,Blog posts per month.,Sets how often blog drafts are written.,,,,Registry cadence_blog
+cadence_social,LinkedIn posts per author per week.,Sets how often LinkedIn drafts are written.,,,,Registry cadence_social
+cadence_plan,How often should we plan content: monthly or quarterly?,Sets when the content plan runs.,,,,Registry cadence_plan
+red_lines,"Anything we must never say, legal or regulatory triggers, and disclaimers that must appear. Write ""none"" if there are none.",Every draft is checked against these.,,,,"Style rules, Claims library"
+channels,"Where content is published: blog platform, social scheduler, email tool.",Approved pieces are prepared for these.,,,,Registry channels
+documents,"Put your documents in the shared Intake folder, or paste links here to any folder or file we should read.",Everything in Intake is read and filed into your Brand Context.,,,,Intake folder

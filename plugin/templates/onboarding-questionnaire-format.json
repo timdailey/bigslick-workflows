@@ -1,0 +1,200 @@
+{
+ "note": "Sheets batchUpdate requests for the Onboarding Questionnaire. Replace __SHEET_ID__ with the first sheet's id (an integer) before sending. The answer column is shaded for the client to fill in.",
+ "requests": [
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__SHEET_ID__",
+     "title": "Questions",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "columnCount": 7
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 7
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 100,
+     "startColumnIndex": 0,
+     "endColumnIndex": 7
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "wrapStrategy": "WRAP",
+      "verticalAlignment": "TOP"
+     }
+    },
+    "fields": "userEnteredFormat.wrapStrategy,userEnteredFormat.verticalAlignment"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 100,
+     "startColumnIndex": 3,
+     "endColumnIndex": 4
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 1.0,
+        "green": 0.98,
+        "blue": 0.88
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 100,
+     "startColumnIndex": 5,
+     "endColumnIndex": 6
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": false
+    }
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 0,
+     "endIndex": 1
+    },
+    "properties": {
+     "pixelSize": 110
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 1,
+     "endIndex": 2
+    },
+    "properties": {
+     "pixelSize": 420
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 2,
+     "endIndex": 3
+    },
+    "properties": {
+     "pixelSize": 300
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 3,
+     "endIndex": 4
+    },
+    "properties": {
+     "pixelSize": 420
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 4,
+     "endIndex": 5
+    },
+    "properties": {
+     "pixelSize": 180
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 5,
+     "endIndex": 6
+    },
+    "properties": {
+     "pixelSize": 110
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 6,
+     "endIndex": 7
+    },
+    "properties": {
+     "pixelSize": 220
+    },
+    "fields": "pixelSize"
+   }
+  }
+ ]
+}

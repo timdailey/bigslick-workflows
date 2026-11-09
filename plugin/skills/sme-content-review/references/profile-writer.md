@@ -35,6 +35,8 @@ Don't quote them at length, and leave out a `forbidden` value, a customer or pat
 
 ## 3. Report
 
+If the client's folder has an `Onboarding Checklist`, set its `sme_profiles` row: `waiting` on the SMEs named in `waiting_on` until each approves their profile, then `done`, or `skipped` if the client has no SMEs.
+
 Say what's in each profile, which convictions rest on one source, and what's still `[TBD: <owner>]`. A gap in topics or capacity goes to the gap questions in company-onboarding.
 
 The SME reads and approves their profile before go-live. Until then every line stays as tagged, and for the first two weeks every piece in their topics goes to them, so a No and its reason can adjust the profile by hand.
