@@ -158,7 +158,7 @@ Every fact in Brand Context ends with one tag, written exactly like this:
 | `[assumed]` | Inference, not yet confirmed | State it with a hedge |
 | `[TBD: <owner>]` | Unknown; the named person owns the answer | Never fill it in |
 
-Grade A is the company's own live website. Grade B is a credible third party: major press, an analyst or a review platform. Outside-in records enter as `sourced`, never `confirmed`; the client confirms them at sign-off.
+Grade A is the company's own live website. Grade B is a credible third party: major press, an analyst or a review platform. Outside-in records enter as `sourced`, never `confirmed`; the client confirms them at sign-off. A finding from paid data with no public page (AI visibility, paid media) uses the Drive link to its file in the client's `Research/` run folder as the `<url>`. A `[TBD: <owner>]` owner is a person or a role at the client, never a process such as outside-in research.
 
 ### Claims library table
 
@@ -318,3 +318,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Onboarding messages to the client are drafted, never sent: a Gmail draft when `gmail` is active, otherwise text in the chat.
 - Claims don't hold up onboarding: the claims item is a `should`, and sign-off doesn't wait for answers on claims.
 - Outside-in research starts as soon as the website URL and location are known, and writes to Brand Context after intake.
+- Intake settles a disagreement by an authority document or a newer version before listing it, keeps personal data out, uses confidential documents for everything but their sensitive facts, and checks a link is shared before a message goes out. Outside-in's re-check runs in the session that started collection (§4).
