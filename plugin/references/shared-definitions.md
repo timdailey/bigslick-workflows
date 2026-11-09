@@ -69,8 +69,8 @@ A single-company install is the same layout with one client. `Research/` is used
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
 | schema_version | text | `1.2` | setup |
-| seo_location | text | DataForSEO location name, e.g. `United States` | setup, people |
-| seo_language | text | DataForSEO language name, e.g. `English` | setup, people |
+| seo_location | text | The client's location: the country or region whose search results matter, as a DataForSEO location name, e.g. `United States`. Asked at setup; if blank, company-onboarding asks before any research | setup, company-onboarding, people |
+| seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, company-onboarding, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
 
 The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; client-context reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and onboarding fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
