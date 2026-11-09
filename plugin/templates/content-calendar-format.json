@@ -8,7 +8,7 @@
      "title": "Calendar",
      "gridProperties": {
       "frozenRowCount": 1,
-      "columnCount": 18
+      "columnCount": 20
      }
     },
     "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
@@ -21,7 +21,7 @@
      "startRowIndex": 0,
      "endRowIndex": 1,
      "startColumnIndex": 0,
-     "endColumnIndex": 18
+     "endColumnIndex": 20
     },
     "cell": {
      "userEnteredFormat": {
@@ -235,6 +235,32 @@
    }
   },
   {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 1000,
+     "startColumnIndex": 18,
+     "endColumnIndex": 19
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "yes"
+       },
+       {
+        "userEnteredValue": "no"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
    "updateDimensionProperties": {
     "range": {
      "sheetId": "__SHEET_ID__",
@@ -255,6 +281,20 @@
      "dimension": "COLUMNS",
      "startIndex": 16,
      "endIndex": 17
+    },
+    "properties": {
+     "pixelSize": 240
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 19,
+     "endIndex": 20
     },
     "properties": {
      "pixelSize": 240

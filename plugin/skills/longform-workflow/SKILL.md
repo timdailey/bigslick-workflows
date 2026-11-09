@@ -24,9 +24,10 @@ Before starting:
 1. Load the brief, or create one with seo-content-brief if the topic came from the chat, using seo-dataforseo for keyword and SERP data within the client's `seo_budget_per_run`.
 2. Draft with write-blog using the content type's template and the brand voice.
 3. Run editorial-qa, brand-review and claims-check. Fix what they find.
-4. Save the draft to Drafts using the file name format in shared definitions, link it from the calendar row (add a row if the topic came from the chat) and set status `drafted`.
-5. Call send-to-review.
-6. Add a row to the registry's Run Log tab.
+4. Run sme-content-review right after claims-check. Apply its `humanize` and `channel` fixes, and leave the rest for the reviewer.
+5. Save the draft to Drafts using the file name format in shared definitions, link it from the calendar row (add a row if the topic came from the chat) and set status `drafted`.
+6. Call send-to-review with the claims-check flags and the sme-content-review result.
+7. Add a row to the registry's Run Log tab.
 
 ## Content type templates
 

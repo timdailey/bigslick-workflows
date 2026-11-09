@@ -154,7 +154,7 @@
       "type": "ONE_OF_LIST",
       "values": [
        {
-        "userEnteredValue": "1.1"
+        "userEnteredValue": "1.2"
        }
       ]
      },
@@ -269,6 +269,12 @@
        },
        {
         "userEnteredValue": "learning-loop"
+       },
+       {
+        "userEnteredValue": "company-onboarding"
+       },
+       {
+        "userEnteredValue": "outside-in-report"
        }
       ]
      },

@@ -16,7 +16,7 @@ Before starting:
 
 ## Steps
 
-1. Query the review page at `review_page_url` (ArtifactData, collection `reviews`) for documents with `status` `approved` or `declined` and no `synced_at`, plus calendar rows whose `approve` column is filled in (fallback). For a calendar decision, also write it to the matching review document (`decision`, `reason`, `status`, `decided_at`; `decided_by` blank) so the page stops showing it as waiting.
+1. Query the review page at `review_page_url` (ArtifactData, collection `reviews`) for documents with `status` `approved` or `declined` and no `synced_at`, plus calendar rows whose `approve` or `sme_approve` column is filled in (fallback). A calendar decision fills one `reviewer_decisions` entry: `approve` and `reason` fill the `any` entry, and `sme_approve` and `sme_reason` fill the SME's. Leave `decided_by` blank. Then set the item-level `decision`, `reason`, `status` and `decided_at` as shared definitions §8 says, so the page stops showing it as waiting: `declined` as soon as any entry is `no`, `approved` once every entry is `yes`. An item with an entry still blank stays `in_review`, so leave it for a later run.
 2. Topic decisions: set the calendar row to `topic_approved` or `topic_declined`.
 3. Draft approvals: set `approved`, copy the final version to Approved and fill `final_link`. Then publish by item type, using the connector rule's fallbacks:
    - Social post: if `typefully` or `taplio` is active, schedule it and set `scheduled`; otherwise set `ready_to_post`.
