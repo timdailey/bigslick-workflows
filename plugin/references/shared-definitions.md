@@ -63,7 +63,7 @@ A single-company install is the same layout with one client. `Research/` is used
 | owner | `big_slick` (Claude does it), `user` (the person running setup), `client` (someone at the client) |
 | status | `not_started`, `in_progress`, `waiting`, `done`, `skipped`, `blocked` |
 | waiting_on | who or what the step needs, with a date if one was given; blank unless `waiting` or `blocked` |
-| detail | one line of progress, e.g. `6 of 9 must items received; 3 unplaced files` |
+| detail | one line of progress, e.g. `6 of 8 must items received; 3 unplaced files` |
 | link | the doc, folder, page or message the step produced |
 | updated_at | when a run last changed the row |
 
@@ -76,7 +76,7 @@ The skill that does a step updates its row when it starts and when it finishes o
 | `research` | outside-in-report in pack mode |
 | `voices` | brand-voice-extractor |
 | `sme_profiles` | sme-content-review's profile writer |
-| `pillars`, `strategy` | also content-plan-workflow, when the client confirms in chat |
+| `pillars`, `strategy` | also content-plan-workflow, when the client confirms in chat; `pillars` also by company-onboarding's sign-off, when the client confirms them in their reply |
 
 After updating it, show the user the checklist in the chat as a table (step, status, waiting on, detail), with a link to the Sheet. When the user comes back to onboarding, start by reading and showing it, then carry on from the first row that isn't `done` or `skipped`.
 

@@ -35,6 +35,15 @@ Onboarding runs over days, across several chats, so the client's `Onboarding Che
    - Every pillar under `Content pillars` is tagged `[confirmed]`. A pillar the client hasn't confirmed, including one Big Slick proposed, doesn't count.
    - The client has approved the content strategy: the first content plan, run in chat with content-plan-workflow, covering the topics by pillar and the posts per month.
 
-   Until both are true, create no scheduled task for any workflow, and tell the user which one is still open. The `pillars` and `strategy` rows show which: each is `done` only when its condition above holds. Set `scheduled_tasks` to `done` once the tasks exist, with their names in `detail`.
+   Until both are true, create no scheduled task for any workflow, and tell the user which one is still open.
+
+   **Go-live check.** Before creating any task, and whenever the user asks what's left, show this as a table, one line per condition, each marked met or not, with who owes it:
+   - sign-off done (`signoff_applied`);
+   - pillars confirmed (`pillars`) and the first content plan approved (`strategy`);
+   - `reviewers`, `cadence_plan`, `cadence_blog` and `cadence_social` filled in the registry;
+   - the review page shared with the reviewers (`review_page`);
+   - for LinkedIn only, a `Voice:` section for each author (`voices`).
+
+   Create a workflow's task only when every condition that workflow needs is met: LinkedIn needs voices, and the content plan and long-form don't. SME profiles don't block go-live, because an SME without a profile simply isn't listed as a reviewer. The `pillars` and `strategy` rows show which: each is `done` only when its condition above holds. Set `scheduled_tasks` to `done` once the tasks exist, with their names in `detail`.
 9. Write Project instructions for the user to paste into a new Claude Project for this client. Set `project` to `waiting` on the user until they say it's pasted.
 10. Run one workflow end to end with the user as reviewer, and set `first_run` with the result. Once every row is `done` or `skipped`, tell the user onboarding is complete.
