@@ -35,7 +35,9 @@ Onboarding ends here, once sign-off, voices, SME profiles and the review page ar
 
 ## Workflow phase
 
-These steps run after onboarding, starting with the first content plan (content-plan-workflow), which builds the pillars and proposes the cadence for the client to approve. They fill the checklist's phase 4 rows.
+These steps run after onboarding, starting with the first content plan (content-plan-workflow), which builds the pillars and proposes the cadence for the client to approve. They fill the checklist's phase 4 rows. This phase also collects what onboarding doesn't ask for:
+- **The annual marketing plan.** The first content plan asks for it, and plans from what exists if there isn't one.
+- **The org chart and the approval rules:** who signs off what, turnaround and legal triggers. Ask for them before the first draft goes to send-to-review, and record them in `Team map` and the Claims library. Until then, the registry `reviewers` and the red lines from the questionnaire are what review uses.
 
 8. Once the client has signed off **and** has confirmed their content pillars and content strategy, create the scheduled tasks for the chosen workflows and cadence. Each task names its client. Confirmed means both of these:
    - Every pillar under `Content pillars` is tagged `[confirmed]`. The first content plan proposes them; a pillar the client hasn't confirmed doesn't count.

@@ -63,7 +63,7 @@ A single-company install is the same layout with one client. `Research/` is used
 | owner | `big_slick` (Claude does it), `user` (the person running setup), `client` (someone at the client) |
 | status | `not_started`, `in_progress`, `waiting`, `done`, `skipped`, `blocked` |
 | waiting_on | who or what the step needs, with a date if one was given; blank unless `waiting` or `blocked` |
-| detail | one line of progress, e.g. `6 of 8 must items received; 3 unplaced files` |
+| detail | one line of progress, e.g. `3 of 5 must items received; 3 unplaced files` |
 | link | the doc, folder, page or message the step produced |
 | updated_at | when a run last changed the row |
 
@@ -322,3 +322,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Workflows load only the Brand Context sections they name, through client-context (§4).
 - Cadence is set by the first content plan, when the client approves the strategy, not during onboarding (§3).
 - Pillars, cadence, scheduled tasks and the first workflow run move to a workflow phase after onboarding, started by the first content plan. Every SME is also an author, with a `Voice:` section built during onboarding from the same material as their profile (§2).
+- Onboarding builds brand guidelines from existing content when the client has none. The annual plan, the org chart and the approval rules move to the workflow phase; without an annual plan, the content plan works from existing schedules and cadences.
