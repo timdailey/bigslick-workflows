@@ -58,7 +58,7 @@ A single-company install is the same layout with one client. `Research/` is used
 | Column | Values / format |
 | --- | --- |
 | step_id | fixed id from the template; never change, reuse or reorder |
-| phase | `1 Connect`, `2 Intake`, `3 Sign-off`, `4 Go live` |
+| phase | `1 Connect`, `2 Intake`, `3 Sign-off` (onboarding), then `4 Workflow phase`, which the workflow skills fill after onboarding |
 | step | what the step is, in plain words |
 | owner | `big_slick` (Claude does it), `user` (the person running setup), `client` (someone at the client) |
 | status | `not_started`, `in_progress`, `waiting`, `done`, `skipped`, `blocked` |
@@ -76,7 +76,7 @@ The skill that does a step updates its row when it starts and when it finishes o
 | `research` | outside-in-report in pack mode |
 | `voices` | brand-voice-extractor |
 | `sme_profiles` | sme-content-review's profile writer |
-| `pillars`, `strategy` | also content-plan-workflow, when the client confirms in chat; `pillars` also by company-onboarding's sign-off, when the client confirms them in their reply |
+| `pillars`, `strategy` | also content-plan-workflow, which builds the pillars and has the client confirm them and the first plan |
 
 After updating it, show the user the checklist in the chat as a table (step, status, waiting on, detail), with a link to the Sheet. When the user comes back to onboarding, start by reading and showing it, then carry on from the first row that isn't `done` or `skipped`.
 
@@ -321,3 +321,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Intake settles a disagreement by an authority document or a newer version before listing it, keeps personal data out, uses confidential documents for everything but their sensitive facts, and checks a link is shared before a message goes out. Outside-in's re-check runs in the session that started collection (§4).
 - Workflows load only the Brand Context sections they name, through client-context (§4).
 - Cadence is set by the first content plan, when the client approves the strategy, not during onboarding (§3).
+- Pillars, cadence, scheduled tasks and the first workflow run move to a workflow phase after onboarding, started by the first content plan. Every SME is also an author, with a `Voice:` section built during onboarding from the same material as their profile (§2).

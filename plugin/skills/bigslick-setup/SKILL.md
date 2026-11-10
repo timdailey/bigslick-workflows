@@ -28,11 +28,17 @@ Onboarding runs over days, across several chats, so the client's `Onboarding Che
    - `Onboarding Checklist`: a Google Sheet created from `onboarding-checklist.csv`, then formatted with the requests in `onboarding-checklist-format.json` (put the new sheet's id in place of `__SHEET_ID__`). Fill in the rows for what has already happened: `connectors` and `drive_setup` are `done`, and `location` is `done`, or `waiting` on the user if it's blank. Then show it to the user for the first time.
    Record every new file and folder ID in the client's registry row, except `Intake`, `Research`, `Onboarding Questionnaire` and `Onboarding Checklist`, which have no column: skills find them by name.
 4. Build the Brand Context doc with company-onboarding (writes to Drive), through to the client's sign-off. It starts outside-in research straight away, from the website URL and location, so the research runs while the client gathers documents. It updates the rows from `intake_request` to `signoff_applied` itself, and outside-in updates `research`. Steps 5 to 7 can run while sign-off is out.
-5. Capture voices with brand-voice-extractor, from the `bigslick-strategy` bundle: it reads each author's LinkedIn posts from the profile URL intake collected, plus any uploaded samples. It updates `voices`.
-6. Write each SME's profile with sme-content-review's profile writer. It updates `sme_profiles`, which stays `waiting` on each SME until they approve their profile, or is `skipped` if the client has no SMEs.
+5. Write each SME's profile with sme-content-review's profile writer. It updates `sme_profiles`, which stays `waiting` on each SME until they approve their profile, or is `skipped` if the client has no SMEs.
+6. Capture voices with brand-voice-extractor, from the `bigslick-strategy` bundle, for every author and every SME. SMEs are authors too: their voices are built from the same material as their profiles, their LinkedIn posts and the writing their profile cites, so run this after step 5. It reads each author's LinkedIn posts from the profile URL the client gave, plus any uploaded samples, adds each to the registry `authors` column, and updates `voices`.
 7. Publish the client's review page from `templates/review-page.html`: replace every `__CLIENT_NAME__` with the client's display name, publish it as an artifact with `capabilities: {"db": {}, "user": {"scopes": ["profile", "email"]}}` and icon `checklist`, and record its URL in the registry's `review_page_url`. Don't seed the database; send-to-review fills it. Tell the user to share the page with each person in `reviewers` at **Contributor** or above (the Share menu): Viewers and Commenters can read the page but not decide. Then publish the dashboard from its template. Set `review_page` to `waiting` on the user until they confirm the page is shared, then `done`.
+Onboarding ends here, once sign-off, voices, SME profiles and the review page are done or skipped. Tell the user so, show the checklist, and say that the workflow phase comes next.
+
+## Workflow phase
+
+These steps run after onboarding, starting with the first content plan (content-plan-workflow), which builds the pillars and proposes the cadence for the client to approve. They fill the checklist's phase 4 rows.
+
 8. Once the client has signed off **and** has confirmed their content pillars and content strategy, create the scheduled tasks for the chosen workflows and cadence. Each task names its client. Confirmed means both of these:
-   - Every pillar under `Content pillars` is tagged `[confirmed]`. A pillar the client hasn't confirmed, including one Big Slick proposed, doesn't count.
+   - Every pillar under `Content pillars` is tagged `[confirmed]`. The first content plan proposes them; a pillar the client hasn't confirmed doesn't count.
    - The client has approved the content strategy: the first content plan, run in chat with content-plan-workflow, covering the topics by pillar and the cadence it proposes.
 
    Until both are true, create no scheduled task for any workflow, and tell the user which one is still open.
@@ -46,4 +52,4 @@ Onboarding runs over days, across several chats, so the client's `Onboarding Che
 
    Create a workflow's task only when every condition that workflow needs is met: LinkedIn needs voices, and the content plan and long-form don't. SME profiles don't block go-live, because an SME without a profile simply isn't listed as a reviewer. The `pillars` and `strategy` rows show which: each is `done` only when its condition above holds. Set `scheduled_tasks` to `done` once the tasks exist, with their names in `detail`.
 9. Write Project instructions for the user to paste into a new Claude Project for this client. Set `project` to `waiting` on the user until they say it's pasted.
-10. Run one workflow end to end with the user as reviewer, and set `first_run` with the result. Once every row is `done` or `skipped`, tell the user onboarding is complete.
+10. Run one workflow end to end with the user as reviewer, and set `first_run` with the result. Once every row is `done` or `skipped`, tell the user the client is live.
