@@ -33,14 +33,14 @@ Onboarding runs over days, across several chats, so the client's `Onboarding Che
 7. Publish the client's review page from `templates/review-page.html`: replace every `__CLIENT_NAME__` with the client's display name, publish it as an artifact with `capabilities: {"db": {}, "user": {"scopes": ["profile", "email"]}}` and icon `checklist`, and record its URL in the registry's `review_page_url`. Don't seed the database; send-to-review fills it. Tell the user to share the page with each person in `reviewers` at **Contributor** or above (the Share menu): Viewers and Commenters can read the page but not decide. Then publish the dashboard from its template. Set `review_page` to `waiting` on the user until they confirm the page is shared, then `done`.
 8. Once the client has signed off **and** has confirmed their content pillars and content strategy, create the scheduled tasks for the chosen workflows and cadence. Each task names its client. Confirmed means both of these:
    - Every pillar under `Content pillars` is tagged `[confirmed]`. A pillar the client hasn't confirmed, including one Big Slick proposed, doesn't count.
-   - The client has approved the content strategy: the first content plan, run in chat with content-plan-workflow, covering the topics by pillar and the posts per month.
+   - The client has approved the content strategy: the first content plan, run in chat with content-plan-workflow, covering the topics by pillar and the cadence it proposes.
 
    Until both are true, create no scheduled task for any workflow, and tell the user which one is still open.
 
    **Go-live check.** Before creating any task, and whenever the user asks what's left, show this as a table, one line per condition, each marked met or not, with who owes it:
    - sign-off done (`signoff_applied`);
    - pillars confirmed (`pillars`) and the first content plan approved (`strategy`);
-   - `reviewers`, `cadence_plan`, `cadence_blog` and `cadence_social` filled in the registry;
+   - `reviewers` filled in the registry, and `cadence_plan`, `cadence_blog` and `cadence_social` filled (the first content plan sets these, as part of the strategy approval);
    - the review page shared with the reviewers (`review_page`);
    - for LinkedIn only, a `Voice:` section for each author (`voices`).
 

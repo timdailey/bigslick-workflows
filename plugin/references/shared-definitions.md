@@ -1,6 +1,6 @@
 # Big Slick Shared Definitions
 
-Version 1.2 · Nov 4, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
+Version 1.2 · Nov 10, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
 
 Workflows never call each other. They hand off through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
 
@@ -101,9 +101,9 @@ After updating it, show the user the checklist in the chat as a table (step, sta
 | approver_in_chat | list | emails of people whose go-ahead in a chat counts as approval | setup, people |
 | channels | list | values from §5 | setup, people |
 | content_types | list | values from §5 | setup, people |
-| cadence_plan | text | `monthly` or `quarterly` | setup, people |
-| cadence_blog | number | posts per month | setup, people |
-| cadence_social | number | posts per week, per author | setup, people |
+| cadence_plan | text | `monthly` or `quarterly` | content-plan-workflow (first plan), people |
+| cadence_blog | number | posts per month | content-plan-workflow (first plan), people |
+| cadence_social | number | posts per week, per author | content-plan-workflow (first plan), people |
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
 | schema_version | text | `1.2` | setup |
@@ -111,7 +111,7 @@ After updating it, show the user the checklist in the chat as a table (step, sta
 | seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, company-onboarding, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
 
-The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; client-context reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and onboarding fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
+The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; client-context reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and the first content plan fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
 
 ### Tab `Run Log` (one row per run, newest at the bottom)
 
@@ -320,3 +320,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Outside-in research starts as soon as the website URL and location are known, and writes to Brand Context after intake.
 - Intake settles a disagreement by an authority document or a newer version before listing it, keeps personal data out, uses confidential documents for everything but their sensitive facts, and checks a link is shared before a message goes out. Outside-in's re-check runs in the session that started collection (§4).
 - Workflows load only the Brand Context sections they name, through client-context (§4).
+- Cadence is set by the first content plan, when the client approves the strategy, not during onboarding (§3).
