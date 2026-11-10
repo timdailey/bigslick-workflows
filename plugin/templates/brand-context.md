@@ -76,6 +76,6 @@ Every factual claim a draft may make, and any it must not. claims-check treats a
 
 Every item onboarding asked for, and where it stands.
 
-| item | tier | status | owner | date | location |
-| --- | --- | --- | --- | --- | --- |
-| [Requested item] | [must, should or nice] | [received, coming_later, does_not_exist, big_slick_to_build or left_tbd] | [Who is responsible] | [YYYY-MM-DD] | [Link in Drive] |
+| item | tier | status | owner | date | location | notes |
+| --- | --- | --- | --- | --- | --- | --- |
+| [Requested item] | [must, should, nice or workflow] | [received, coming_later, does_not_exist, big_slick_to_build or left_tbd] | [Who is responsible] | [YYYY-MM-DD] | [Link in Drive] | [What's missing, what it was built from, or why it's left] |

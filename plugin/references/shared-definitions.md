@@ -187,11 +187,12 @@ One row per item onboarding asked for.
 | Column | Meaning |
 | --- | --- |
 | item | The requested item |
-| tier | `must`, `should`, `nice` |
+| tier | `must`, `should`, `nice`, or `workflow` for an item the workflow phase collects (never counted as a must) |
 | status | `received`, `coming_later`, `does_not_exist`, `big_slick_to_build`, `left_tbd` |
 | owner | Who is responsible for it |
 | date | Date it is due, or date it was received |
 | location | Link to the item in Drive, once received |
+| notes | One short line: what's still missing, what Big Slick built it from, or why it's left |
 
 ## 5. Value lists
 
@@ -323,3 +324,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Cadence is set by the first content plan, when the client approves the strategy, not during onboarding (§3).
 - Pillars, cadence, scheduled tasks and the first workflow run move to a workflow phase after onboarding, started by the first content plan. Every SME is also an author, with a `Voice:` section built during onboarding from the same material as their profile (§2).
 - Onboarding builds brand guidelines from existing content when the client has none. The annual plan, the org chart and the approval rules move to the workflow phase; without an annual plan, the content plan works from existing schedules and cadences.
+- `Sources and intake` gains a `notes` column and a `workflow` tier for items the workflow phase collects (§4).
