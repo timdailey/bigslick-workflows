@@ -127,7 +127,7 @@ The registry is the one home for settings. Runs read it on every start, so a cha
 
 ## 4. Brand Context doc
 
-Skills find sections by their exact heading text. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
+Skills find sections by their exact heading text, and load only the sections they name through client-context, because a filled doc runs past 100,000 characters. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
 
 1. `Company facts`
 2. `Audience and ICP`
@@ -319,3 +319,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Claims don't hold up onboarding: the claims item is a `should`, and sign-off doesn't wait for answers on claims.
 - Outside-in research starts as soon as the website URL and location are known, and writes to Brand Context after intake.
 - Intake settles a disagreement by an authority document or a newer version before listing it, keeps personal data out, uses confidential documents for everything but their sensitive facts, and checks a link is shared before a message goes out. Outside-in's re-check runs in the session that started collection (§4).
+- Workflows load only the Brand Context sections they name, through client-context (§4).

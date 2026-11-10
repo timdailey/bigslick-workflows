@@ -20,7 +20,7 @@ A calendar row, a topic typed into the chat, or a repurposing request (source do
 
 ## Steps
 
-1. Load the author's voice section from Brand Context.
+1. Load the client with client-context, asking for these Brand Context sections only: `Voices` (keep only the author's `Voice:` section), `Style rules`, `Audience and ICP`, `Products and positioning`, `Content pillars` and `Claims library`.
 2. Draft the post using the platform rules below.
 3. Run claims-check.
 4. For a LinkedIn post, run sme-content-review right after claims-check. Apply its `humanize` and `channel` fixes, and leave the rest for the reviewer.
