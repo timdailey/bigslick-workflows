@@ -2,7 +2,7 @@
 
 Content workflows for Big Slick. Works for one company or a consultant with many clients.
 
-**Status:** v0.8.0, shared definitions v1.3. Onboarding and review are built and tested on a test client. content-plan-workflow is built but not yet run against DataForSEO; the other content workflows are still outlines.
+**Status:** v0.9.0, shared definitions v1.3. Onboarding and review are built and tested on a test client. content-plan-workflow (simulated on a real client) and longform-workflow are built; social and repurpose are still outlines.
 
 ## Skills
 

@@ -226,7 +226,7 @@ One row per content item. Never delete a row; set its status instead.
 | title | text | working title | content plan, people |
 | keyword | text | target keyword; blank for social | content plan |
 | pillar | text | a `Content pillars` heading from Brand Context | content plan |
-| author | text | an `authors` name from the registry | content plan, people |
+| author | text | the byline: an `authors` name from the registry, or the client's `client_name` for a company byline in the company voice (`Style rules`). Proposed by the content plan; the long-form workflow asks the user to confirm it before drafting | content plan, longform-workflow, people |
 | source_item_id | text | for repurposed pieces, the item_id they came from | repurpose |
 | brief_link | URL | | content plan |
 | draft_link | URL | the latest version | long-form, social, repurpose |
@@ -351,4 +351,4 @@ Everything else is optional. The exact check, the fallback for each optional con
 - The registry gains `claims_sheet_id` as its last column, and `schema_version` becomes `1.3` (§3).
 - Brand Context keeps its doc ID for good and is edited only in place (§4). Found in the first onboarding test: the Docs connector can't edit large tables in place, so the run uploaded a new doc, which would break the client's sign-off link and comments.
 - **Migrating a v1.2 client:** bigslick-setup does it the next time the user comes back to that client. It creates the Sheet from the templates, copies each table's rows into its tab, replaces each table in the doc with its pointer line (deleting the table's range in place, so the doc ID stays), fills `claims_sheet_id` and sets `schema_version` to `1.3`. Until then, bigslick-client reads the tables from the doc.
-
+- The calendar `author` can be the client's `client_name`, for a company byline written in the company voice (§6). The long-form workflow asks who the author is before every draft in a chat; a scheduled run skips a long-form row with no author.

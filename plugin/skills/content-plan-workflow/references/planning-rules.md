@@ -63,7 +63,7 @@ LinkedIn rows are angles, not keywords: a point of view, a lesson, a customer st
 
 ## 6. Authors and dates
 
-- **Long-form author:** the SME whose `SME profiles` topics cover the pillar, if one is in `authors`; otherwise the first name in `authors`, or blank for the client to fill.
+- **Long-form author:** a suggestion, not a decision: the long-form workflow asks the user who the piece is by before it drafts. Suggest the SME whose `SME profiles` topics cover the pillar if the piece is first-person (their view or experience) and they're in `authors`; otherwise the company, as `client_name`. Don't give one SME every row: check their review time in `SME profiles`.
 - **LinkedIn author:** each row belongs to one author, at that author's cadence.
 - **Dates:** spread long-form evenly across the horizon on Tuesdays to Thursdays. Spread each author's LinkedIn rows across Monday to Thursday, never two by the same author on one day. Put a launch-related topic one to two weeks before its launch date. Skip any blackout or embargo dates in `Marketing plan`. Dates are in the client's `timezone`.
 
