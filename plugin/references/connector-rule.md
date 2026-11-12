@@ -4,7 +4,7 @@ Every Big Slick workflow runs this check before it does any work, and follows th
 
 ## 1. Check, before any work
 
-Decide what is connected by looking at the tools available in this session. Don't make a paid call just to test a connector.
+Decide what is connected by looking at the tools available in this session. Connector tools are often deferred when a session starts, especially in a scheduled run: if a service's tools aren't listed, search for them (for example with ToolSearch, `dataforseo`) before deciding it's missing. Don't make a paid call just to test a connector.
 
 ### Required services
 

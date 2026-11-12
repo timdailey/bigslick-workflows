@@ -8,7 +8,7 @@ Pass the registry's `seo_location` as `location_name` and `seo_language` as `lan
 
 ## Tools
 
-The connector's tool names can change. Use whichever present tool does each job below; the names are the usual ones. Don't call a tool just to see whether it works.
+The names below were confirmed on the live connector on 12 November 2026 (prefixed `mcp__DataForSEO__`). Names can change, so use whichever present tool does each job. Don't call a tool just to see whether it works.
 
 | Job | Usual tool | Planning cost |
 |---|---|---|
@@ -18,7 +18,9 @@ The connector's tool names can change. Use whichever present tool does each job 
 | Difficulty for a shortlist | `dataforseo_labs_bulk_keyword_difficulty` | $0.01 |
 | Intent for a shortlist | `dataforseo_labs_search_intent` | $0.01 |
 | Volume, if the ideas call didn't return it | `kw_data_google_ads_search_volume` (one batch) | $0.05 |
-| Current results for one keyword | `serp_organic_live_advanced` | $0.002 |
+| Current results for one keyword | `serp_organic_live_advanced` (depth 10 is the minimum) | $0.002 |
+
+**Reading SERP results:** the `domain` field on organic results comes back as `google.com`, with `google.com` redirect URLs. Take each result's real site from its `website_name` or breadcrumb field instead.
 
 ## Call order and budget
 
@@ -34,7 +36,7 @@ A typical first plan with 4 pillars and 3 competitors makes about 15 calls and c
 
 ## Spend and records
 
-- Log each call's `cost` field when the response has one. When it doesn't, use the planning cost above and mark it estimated.
+- The connector's responses carry no `cost` field (checked 12 November 2026), so count calls and log the planning cost above for each, marked estimated. Actual spend is in the client's DataForSEO dashboard. If a response does carry `cost`, log that instead.
 - Keep the numbers you use (volume, difficulty, intent, position) with each candidate topic for the scoring step and the briefs. Don't save raw responses to Drive.
-- The Run Log `note` gives calls and spend, e.g. `14 DataForSEO calls, $0.62 actual + $0.10 estimated`.
+- The Run Log `note` gives calls and spend, e.g. `14 DataForSEO calls, $0.72 estimated`.
 - If a call fails, retry it once. If it fails again, carry on without it and say which data is missing in the plan and the Run Log.
