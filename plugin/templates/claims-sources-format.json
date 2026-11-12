@@ -1,0 +1,374 @@
+{
+ "note": "Sheets batchUpdate requests for the Claims and Sources Sheet. Replace __CLAIMS_SHEET_ID__ with the first sheet's id and __SOURCES_SHEET_ID__ with the second's (integers) before sending.",
+ "requests": [
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "title": "Claims",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "columnCount": 11
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 11
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 6,
+     "endColumnIndex": 7
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "approved"
+       },
+       {
+        "userEnteredValue": "candidate"
+       },
+       {
+        "userEnteredValue": "forbidden"
+       },
+       {
+        "userEnteredValue": "must_qualify"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 10,
+     "endColumnIndex": 11
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "yes"
+       },
+       {
+        "userEnteredValue": "no"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 4,
+     "endColumnIndex": 5
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 8,
+     "endColumnIndex": 9
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 9,
+     "endColumnIndex": 10
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 1,
+     "endIndex": 2
+    },
+    "properties": {
+     "pixelSize": 420
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 2,
+     "endIndex": 3
+    },
+    "properties": {
+     "pixelSize": 260
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 5,
+     "endIndex": 6
+    },
+    "properties": {
+     "pixelSize": 260
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__CLAIMS_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 7,
+     "endIndex": 8
+    },
+    "properties": {
+     "pixelSize": 220
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateSheetProperties": {
+    "properties": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "title": "Sources",
+     "gridProperties": {
+      "frozenRowCount": 1,
+      "columnCount": 7
+     }
+    },
+    "fields": "title,gridProperties.frozenRowCount,gridProperties.columnCount"
+   }
+  },
+  {
+   "repeatCell": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "startRowIndex": 0,
+     "endRowIndex": 1,
+     "startColumnIndex": 0,
+     "endColumnIndex": 7
+    },
+    "cell": {
+     "userEnteredFormat": {
+      "textFormat": {
+       "bold": true
+      },
+      "backgroundColorStyle": {
+       "rgbColor": {
+        "red": 0.93,
+        "green": 0.93,
+        "blue": 0.93
+       }
+      }
+     }
+    },
+    "fields": "userEnteredFormat.textFormat.bold,userEnteredFormat.backgroundColorStyle"
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 1,
+     "endColumnIndex": 2
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "must"
+       },
+       {
+        "userEnteredValue": "should"
+       },
+       {
+        "userEnteredValue": "nice"
+       },
+       {
+        "userEnteredValue": "workflow"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 2,
+     "endColumnIndex": 3
+    },
+    "rule": {
+     "condition": {
+      "type": "ONE_OF_LIST",
+      "values": [
+       {
+        "userEnteredValue": "received"
+       },
+       {
+        "userEnteredValue": "coming_later"
+       },
+       {
+        "userEnteredValue": "does_not_exist"
+       },
+       {
+        "userEnteredValue": "big_slick_to_build"
+       },
+       {
+        "userEnteredValue": "left_tbd"
+       }
+      ]
+     },
+     "strict": true,
+     "showCustomUi": true
+    }
+   }
+  },
+  {
+   "setDataValidation": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "startRowIndex": 1,
+     "endRowIndex": 2000,
+     "startColumnIndex": 4,
+     "endColumnIndex": 5
+    },
+    "rule": {
+     "condition": {
+      "type": "DATE_IS_VALID"
+     },
+     "strict": true
+    }
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 0,
+     "endIndex": 1
+    },
+    "properties": {
+     "pixelSize": 280
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 5,
+     "endIndex": 6
+    },
+    "properties": {
+     "pixelSize": 260
+    },
+    "fields": "pixelSize"
+   }
+  },
+  {
+   "updateDimensionProperties": {
+    "range": {
+     "sheetId": "__SOURCES_SHEET_ID__",
+     "dimension": "COLUMNS",
+     "startIndex": 6,
+     "endIndex": 7
+    },
+    "properties": {
+     "pixelSize": 360
+    },
+    "fields": "pixelSize"
+   }
+  }
+ ]
+}

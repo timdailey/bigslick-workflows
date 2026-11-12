@@ -30,11 +30,9 @@ Big Slick reads this doc on every run. Keep the fifteen section headings exactly
 
 ## Claims library
 
-Every factual claim a draft may make, and any it must not. claims-check treats anything not in this table as unsupported, and passes only `approved` rows that haven't expired, or `must_qualify` rows used with their qualifier.
+Every factual claim a draft may make, and any it must not. claims-check treats anything not in that table as unsupported, and passes only `approved` rows that haven't expired, or `must_qualify` rows used with their qualifier.
 
-| claim_id | claim | source | owner | approved_on | notes | status | provenance | last_checked | expires_on | logo_ok |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| C-001 | [Exact wording of the claim] | [Link or document that proves it] | [Who approved it, or outside-in] | [YYYY-MM-DD] | [Limits, or the qualifier a must_qualify claim needs] | [approved, candidate, forbidden or must_qualify] | [Provenance tag] | [YYYY-MM-DD] | [YYYY-MM-DD] | [yes or no; blank if it names no customer] |
+The table is the `Claims` tab of this client's Claims and Sources Sheet: [Claims and Sources link]
 
 ## Voices
 
@@ -76,6 +74,4 @@ Every factual claim a draft may make, and any it must not. claims-check treats a
 
 Every item onboarding asked for, and where it stands.
 
-| item | tier | status | owner | date | location | notes |
-| --- | --- | --- | --- | --- | --- | --- |
-| [Requested item] | [must, should, nice or workflow] | [received, coming_later, does_not_exist, big_slick_to_build or left_tbd] | [Who is responsible] | [YYYY-MM-DD] | [Link in Drive] | [What's missing, what it was built from, or why it's left] |
+The table is the `Sources` tab of this client's Claims and Sources Sheet: [Claims and Sources link]. The logs (Files read, Received in part, Unplaced documents, Disagreements, Gap questions, Sign-off log) go below as level-3 headings.

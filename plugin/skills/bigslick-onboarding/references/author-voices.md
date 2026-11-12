@@ -51,7 +51,7 @@ Anything you couldn't work out gets a `[TBD: <author>]` line, with no value besi
 
 Add each author to the row's `authors` column, comma-separated and spelled exactly as in the heading, keeping the names already there. Never remove one.
 
-In `Sources and intake`, set the LinkedIn item to `received`, with today's date, once every author has at least 10 samples, counting posts and uploads. Otherwise it stays `left_tbd`, with a line under `Received in part` saying who's short.
+In the `Sources` tab, set the LinkedIn item to `received`, with today's date, once every author has at least 10 samples, counting posts and uploads. Otherwise it stays `left_tbd`, with a line under `Received in part` saying who's short.
 
 If the client's folder has a Google Sheet named `Onboarding Checklist`, update its `voices` row as shared definitions §2 says: `done` once every author has a `Voice:` section with at least 10 samples, otherwise `waiting` on the authors still short, named in `waiting_on`, with posts and uploads per author in `detail`.
 

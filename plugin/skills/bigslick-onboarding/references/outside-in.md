@@ -74,7 +74,7 @@ Where each area lands:
 
 **Tag every line `sourced`, with its grade and URL:** `[sourced A: <url>]`, `[sourced B: <url>]` or `[sourced C: <url>]`. A finding from paid data with no public page, such as AI visibility or paid media, uses the Drive link to its file in the run folder as the URL. Never `[confirmed]`: the client confirms at sign-off. Write plainly and neutrally, one fact per line.
 
-**Claims library rows,** following its table:
+**Claims tab rows** (the Claims and Sources Sheet), following its columns:
 
 | Record | `status` | Also set |
 |---|---|---|

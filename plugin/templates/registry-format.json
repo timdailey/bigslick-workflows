@@ -155,6 +155,9 @@
       "values": [
        {
         "userEnteredValue": "1.2"
+       },
+       {
+        "userEnteredValue": "1.3"
        }
       ]
      },

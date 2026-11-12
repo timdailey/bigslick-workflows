@@ -2,7 +2,7 @@
 
 The workflow layer on top of [Big Slick](https://github.com/frankdays/bigslick). Big Slick provides the curated marketing skills; this repo holds the first-party workflows that chain them into a content operation: plan, write, review and publish, for one company or a consultant with many clients.
 
-**Status:** v0.7.2. Onboarding and review are built and tested on a test client. content-plan-workflow is built but not yet run against DataForSEO; the other content workflows are still outlines.
+**Status:** v0.8.0. Onboarding and review are built and tested on a test client. content-plan-workflow is built but not yet run against DataForSEO; the other content workflows are still outlines.
 
 ## Install
 

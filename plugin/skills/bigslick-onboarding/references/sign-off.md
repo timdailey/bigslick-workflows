@@ -28,7 +28,7 @@ Leave out a competitor's own inconsistent figures, unless a client document or c
 
 ## 2. Gap questions
 
-Ask only about must items, in the sign-off message, never about a `workflow` item. A must item is a gap if its `Sources and intake` row isn't `received`, or if the sections it feeds still have `[TBD: <owner>]` lines that only it would answer, other than conflicts.
+Ask only about must items, in the sign-off message, never about a `workflow` item. A must item is a gap if its row in the `Sources` tab isn't `received`, or if the sections it feeds still have `[TBD: <owner>]` lines that only it would answer, other than conflicts.
 
 Read what intake and outside-in found before you ask. Never ask for something a document, the website or the research already answered. If part of an item is answered, say what you have and ask for the rest.
 
@@ -72,7 +72,7 @@ Then log it, as in step 11 of `drive-intake.md`.
 
 Apply only what the client said. Silence is never approval, and a yes to the doc doesn't change a tag on its own. A fact becomes `[confirmed]` only if the client answered it, or said a named section is right.
 
-Before you start, save the text of each level-2 section. Edit table cells by position, last first, holding the doc's revision ID. When you finish, read the doc back and compare: only the sections the answer touches may differ.
+Before you start, save the text of each level-2 section. Claim changes are row updates in the `Claims` tab, found by `claim_id`; doc changes are in-place edits, holding the doc's revision ID. Never upload a replacement doc: the client's link and comments belong to this one. When you finish, read the doc back and compare: only the sections the answer touches may differ.
 
 **Claims:**
 

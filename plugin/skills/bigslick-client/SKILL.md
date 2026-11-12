@@ -38,6 +38,8 @@ A scheduled run has no one to ask. It stops, logs why in the Run Log, and names 
 
 Load it from `brand_context_doc_id`. Read the whole doc unless the caller names sections. If it does, keep only those level-2 sections, matching each heading's exact text. Drive returns the whole doc either way, so read it as plain text (`read_file_content`), not as the document's JSON structure, which is far larger.
 
+**The two tables are in a Sheet.** When the caller asks for `Claims library`, also read the `Claims` tab of the Sheet at `claims_sheet_id`; for `Sources and intake`, read the `Sources` tab as well as the logs under that heading in the doc. Use Google Sheets tools, and return the rows with their column names. If `claims_sheet_id` is blank and `schema_version` is `1.2`, the tables are still in the doc: read them there, and in a chat tell the user once that bigslick-setup will move them to a Sheet the next time they come back to this client.
+
 **Use each fact as its provenance tag allows.** State `[confirmed]` and `[sourced A: <url>]` facts plainly, and hedge the rest. Never fill in a `[TBD: <owner>]`: ask, or leave it out.
 
 ## 4. Say which client

@@ -1,6 +1,6 @@
 # Big Slick Shared Definitions
 
-Version 1.2 · Nov 10, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
+Version 1.3 · Nov 12, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
 
 Workflows never call each other. They hand off through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
 
@@ -22,7 +22,8 @@ Big Slick/
 ├── Big Slick Registry            (Google Sheet: tabs Clients, Run Log)
 └── Clients/
     └── <Client Name>/
-        ├── Brand Context         (Google Doc)
+        ├── Brand Context         (Google Doc; no tables)
+        ├── Claims and Sources    (Google Sheet: tabs Claims, Sources)
         ├── Content Calendar      (Google Sheet: tab Calendar)
         ├── Onboarding Checklist  (Google Sheet: tab Checklist)
         ├── Onboarding Questionnaire (Google Sheet: tab Questions; shared with the client contact)
@@ -53,7 +54,7 @@ A single-company install is the same layout with one client. `Research/` is used
 
 ### Onboarding checklist
 
-`Onboarding Checklist` is a Google Sheet in the client's folder, tab `Checklist`, one row per onboarding step in process order. bigslick-setup creates it from `templates/onboarding-checklist.csv` and keeps it until go-live. Find it by name under `client_folder_id`, like `Research/`; it has no registry column. It shows where onboarding stands. `Sources and intake` in Brand Context stays the record of each requested item, and the checklist only summarises it.
+`Onboarding Checklist` is a Google Sheet in the client's folder, tab `Checklist`, one row per onboarding step in process order. bigslick-setup creates it from `templates/onboarding-checklist.csv` and keeps it until go-live. Find it by name under `client_folder_id`, like `Research/`; it has no registry column. It shows where onboarding stands. The `Sources` tab of the Claims and Sources Sheet stays the record of each requested item, and the checklist only summarises it.
 
 | Column | Values / format |
 | --- | --- |
@@ -106,10 +107,11 @@ After updating it, show the user the checklist in the chat as a table (step, sta
 | cadence_social | number | posts per week, per author | content-plan-workflow (first plan), people |
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
-| schema_version | text | `1.2` | setup |
+| schema_version | text | `1.3` | setup |
 | seo_location | text | The client's location: the country or region whose search results matter, as a DataForSEO location name, e.g. `United States`. Asked at setup; if blank, bigslick-onboarding asks before any research | setup, bigslick-onboarding, people |
 | seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, bigslick-onboarding, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
+| claims_sheet_id | Drive ID | the client's `Claims and Sources` Sheet (added in v1.3, so it's the last column) | setup |
 
 The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; bigslick-client reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and the first content plan fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
 
@@ -129,12 +131,14 @@ The registry is the one home for settings. Runs read it on every start, so a cha
 
 Skills find sections by their exact heading text, and load only the sections they name through bigslick-client, because a filled doc runs past 100,000 characters. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
 
+**The doc holds no tables, and keeps its ID for good.** The two tables live in the client's `Claims and Sources` Sheet (below), because skills add and change their rows constantly and Sheets edit row by row. Edit the doc only in place, with the Docs connector (`replaceAllText`, `insertText`, `deleteContentRange`) or by hand. Never upload a replacement doc once it exists: the client's sign-off link, comments, version history and sharing all belong to that ID.
+
 1. `Company facts`
 2. `Audience and ICP`
 3. `Products and positioning`
 4. `Content pillars` (one level-3 heading per pillar)
 5. `Competitors`
-6. `Claims library` (a table, below)
+6. `Claims library` (a one-line pointer to the `Claims` tab, below)
 7. `Voices` (one level-3 heading per author: `Voice: <Author Name>`; the template writes it as `Voice: [Author Name]`)
 8. `Style rules` (house style, banned words, formatting)
 9. `Visual identity`
@@ -143,7 +147,7 @@ Skills find sections by their exact heading text, and load only the sections the
 12. `Content inventory`
 13. `AI visibility baseline`
 14. `Team map` (who holds each marketing lane and decision rights; no reviewer list)
-15. `Sources and intake` (a table, below)
+15. `Sources and intake` (a one-line pointer to the `Sources` tab, then the logs listed below)
 
 ### Provenance tags
 
@@ -160,7 +164,9 @@ Every fact in Brand Context ends with one tag, written exactly like this:
 
 Grade A is the company's own live website. Grade B is a credible third party: major press, an analyst or a review platform. Outside-in records enter as `sourced`, never `confirmed`; the client confirms them at sign-off. A finding from paid data with no public page (AI visibility, paid media) uses the Drive link to its file in the client's `Research/` run folder as the `<url>`. A `[TBD: <owner>]` owner is a person or a role at the client, never a process such as outside-in research.
 
-### Claims library table
+### Claims tab (Claims and Sources Sheet)
+
+One row per claim, in this column order. Find a row by `claim_id`; add new rows at the bottom.
 
 | Column | Meaning |
 | --- | --- |
@@ -180,9 +186,9 @@ A row is `approved` in one of two ways: the company approved it (provenance `[co
 
 `claims-check` passes a claim only if it matches an `approved` row, or a `must_qualify` row with its qualifier in the draft, and `expires_on` is blank or later than today. A `candidate`, `forbidden` or expired row is a flag, and so is anything in a draft that this table doesn't back. A claim may name a customer without `logo_ok`; showing their logo needs `logo_ok` = `yes`.
 
-### Sources and intake table
+### Sources tab (Claims and Sources Sheet)
 
-One row per item onboarding asked for.
+One row per item onboarding asked for, in this column order. Find a row by `item`.
 
 | Column | Meaning |
 | --- | --- |
@@ -193,6 +199,10 @@ One row per item onboarding asked for.
 | date | Date it is due, or date it was received |
 | location | Link to the item in Drive, once received |
 | notes | One short line: what's still missing, what Big Slick built it from, or why it's left |
+
+The logs stay in the doc, as level-3 headings under `Sources and intake`: `Files read`, `Received in part`, `Unplaced documents`, `Disagreements`, `Gap questions` and `Sign-off log`. They're prose, written once and added to, so they don't need a Sheet.
+
+bigslick-client reads the matching tab whenever a skill asks for `Claims library` or `Sources and intake`, so callers name sections as before.
 
 ## 5. Value lists
 
@@ -334,3 +344,11 @@ Everything else is optional. The exact check, the fallback for each optional con
   - **bigslick-client** loads a client from the registry and its Brand Context by section. It replaces the registry route that was in core `client-context`.
   - **bigslick-onboarding** fills Brand Context: `drive-intake.md` and `sign-off.md` (from core `company-onboarding`), `outside-in.md` (from core `outside-in-report`'s pack mode) and `author-voices.md` (from the core patch to `brand-voice-extractor`).
 - The core skills stay general and are called unchanged: `outside-in-report` runs the research stages, and `brand-voice-extractor` (in `bigslick-strategy`) supplies the voice dimensions.
+
+## 14. Changes in v1.3
+
+- The Claims library and Sources and intake tables move out of Brand Context into a `Claims and Sources` Sheet in the client's folder, tabs `Claims` and `Sources`, with the same columns (§2, §4). The two headings stay in the doc, each with a one-line pointer, and the Sources and intake logs stay under their heading.
+- The registry gains `claims_sheet_id` as its last column, and `schema_version` becomes `1.3` (§3).
+- Brand Context keeps its doc ID for good and is edited only in place (§4). Found in the first onboarding test: the Docs connector can't edit large tables in place, so the run uploaded a new doc, which would break the client's sign-off link and comments.
+- **Migrating a v1.2 client:** bigslick-setup does it the next time the user comes back to that client. It creates the Sheet from the templates, copies each table's rows into its tab, replaces each table in the doc with its pointer line (deleting the table's range in place, so the doc ID stays), fills `claims_sheet_id` and sets `schema_version` to `1.3`. Until then, bigslick-client reads the tables from the doc.
+
