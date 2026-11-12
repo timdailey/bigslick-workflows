@@ -13,12 +13,15 @@ The names below were confirmed on the live connector on 12 November 2026 (prefix
 | Job | Usual tool | Planning cost |
 |---|---|---|
 | Keywords the client's site ranks for | `dataforseo_labs_google_ranked_keywords` or `dataforseo_labs_google_keywords_for_site` | $0.05 |
-| Keywords a competitor ranks for and the client doesn't | `dataforseo_labs_google_domain_intersection` (client and one competitor, keep rows where only the competitor ranks) | $0.05 |
-| Keyword ideas from a pillar seed | `dataforseo_labs_google_keyword_ideas` or `dataforseo_labs_google_keyword_suggestions` | $0.05 |
-| Difficulty for a shortlist | `dataforseo_labs_bulk_keyword_difficulty` | $0.01 |
-| Intent for a shortlist | `dataforseo_labs_search_intent` | $0.01 |
-| Volume, if the ideas call didn't return it | `kw_data_google_ads_search_volume` (one batch) | $0.05 |
+| Keywords a competitor ranks for and the client doesn't | `dataforseo_labs_google_domain_intersection` with `intersections` = `false`, the competitor as `target1` and the client as `target2` | $0.05 |
+| Volume, intent and difficulty for a candidate list | `dataforseo_labs_google_keyword_overview` (up to 700 terms in one call) | $0.05 |
+| Longer phrases containing a term, to widen a thin pillar | `dataforseo_labs_google_keyword_suggestions` (phrase match) | $0.05 |
+| Difficulty where the overview left it blank | `dataforseo_labs_bulk_keyword_difficulty` | $0.01 |
 | Current results for one keyword | `serp_organic_live_advanced` (depth 10 is the minimum) | $0.002 |
+
+**Don't use** `dataforseo_labs_google_keyword_ideas` (category matching returns off-topic terms for a specialist client: CPR certification and lab coats for a clinical-imaging company) or `kw_data_google_ads_search_volume` (returns only the first 10 keywords of a batch). Both checked 12 November 2026.
+
+**Large responses:** ranked-keyword and intersection calls return 250,000 to 430,000 characters for 100 rows. Ask for the rows you need (`limit`, a volume filter, `order_by` volume), and when a response is saved to a file because it's too large, pull out keyword, volume, difficulty, intent, position and URL with a short script instead of reading it.
 
 **Reading SERP results:** the `domain` field on organic results comes back as `google.com`, with `google.com` redirect URLs. Take each result's real site from its `website_name` or breadcrumb field instead.
 
@@ -26,13 +29,13 @@ The names below were confirmed on the live connector on 12 November 2026 (prefix
 
 Spend in this order, and stop adding calls when the next one would pass the budget. Each line says what to drop when the budget is tight.
 
-1. **Client's ranked keywords:** 1 call, limit 500 rows. Always run it.
-2. **Competitor gaps:** 1 call per competitor, for up to 3 competitors from `Competitors`, in the order listed, keeping only `[confirmed]` competitors once sign-off is done. Drop to 1 competitor first when tight.
-3. **Pillar ideas:** 1 call per confirmed pillar, seeded with the pillar's main term, limit 100 rows each.
-4. **Shortlist checks:** after the first cut (see `planning-rules.md`), 1 difficulty call and 1 intent call for the whole shortlist. Skip intent when tight; judge it from the SERP or the keyword.
+1. **Client's ranked keywords:** 1 call, limit 200 rows, ordered by volume. Always run it.
+2. **Competitor gaps:** 1 call per competitor, for up to 3 competitors from `Competitors`, in the order listed, keeping only `[confirmed]` competitors once sign-off is done. Limit 100 rows with search volume of 20 or more. Throw away rows that are the competitor's own brand or product names, careers, jobs, login or support pages, and anything outside the confirmed pillars. Expect few usable rows for a specialist client; that's normal, not a failed call. Drop to 1 competitor first when tight.
+3. **Candidate list:** write 50 to 150 terms from the client's own material: `Products and positioning` and `Audience and ICP` terms, buyer language, the questions in `AI visibility baseline`, each pillar's main terms, the competitor-gap rows you kept, and launch and event names in `Marketing plan`. Size the whole list in 1 keyword overview call. If a pillar ends up with fewer than three terms over 20 searches a month, add 1 keyword suggestions call for that pillar's main term (limit 50).
+4. **Shortlist difficulty:** after the first cut (see `planning-rules.md`), 1 bulk difficulty call for shortlist terms the overview left blank.
 5. **SERP checks:** 1 call per long-form topic in the first month of the plan, up to 6. Note who ranks, whether an AI Overview or a People Also Ask box shows, and the content format that wins. Drop these first when tight, and say the briefs were written without a live SERP.
 
-A typical first plan with 4 pillars and 3 competitors makes about 15 calls and costs under $1.
+A first plan with 4 pillars and 3 competitors makes about 10 to 14 calls and costs about $0.50 (the QMENTA simulation on 12 November 2026 made 15, including the 5 calls this file now rules out).
 
 ## Spend and records
 

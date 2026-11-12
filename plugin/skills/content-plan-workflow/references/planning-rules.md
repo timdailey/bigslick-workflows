@@ -7,6 +7,7 @@ How the content plan turns data into calendar rows. Column names and values are 
 - `cadence_plan` = `monthly`: the next calendar month after the last `publish_date` in the calendar, or the next month after today if the calendar is empty.
 - `quarterly`: the next three calendar months on the same rule.
 - First plan, with no cadence yet: propose one month, unless the client asks for more or their `Marketing plan` runs by quarter.
+- **First plan, work already in progress:** before planning, ask for drafts in review or scheduled posts that aren't in the calendar (`Marketing plan` and `Content inventory` may mention them). Add each as a row with its real status (`drafted`, `in_review` or `scheduled`) and date, so the plan works around them and doesn't repeat them. In a scheduled run, skip this.
 - The user can name another horizon in chat. A scheduled run uses the rule above and nothing else.
 
 ## 2. How many rows
@@ -21,10 +22,10 @@ Plan only the content types in the registry's `content_types` that the MVP draft
 
 Build one list from these sources, keeping where each came from:
 
-1. Competitor gaps and pillar ideas from the SEO data (`seo-data.md`).
+1. The candidate list and competitor gaps from the SEO data (`seo-data.md`).
 2. The client's own keywords at positions 11 to 30: pages close to page one, worth a new supporting piece. A keyword where the client already ranks in the top 10 isn't a new topic.
 3. Questions rivals win in `AI visibility baseline`. Write each as a topic that answers the question directly, with the client's evidence.
-4. Launches, events and themes in `Marketing plan` inside the horizon.
+4. Launches, events and themes in `Marketing plan` inside the horizon. Each event gives LinkedIn angles before it (who to meet, what to watch), during it and after it (one takeaway), plus a long-form topic if a theme is strong enough.
 5. Topics from calls, if `granola` is active (connector rule).
 6. Topics the user names in chat. These skip the cut below but are still scored and mapped to a pillar.
 
@@ -33,7 +34,7 @@ Build one list from these sources, keeping where each came from:
 Drop a candidate that:
 
 - doesn't fit any confirmed pillar;
-- is a competitor's brand term, or a term for something the client doesn't sell (`Products and positioning`);
+- is a competitor's brand term, unless it's a comparison or alternatives topic for a competitor in `Competitors` and `Marketing plan` or the user asks for comparison content; or is a term for something the client doesn't sell (`Products and positioning`);
 - touches a red line or a banned subject in `Style rules` or an SME's red lines in `SME profiles`;
 - is already covered: the same keyword or the same question is in the Content Calendar (any status except `topic_declined`), in the file names in Approved, or in `Content inventory`. A covered page that has gone stale is a refresh, which is a V1 workflow: list it in the summary, don't add it;
 - has under 20 searches a month in the client's location, unless it came from the AI visibility baseline, a launch, a call or the user.
