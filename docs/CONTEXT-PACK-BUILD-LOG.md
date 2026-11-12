@@ -1,5 +1,7 @@
 # Context Pack MVP: Build Log
 
+> **Moved on 12 November 2026.** The Drive route this log describes in core (client-context's registry route, company-onboarding's `drive-intake.md` and `sign-off.md`, outside-in-report's `pack-mode.md` and the brand-voice-extractor patch) now lives in this plugin as `bigslick-client` and `bigslick-onboarding`. The text moved unchanged apart from names and paths. Core commit hashes below are history.
+
 Results for `CONTEXT-PACK-MVP-BUILD-PLAN.md`. Where the plan and the earlier build brief disagree, this build follows the plan: it is newer (4 November) and builds to shared definitions v1.2.
 
 ## T1. Shared definitions v1.2, template and claims-check

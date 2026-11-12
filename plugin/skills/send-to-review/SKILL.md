@@ -17,7 +17,7 @@ Before starting:
 ## Steps
 
 1. Write one document per item to the review page at the registry's `review_page_url` (ArtifactData `set`, collection `reviews`), using the id format and fields in shared definitions §8, with the claims-check result in `claims_flags`, the sme-content-review result in `sme_verdict` and `sme_flags`, and `status` = `in_review`. Leave out `sme_verdict` and `sme_flags` if sme-content-review didn't run. Write `reviewer_decisions` as in step 2. Leave out `decision`, `reason`, `decided_by`, `decided_at` and `synced_at`. A redraft is a new document (`<item_id>-v<version>`), so the declined version stays on the page as history. If a document with the same id already exists, read it and pin the write to its version; never overwrite one that has a `decision`. Write several items in one batch.
-2. Build `reviewer_decisions`, loading only the `SME profiles` section of Brand Context with client-context. Always add one entry with `reviewer` = `any`. Add a second entry with the SME's review email, from their heading in `SME profiles`, if either is true:
+2. Build `reviewer_decisions`, loading only the `SME profiles` section of Brand Context with bigslick-client. Always add one entry with `reviewer` = `any`. Add a second entry with the SME's review email, from their heading in `SME profiles`, if either is true:
    - The piece's `author` has a heading in `SME profiles`.
    - sme-content-review named an `sme_name`, and `sme_flags` has a Blocker or a Major with `technical` as its check.
    If the SME has no review email in their profile, write only the `any` entry, and add a Major line to `sme_flags` saying the SME couldn't be listed. Leave each entry's `decision`, `reason`, `decided_by` and `decided_at` blank.

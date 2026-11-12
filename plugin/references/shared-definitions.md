@@ -33,7 +33,7 @@ Big Slick/
         └── Research/             (outside-in runs for this client only)
 ```
 
-A single-company install is the same layout with one client. `Research/` is used only during onboarding, by outside-in-report. Find it by name under `client_folder_id`, and create it if a client set up before v1.2 doesn't have one.
+A single-company install is the same layout with one client. `Research/` is used only during onboarding, by outside-in research (bigslick-onboarding's `outside-in.md`). Find it by name under `client_folder_id`, and create it if a client set up before v1.2 doesn't have one.
 
 ### File names
 
@@ -49,7 +49,7 @@ A single-company install is the same layout with one client. `Research/` is used
 
 `Intake/` holds every document the client provides. The client puts files there, and onboarding saves a copy there of any file that arrives another way (uploaded in chat, forwarded by email), so a later run can find it. `Sources and intake` in Brand Context lists each file read, with the modified time read, under `Files read`, so a later pass reads only what's new or changed.
 
-`Onboarding Questionnaire` collects what is an answer rather than a document: one row per question, with `question_id`, `question`, `why_we_ask`, `answer`, `answered_by`, `answered_on` and `feeds`. bigslick-setup creates it from `templates/onboarding-questionnaire.csv` and fills in `contact`, `website` and `location`. The client fills in the rest. company-onboarding reads every answer into the place its `feeds` column names, tagged `[confirmed]`. The intake request links to both. setup shares only these two with the client contact, after the user agrees. Neither has a registry column: find them by name under `client_folder_id`.
+`Onboarding Questionnaire` collects what is an answer rather than a document: one row per question, with `question_id`, `question`, `why_we_ask`, `answer`, `answered_by`, `answered_on` and `feeds`. bigslick-setup creates it from `templates/onboarding-questionnaire.csv` and fills in `contact`, `website` and `location`. The client fills in the rest. bigslick-onboarding reads every answer into the place its `feeds` column names, tagged `[confirmed]`. The intake request links to both. setup shares only these two with the client contact, after the user agrees. Neither has a registry column: find them by name under `client_folder_id`.
 
 ### Onboarding checklist
 
@@ -71,10 +71,10 @@ The skill that does a step updates its row when it starts and when it finishes o
 
 | Rows | Updated by |
 | --- | --- |
-| `connectors`, `location`, `drive_setup`, `review_page`, `pillars`, `strategy`, `scheduled_tasks`, `project`, `first_run` | bigslick-setup (`location` also by company-onboarding, if setup left it blank) |
-| `intake_request`, `documents`, `website`, `reconcile`, `signoff_sent`, `signoff_applied` | company-onboarding (`drive-intake.md`, `sign-off.md`) |
-| `research` | outside-in-report in pack mode |
-| `voices` | brand-voice-extractor |
+| `connectors`, `location`, `drive_setup`, `review_page`, `pillars`, `strategy`, `scheduled_tasks`, `project`, `first_run` | bigslick-setup (`location` also by bigslick-onboarding, if setup left it blank) |
+| `intake_request`, `documents`, `website`, `reconcile`, `signoff_sent`, `signoff_applied` | bigslick-onboarding (`drive-intake.md`, `sign-off.md`) |
+| `research` | bigslick-onboarding (`outside-in.md`) |
+| `voices` | bigslick-onboarding (`author-voices.md`) |
 | `sme_profiles` | sme-content-review's profile writer |
 | `pillars`, `strategy` | also content-plan-workflow, which builds the pillars and has the client confirm them and the first plan |
 
@@ -107,11 +107,11 @@ After updating it, show the user the checklist in the chat as a table (step, sta
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
 | schema_version | text | `1.2` | setup |
-| seo_location | text | The client's location: the country or region whose search results matter, as a DataForSEO location name, e.g. `United States`. Asked at setup; if blank, company-onboarding asks before any research | setup, company-onboarding, people |
-| seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, company-onboarding, people |
+| seo_location | text | The client's location: the country or region whose search results matter, as a DataForSEO location name, e.g. `United States`. Asked at setup; if blank, bigslick-onboarding asks before any research | setup, bigslick-onboarding, people |
+| seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, bigslick-onboarding, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
 
-The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; client-context reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and the first content plan fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
+The registry is the one home for settings. Runs read it on every start, so a change takes effect on the next run. bigslick-setup writes the registry; bigslick-client reads the `Clients` tab by the `client` slug. Publishing cadence lives in the `cadence_*` columns, not in Brand Context, and the first content plan fills them. Onboarding also fills `reviewers` once, at setup; send-to-review uses no other list.
 
 ### Tab `Run Log` (one row per run, newest at the bottom)
 
@@ -119,7 +119,7 @@ The registry is the one home for settings. Runs read it on every start, so a cha
 | --- | --- | --- |
 | run_at | timestamp | UTC |
 | client | text | registry slug |
-| workflow | value | skill name, e.g. `content-plan-workflow`, `company-onboarding`, `outside-in-report` |
+| workflow | value | skill name, e.g. `content-plan-workflow`. Onboarding logs `company-onboarding` for intake and sign-off and `outside-in-report` for outside-in research; both names are kept from v1.2 so existing Run Logs and dropdowns stay valid |
 | trigger | value | `chat` or `scheduled` |
 | items | number | calendar rows created or updated |
 | result | value | `ok`, `partial`, `failed` |
@@ -127,7 +127,7 @@ The registry is the one home for settings. Runs read it on every start, so a cha
 
 ## 4. Brand Context doc
 
-Skills find sections by their exact heading text, and load only the sections they name through client-context, because a filled doc runs past 100,000 characters. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
+Skills find sections by their exact heading text, and load only the sections they name through bigslick-client, because a filled doc runs past 100,000 characters. Keep the headings (level 2) as written and in this order; add content under them freely. Headings 1 to 8 are unchanged from v1.1.
 
 1. `Company facts`
 2. `Audience and ICP`
@@ -291,7 +291,7 @@ Two services are required to use Big Slick:
 
 If a required service isn't connected, stop and say which one, before doing any work.
 
-**Onboarding-only services.** outside-in-report also needs Tavily and Perplexity, paid for by the client. It checks them and DataForSEO before spending anything; if one is missing it stops and names it, and onboarding carries on with the client's documents. The day-to-day workflows don't need either service.
+**Onboarding-only services.** Outside-in research also needs Tavily and Perplexity, paid for by the client. It checks them and DataForSEO before spending anything; if one is missing it stops and names it, and onboarding carries on with the client's documents. The day-to-day workflows don't need either service.
 
 Everything else is optional. The exact check, the fallback for each optional connector and what to log are in `connector-rule.md`. Before any step that uses an optional connector from §5, check that it is connected and listed in the client's `optional_connectors`. If not, write the content to Google Docs in the client's folder, set the status that step would otherwise skip to, and continue. Never stop a run for a missing optional connector.
 
@@ -320,8 +320,17 @@ Everything else is optional. The exact check, the fallback for each optional con
 - Claims don't hold up onboarding: the claims item is a `should`, and sign-off doesn't wait for answers on claims.
 - Outside-in research starts as soon as the website URL and location are known, and writes to Brand Context after intake.
 - Intake settles a disagreement by an authority document or a newer version before listing it, keeps personal data out, uses confidential documents for everything but their sensitive facts, and checks a link is shared before a message goes out. Outside-in's re-check runs in the session that started collection (§4).
-- Workflows load only the Brand Context sections they name, through client-context (§4).
+- Workflows load only the Brand Context sections they name, through bigslick-client (§4).
 - Cadence is set by the first content plan, when the client approves the strategy, not during onboarding (§3).
 - Pillars, cadence, scheduled tasks and the first workflow run move to a workflow phase after onboarding, started by the first content plan. Every SME is also an author, with a `Voice:` section built during onboarding from the same material as their profile (§2).
 - Onboarding builds brand guidelines from existing content when the client has none. The annual plan, the org chart and the approval rules move to the workflow phase; without an annual plan, the content plan works from existing schedules and cadences.
 - `Sources and intake` gains a `notes` column and a `workflow` tier for items the workflow phase collects (§4).
+
+## 13. Skill moves after v1.2 (no schema change)
+
+`schema_version` stays `1.2`; no column, value or heading changed.
+
+- Everything that reads or writes this spec now ships in this plugin. The Drive and registry route moved out of the core `bigslick` skills and into two skills here:
+  - **bigslick-client** loads a client from the registry and its Brand Context by section. It replaces the registry route that was in core `client-context`.
+  - **bigslick-onboarding** fills Brand Context: `drive-intake.md` and `sign-off.md` (from core `company-onboarding`), `outside-in.md` (from core `outside-in-report`'s pack mode) and `author-voices.md` (from the core patch to `brand-voice-extractor`).
+- The core skills stay general and are called unchanged: `outside-in-report` runs the research stages, and `brand-voice-extractor` (in `bigslick-strategy`) supplies the voice dimensions.

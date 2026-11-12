@@ -4,7 +4,7 @@
 
 | File | Becomes | Notes |
 | --- | --- | --- |
-| `brand-context.md` | `Brand Context` (Google Doc) | Create from the markdown so headings and the claims table convert. Fill it with company-onboarding, brand-voice-extractor and sme-content-review's profile writer. |
+| `brand-context.md` | `Brand Context` (Google Doc) | Create from the markdown so headings and the claims table convert. Fill it with bigslick-onboarding (intake, outside-in research, voices) and sme-content-review's profile writer. |
 | `content-calendar.csv` | `Content Calendar` (Google Sheet) | Create from the CSV, then apply `content-calendar-format.json` (tab name `Calendar`, frozen header, dropdowns). |
 | `onboarding-checklist.csv` | `Onboarding Checklist` (Google Sheet) | Create from the CSV, then apply `onboarding-checklist-format.json` (tab name `Checklist`, frozen header, dropdowns, a colour per status). One row per onboarding step; each onboarding skill updates its own rows, as shared definitions §2 says. Kept after go-live as the record. |
 | `onboarding-questionnaire.csv` | `Onboarding Questionnaire` (Google Sheet) | Create from the CSV, then apply `onboarding-questionnaire-format.json` (tab name `Questions`, answer column shaded). Setup fills in `contact`, `website` and `location`; the client answers the rest. Shared with the client contact, and linked from the intake request. |

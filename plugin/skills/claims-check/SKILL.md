@@ -16,7 +16,7 @@ Before starting:
 
 ## Steps
 
-1. Load the `Claims library` section of the client's Brand Context with client-context, and no other section. Never use another client's claims.
+1. Load the `Claims library` section of the client's Brand Context with bigslick-client, and no other section. Never use another client's claims.
 2. List every factual claim, number, customer name and comparison in the draft.
 3. Match each one to a row in the claims library, then mark it:
    - **Supported:** an `approved` row whose `expires_on` is blank or later than today (in the client's timezone), or a `must_qualify` row that also passes that date check and whose qualifier from `notes` appears in the draft.

@@ -21,7 +21,7 @@ Before starting:
 
 ## Steps
 
-1. Load the client with client-context, asking for these Brand Context sections only: `Company facts`, `Audience and ICP`, `Products and positioning`, `Content pillars`, `Style rules`, `Voices` (keep only the author's `Voice:` section, if they have one), `Claims library` and `Content inventory`. Then load the brief, or create one with seo-content-brief if the topic came from the chat, using seo-dataforseo for keyword and SERP data within the client's `seo_budget_per_run`.
+1. Load the client with bigslick-client, asking for these Brand Context sections only: `Company facts`, `Audience and ICP`, `Products and positioning`, `Content pillars`, `Style rules`, `Voices` (keep only the author's `Voice:` section, if they have one), `Claims library` and `Content inventory`. Then load the brief, or create one with seo-content-brief if the topic came from the chat, using seo-dataforseo for keyword and SERP data within the client's `seo_budget_per_run`.
 2. Draft with write-blog using the content type's template and the brand voice.
 3. Run editorial-qa, brand-review and claims-check. Fix what they find.
 4. Run sme-content-review right after claims-check. Apply its `humanize` and `channel` fixes, and leave the rest for the reviewer.
