@@ -4,7 +4,7 @@ Every call goes through the DataForSEO connector, signed in with the client's ow
 
 ## Location and language
 
-Pass the registry's `seo_location` as `location_name` and `seo_language` as `language_name` on every call that takes them. Never fall back to US English. If `seo_location` is blank, ask the user before any call and write both cells; in a scheduled run, stop and log it.
+Pass the registry's `seo_location` as `location_name` on every call that takes it. For language, the connector's tools take `language_code` (e.g. `en` for `English`): convert `seo_language` to its code, or pass it as `language_name` on a tool that asks for the name. Never fall back to US English. If `seo_location` is blank, ask the user before any call and write both cells; in a scheduled run, stop and log it.
 
 ## Tools
 
