@@ -11,11 +11,28 @@ Load the client with `bigslick-client` and name them.
 Two things must be in place. If either is missing, stop here, tell the caller what's missing, and add the Run Log row from section 8 with `result` = `failed`. bigslick-onboarding carries on with the client's documents, and anything that depends on the research stays `[TBD: <owner>]` until this runs.
 
 - **`client_folder_id` in the client's row,** because the run is saved under it. Never search for a folder when it's blank.
-- **DataForSEO, Tavily and Perplexity tools,** all present. Don't make a paid call to test them.
+- **DataForSEO tools,** present. Don't make a paid call to test them.
+
+Tavily and Perplexity are optional. Check whether their tools are present, without a paid call, and take the route in section 1a for any that isn't. Record the route in the run's `config.json` (`research_route`: `full`, `no_tavily`, `no_perplexity` or `claude_only`) and in the Run Log note.
 
 Then read the row's `seo_location` and `seo_language`. If `seo_location` is blank, ask the caller for the client's location and write both to the row before any paid call; in a scheduled run, stop as above. Pass them as `location_name` and `language_name` on every DataForSEO call that takes a location or language, in place of the US English codes in `references/prompt-set.md`. ChatGPT calls always use `United States` and `English`, whatever the client's location, because that's the only ChatGPT data there is, as that file says.
 
 If the client's folder has a Google Sheet named `Onboarding Checklist`, update its `research` row as shared definitions §2 says: `in_progress` once collection starts, with spend so far in `detail`, then `done` with the spend and duration, or `blocked` with the missing tool or cell in `waiting_on` for a stop in this section.
+
+## 1a. Without Tavily or Perplexity
+
+outside-in-report's stages name Tavily and Perplexity for some steps. When one isn't connected, do that step with Claude's own web search and page fetching (the WebSearch and WebFetch tools, or whatever search and fetch tools this session has), plus DataForSEO, as below. It's slower and covers fewer pages, but the grades are the same, because a grade depends on the source, not the tool that fetched it.
+
+| Step in outside-in-report | Without Tavily or Perplexity |
+|---|---|
+| Tavily extract (read one page) | Fetch the page. If the fetch is blocked or the page renders empty, use DataForSEO's `on_page_content_parsing` for it (counts against the $15 cap) |
+| Tavily map (list a site's pages) | Fetch `/sitemap.xml` (and any sitemap index it lists) and read the navigation of the homepage. If neither works, search `site:<domain>` with the section's words (`case study`, `customers`, `blog`, `press`) |
+| Tavily crawl (read a section, e.g. 100 blog posts) | List the section from its sitemap or index page, then fetch the most recent items one by one, up to 30 per vendor for the client and 15 per competitor. Say the sample size in the record |
+| Tavily or Perplexity deep research (analysts, acquisitions, funding, press) | Run your own research: several web searches per question, each with the vendor's name and the topic (`Gartner Magic Quadrant`, `Forrester Wave`, `acquired`, `raises`, `press release`), then fetch and read the primary sources the results point to. Prefer the analyst's or company's own page over a summary of it, and grade by that source |
+| Perplexity for paid search | DataForSEO's paid-search data, which the stage already uses |
+| AI visibility (area 8) | Unchanged: it runs through DataForSEO's AI optimization data, not the Perplexity connector |
+
+Every record still needs a URL you fetched yourself. Never record a fact that only appears in a search result's snippet. Without Tavily, expect the run to take longer, and to spend less, because page fetching is free.
 
 ## 2. Reuse this client's run, and only this client's
 
@@ -44,7 +61,7 @@ Run Stages 3 to 6 for all six vendors. Stage 6 matters more here than in a repor
 
 - **Martech (area 13).** If `detect_stack.py` can't reach the site because the shell's network is blocked, use DataForSEO's domain technologies data instead, graded B. Say in the run's `config.json` which you used.
 - **LLM visibility (area 8).** Responses can run to many thousands of tokens. Ask for no more than 20 results a call, save each raw response to the run folder, and pull out only the fields `prompt-set.md` lists with a short script, rather than reading whole responses.
-- **Spend.** Log a DataForSEO call's `cost` field when the response has one. When it doesn't, and for Tavily and Perplexity, which don't report cost, log the planning rate from `budget.md` and mark it estimated. The Run Log note gives actual and estimated spend separately, e.g. `$0.73 actual + $3.16 estimated`.
+- **Spend.** Log a DataForSEO call's `cost` field when the response has one. When it doesn't, and for Tavily and Perplexity when they're used, which don't report cost, log the planning rate from `budget.md` and mark it estimated. The Run Log note gives actual and estimated spend separately, e.g. `$0.73 actual + $3.16 estimated`.
 - **A call that times out,** such as a deep-research call through the user's computer, may still be charged. Log it as estimated at its planning rate, retry it at most once, then use another research tool for that question.
 
 Stage 6 re-checks each changed record once, from what the source says now. Keep that reading as the record, or drop it. Records observed on LinkedIn, in ad libraries or in paid data keep their grade, but Stage 6 can't pass them, so they don't count as verified.

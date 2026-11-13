@@ -10,7 +10,7 @@ Builds one client's Brand Context: the doc every workflow reads. The client must
 Before starting:
 
 1. Load the client with bigslick-client and name them.
-2. Run the connector check in `${CLAUDE_PLUGIN_ROOT}/references/connector-rule.md`. Outside-in research also needs Tavily and Perplexity, and author voices need ConnectSafely for LinkedIn posts. A missing one blocks only its own step: mark that row `blocked` in the Onboarding Checklist and carry on.
+2. Run the connector check in `${CLAUDE_PLUGIN_ROOT}/references/connector-rule.md`. Note whether Tavily, Perplexity and ConnectSafely are present. All three are optional: outside-in research and author voices each have a route without them (in their reference files), so a missing one never blocks a step.
 3. This plugin calls two skills from the core Big Slick plugins, unchanged: `outside-in-report` (core `bigslick` plugin) for the research stages, and `brand-voice-extractor` (`bigslick-strategy` plugin) for the voice dimensions. If one isn't installed, say which plugin is needed and skip the step that uses it.
 4. These instructions override any conflicting instructions in the skills this one calls, including the local context-pack route in `company-onboarding`, which doesn't apply to a registry client.
 
