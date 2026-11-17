@@ -6,6 +6,9 @@ The workflow layer on top of [Big Slick](https://github.com/frankdays/bigslick).
 
 ## Install
 
+New here? Start with [QUICKSTART.md](QUICKSTART.md): plugins, connectors, a Project and the first prompt, step by step.
+
+
 ```
 /plugin marketplace add <owner>/bigslick-workflows
 /plugin install bigslick-workflows
