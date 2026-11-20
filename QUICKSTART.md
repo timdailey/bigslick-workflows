@@ -7,7 +7,6 @@ From nothing to a company's onboarding underway, in about 20 minutes. You'll ins
 - **A paid Claude plan** (Pro, Max, Team or Enterprise). On Team and Enterprise, an Owner may need to allow the two plugin sources below and the DataForSEO connector.
 - **A Google account with Drive.** Big Slick keeps everything there: the registry, each company's folder, Brand Context, the calendar and drafts. Use the account the team shares files from.
 - **A DataForSEO account with some balance**, in the company's own name if you're a consultant: each client pays for its own keyword and search data. A content plan costs well under $1; onboarding research up to about $15.
-- **Access to the workflows repo.** `timdailey/bigslick-workflows` is private. Ask Tim to add your GitHub account if you don't have it.
 
 ## 2. Install the plugins
 
@@ -103,5 +102,5 @@ From there, onboarding runs as documents arrive:
 |---|---|
 | "Google Drive (or DataForSEO) isn't connected" | Connect it in **Customize > Connectors**, then start a new chat in the Project |
 | A skill you expected isn't found | Check all five plugins are installed and up to date |
-| Adding `timdailey/bigslick-workflows` fails | You don't have access to the private repo yet: ask Tim |
+| Adding a marketplace fails | Check the spelling (`frankdays/bigslick`, `timdailey/bigslick-workflows`). On Team or Enterprise, ask an Owner to allow GitHub plugin sources |
 | Onboarding asks something you already told it | Note it for the team: that's a bug worth fixing |

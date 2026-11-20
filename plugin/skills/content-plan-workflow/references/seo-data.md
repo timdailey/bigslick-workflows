@@ -35,7 +35,7 @@ Spend in this order, and stop adding calls when the next one would pass the budg
 4. **Shortlist difficulty:** after the first cut (see `planning-rules.md`), 1 bulk difficulty call for shortlist terms the overview left blank.
 5. **SERP checks:** 1 call per long-form topic in the first month of the plan, up to 6. Note who ranks, whether an AI Overview or a People Also Ask box shows, and the content format that wins. Drop these first when tight, and say the briefs were written without a live SERP.
 
-A first plan with 4 pillars and 3 competitors makes about 10 to 14 calls and costs about $0.50 (the QMENTA simulation on 12 November 2026 made 15, including the 5 calls this file now rules out).
+A first plan with 4 pillars and 3 competitors makes about 10 to 14 calls and costs about $0.50 (a simulated first plan for a real client on 12 November 2026 made 15, including the 5 calls this file now rules out).
 
 ## Spend and records
 
