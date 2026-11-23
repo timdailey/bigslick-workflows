@@ -1,13 +1,13 @@
 # Long-form templates
 
-One section per content type. The client's `Style rules` win over anything here: if their house style has its own blocks (a "Quick answer" box, an FAQ block, a demo banner), use theirs in place of the matching item below.
+One section per content type. Stage 2 writes the outline to these sections (each heading with its intent and target words), and Stage 3 writes the draft to the same structure. A blog_post or guide is ContentForge's `standard` format; a listicle is a blog_post whose body H2s are the list items. The client's `Style rules` win over anything here: if their house style has its own blocks (a "Quick answer" box, an FAQ block, a demo banner), use theirs in place of the matching item below.
 
-Every type starts the Google Doc with these lines, which publish-approved carries into the Approved file:
+Every type starts the outline and draft Google Docs with these lines, which Stage 5 (Publish) carries into the Approved file:
 
 - **Title:** under 60 characters where possible, with the keyword near the front.
 - **Slug:** lowercase words from the keyword, joined by hyphens.
 - **Meta description:** 140 to 155 characters, saying what the reader gets.
-- **Author:** the byline as settled in step 2.
+- **Author:** the byline as settled in Stage 1.
 
 ## blog_post (MVP)
 

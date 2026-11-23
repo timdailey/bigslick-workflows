@@ -78,13 +78,31 @@ textarea { font: inherit; width: 100%; min-height: 76px; resize: vertical; paddi
 .outcome q { color: var(--fg); quotes: "\201C" "\201D"; }
 .synced { font-size: 12px; color: var(--muted); }
 footer { font-size: 12px; color: var(--muted); }
+.stage { background: var(--ink); color: var(--surface); }
+.summary { margin: 0; padding-left: 18px; font-size: 14px; display: grid; gap: 2px; }
+.scores { display: flex; flex-wrap: wrap; gap: 6px; }
+.score { font-size: 12px; padding: 3px 8px; border-radius: 4px; background: var(--chip); }
+.score b { font-family: var(--mono); font-weight: 500; margin-left: 4px; }
+.score.good { background: var(--ok-bg); color: var(--ok); }
+.score.bad { background: var(--no-bg); color: var(--no); }
+.links { display: flex; flex-wrap: wrap; gap: 4px 14px; font-size: 14px; }
+.findings { display: grid; gap: 6px; }
+.findings h3 { font-size: 13px; font-weight: 600; margin: 4px 0 0; }
+.finding { display: grid; grid-template-columns: auto 1fr; gap: 4px 10px; align-items: start; padding: 8px 10px; border: 1px solid var(--line); border-radius: 6px; font-size: 13px; }
+.finding input { margin-top: 3px; width: 16px; height: 16px; }
+.finding .sev { font-weight: 600; }
+.finding .sev.Blocker { color: var(--no); } .finding .sev.Major { color: var(--warn); }
+.finding blockquote { margin: 2px 0; padding-left: 8px; border-left: 2px solid var(--line); color: var(--muted); overflow-wrap: anywhere; }
+.checklist { margin: 0; padding-left: 20px; font-size: 14px; }
+.live { display: flex; gap: 8px; flex-wrap: wrap; }
+.live input { font: inherit; flex: 1 1 240px; padding: 7px 10px; border-radius: 6px; border: 1px solid var(--line); background: var(--bg); color: var(--fg); }
 </style>
 
 <main>
   <header>
     <span class="eyebrow">Big Slick · Content review</span>
     <h1>__CLIENT_NAME__</h1>
-    <p class="lede">Topics and drafts waiting for a decision. Open the doc, then approve or decline. A decline needs a reason, which goes back to the writer for the redraft.</p>
+    <p class="lede">Topics, drafts and long-form gates waiting for a decision. Open the doc, then decide. Long-form pieces stop at four gates (Outline, Draft, Final Check, Publish): approve to move on, request changes to re-run the stage with your notes, or stop the piece.</p>
   </header>
 
   <nav role="tablist" aria-label="Filter">
@@ -96,7 +114,7 @@ footer { font-size: 12px; color: var(--muted); }
   <div id="status" class="notice">Loading reviews…</div>
   <div id="list"></div>
 
-  <footer>Decisions reach the Content Calendar on the next hourly sync. You can change a decision until it syncs.</footer>
+  <footer>Decisions reach the Content Calendar on the next hourly sync, and a long-form piece moves to its next stage then. You can change a decision until it syncs.</footer>
 </main>
 
 <script>
@@ -108,9 +126,17 @@ footer { font-size: 12px; color: var(--muted); }
   const CHANNEL = { blog: "Blog", linkedin: "LinkedIn", x: "X", community: "Community", newsletter: "Newsletter", email: "Email" };
   const VERDICT = { approve: "Approve", approve_with_edits: "Approve with edits", revise: "Revise", reject: "Reject" };
   const AFTER = { scheduled: "Scheduled", ready_to_post: "Ready to post", published: "Published" };
+  const STAGE = { outline: "Outline", draft: "Draft", final_check: "Final Check", publish: "Publish" };
+  const APPROVE_LABEL = { outline: "Approve outline", draft: "Approve draft", final_check: "Approve for publish", publish: "Approve" };
+  const DOC_LABEL = { outline: "Open the outline ↗", draft: "Open the draft ↗", final_check: "Open the draft ↗", publish: "Open the Approved doc ↗" };
+  const SCORE = { persona: "Persona fit", five_lens: "Five-lens", seo: "SEO", smell: "Human" };
+  const CHECKLIST = ["Create the post in the CMS (or open the HubSpot draft).", "Paste the title, the HTML, the meta description and the slug.",
+    "Set the author and tags.", "Preview: check the heading hierarchy and the links.", "Publish, and copy the live URL.",
+    "Publish the LinkedIn post, and add the live URL as the first comment.", "Enter the live URL below."];
 
   let tab = "waiting", rows = [], db = null, user = null, me = null, canWrite = null, readOnly = false, myEmail = null;
-  const open = new Map();   // doc id -> {mode: "decline"|"change", text, error, busy}
+  const open = new Map();   // doc id -> {mode: "decline"|"changes"|"change", text, error, busy}
+  const ticking = new Set(); // doc ids with a tick being saved
 
   try { const t = localStorage.getItem("bs-review-tab"); if (["waiting","decided","all"].includes(t)) tab = t; } catch (e) {}
 
@@ -170,7 +196,8 @@ footer { font-size: 12px; color: var(--muted); }
   function card(r, people) {
     const c = el("article", "card");
     const slug = el("div", "slug");
-    slug.append(el("span", "kind", r.kind === "topic" ? "Topic" : "Draft v" + (r.version || 1)), el("span", null, r.item_id || r._id));
+    if (r.stage) slug.append(el("span", "kind stage", "Gate · " + (STAGE[r.stage] || r.stage)));
+    slug.append(el("span", "kind", r.kind === "topic" ? "Topic" : "v" + (r.version || 1)), el("span", null, r.item_id || r._id));
     c.append(slug, el("h2", null, r.title || "(untitled)"));
 
     const meta = el("div", "meta");
@@ -181,10 +208,11 @@ footer { font-size: 12px; color: var(--muted); }
     c.append(meta);
 
     if (r.doc_link) {
-      const a = el("a", "doc-link", r.kind === "topic" ? "Open the brief ↗" : "Open the draft ↗");
+      const a = el("a", "doc-link", r.kind === "topic" ? "Open the brief ↗" : (DOC_LABEL[r.stage] || "Open the draft ↗"));
       a.href = r.doc_link; a.target = "_blank"; a.rel = "noopener";
       c.append(a);
     }
+    if (r.stage) stageDetails(r, c);
 
     const flags = Array.isArray(r.claims_flags) ? r.claims_flags.filter(Boolean) : [];
     if (flags.length) {
@@ -209,7 +237,7 @@ footer { font-size: 12px; color: var(--muted); }
       entries.forEach(e => {
         const line = el("div");
         const who = people[e.decided_by];
-        const state = !e.decision ? "Waiting" : (e.decision === "yes" ? "Approved" : "Declined") + (e.decided_by ? " by " + ((who && who.isMe) ? "you" : (who && who.name) || "a reviewer") : "");
+        const state = !e.decision ? "Waiting" : (e.decision === "yes" ? "Approved" : e.decision === "changes" ? "Changes requested" : r.stage ? "Stopped" : "Declined") + (e.decided_by ? " by " + ((who && who.isMe) ? "you" : (who && who.name) || "a reviewer") : "");
         line.append(el("b", null, isSme(e) ? "SME " + e.reviewer + ": " : "Reviewer: "), state);
         box.append(line);
       });
@@ -226,11 +254,124 @@ footer { font-size: 12px; color: var(--muted); }
     return c;
   }
 
+  function stageDetails(r, c) {
+    const lines = Array.isArray(r.summary) ? r.summary.filter(Boolean) : [];
+    if (lines.length) { const ul = el("ul", "summary"); lines.forEach(t => ul.append(el("li", null, String(t)))); c.append(ul); }
+
+    const sc = r.scores && typeof r.scores === "object" ? r.scores : null;
+    const chips = el("div", "scores");
+    if (sc) Object.keys(SCORE).forEach(k => {
+      if (sc[k] == null || sc[k] === "") return;
+      const n = Number(sc[k]);
+      const chip = el("span", "score" + (isNaN(n) ? "" : n >= 70 ? " good" : n < 50 ? " bad" : ""), SCORE[k]);
+      chip.append(el("b", null, isNaN(n) ? String(sc[k]) : String(Math.round(n))));
+      chips.append(chip);
+    });
+    if (r.exit_reason) chips.append(el("span", "score", `Humanize: ${r.humanize_iterations ?? "?"} pass${r.humanize_iterations === 1 ? "" : "es"}, stopped at ${r.exit_reason === "threshold" ? "threshold" : "max passes"}`));
+    if (r.link_gate) { const ok = r.link_gate === "ok"; chips.append(el("span", "score " + (ok ? "good" : "bad"), ok ? "Links OK" : r.link_gate === "stale" ? "Links: re-check needed" : "Links: broken")); }
+    if (chips.childNodes.length) c.append(chips);
+
+    const links = Array.isArray(r.links) ? r.links.filter(l => l && l.url) : [];
+    if (links.length) {
+      const box = el("div", "links");
+      links.forEach(l => { const a = el("a", "doc-link", (l.label || "Link") + " ↗"); a.href = l.url; a.target = "_blank"; a.rel = "noopener"; box.append(a); });
+      c.append(box);
+    }
+
+    if (r.stage === "final_check") findingsBox(r, c);
+    if (r.stage === "publish") {
+      const ol = el("ol", "checklist"); CHECKLIST.forEach(t => ol.append(el("li", null, t)));
+      c.append(el("strong", null, "Publish checklist"), ol);
+      if (r.decision === "yes") c.append(liveUrl(r));
+    }
+  }
+
+  const visibleFindings = r => (Array.isArray(r.findings) ? r.findings : []).filter(f => f && !f.applied);
+  const tickedCount = r => visibleFindings(r).filter(f => f.selected).length;
+
+  function findingsBox(r, c) {
+    const list = visibleFindings(r);
+    const box = el("div", "findings");
+    const editable = !readOnly && isWaiting(r) && !ticking.has(r._id);
+    const groups = [["SME findings", list.filter(f => f.check !== "humanize")], ["Humanize fixes", list.filter(f => f.check === "humanize")]];
+    if (!list.length) box.append(el("div", "notice", "No open findings. Approve for publish, or request changes with notes."));
+    groups.forEach(([title, items]) => {
+      if (!items.length) return;
+      box.append(el("h3", null, `${title} (${items.length})`));
+      items.forEach(f => {
+        const row = el("label", "finding");
+        const cb = el("input"); cb.type = "checkbox"; cb.checked = !!f.selected; cb.disabled = !editable;
+        cb.onchange = () => tick(r, f.id, cb.checked);
+        const body = el("div");
+        const head = el("div");
+        head.append(el("span", "sev " + (f.severity || ""), f.severity || ""), document.createTextNode(` · ${f.check || ""} · ${f.id || ""}`));
+        body.append(head);
+        if (f.line) body.append(el("blockquote", null, String(f.line)));
+        if (f.fix) body.append(el("div", null, String(f.fix)));
+        row.append(cb, body);
+        box.append(row);
+      });
+    });
+    if (list.length) box.append(el("div", "synced", "Tick the findings to apply. Only ticked items change; nothing else in the text does."));
+    c.append(box);
+  }
+
+  async function tick(r, id, on) {
+    ticking.add(r._id); render();
+    try {
+      const ref = db.collection("reviews").doc(r._id);
+      const cur = await ref.get();
+      const d = cur.exists ? cur.data() : null;
+      if (!d || d.decision || d.synced_at || d.version !== r.version) throw { code: "stale" };
+      const findings = (d.findings || []).map(f => f.id === id ? Object.assign({}, f, { selected: on }) : f);
+      await ref.set(Object.assign({}, d, { findings }));
+    } catch (e) {
+      const s = open.get(r._id) || {}; s.error = e && e.code === "stale" ? "This item changed since you opened it. The page now shows its latest state." : "That tick didn't save. Try again."; open.set(r._id, s);
+    }
+    ticking.delete(r._id); render();
+  }
+
+  function liveUrl(r) {
+    const wrap = el("div", "reason");
+    if (r.published_url) {
+      const a = el("a", "doc-link", "Live: " + r.published_url); a.href = r.published_url; a.target = "_blank"; a.rel = "noopener";
+      wrap.append(a); return wrap;
+    }
+    if (readOnly) return wrap;
+    const s = open.get(r._id + ":url") || {};
+    const id = "url-" + r._id;
+    const lab = el("label", null, "Live URL, once it's published"); lab.htmlFor = id;
+    const row = el("div", "live");
+    const inp = el("input"); inp.id = id; inp.type = "url"; inp.placeholder = "https://"; inp.value = s.text || "";
+    inp.oninput = () => { s.text = inp.value; open.set(r._id + ":url", s); };
+    const save = el("button", "btn yes", "Save URL"); save.disabled = !!s.busy;
+    save.onclick = async () => {
+      const v = (s.text || "").trim();
+      if (!/^https?:\/\/\S+$/.test(v)) { s.error = "Enter the full live URL, starting with https://"; open.set(r._id + ":url", s); render(); return; }
+      s.busy = true; s.error = ""; open.set(r._id + ":url", s); render();
+      try {
+        const ref = db.collection("reviews").doc(r._id);
+        const cur = await ref.get(); const d = cur.exists ? cur.data() : null;
+        if (!d || d.decision !== "yes") throw { code: "stale" };
+        await ref.set(Object.assign({}, d, { published_url: v }));
+        open.delete(r._id + ":url");
+      } catch (e) { s.busy = false; s.error = "That didn't save. Try again in a moment."; open.set(r._id + ":url", s); }
+      render();
+    };
+    row.append(inp, save);
+    wrap.append(lab, row);
+    if (s.error) wrap.append(el("p", "err", s.error));
+    return wrap;
+  }
+
   function outcome(r, people) {
-    const yes = r.decision === "yes";
+    const yes = r.decision === "yes", changes = r.decision === "changes";
     const box = el("div", "outcome " + (yes ? "yes" : "no"));
-    box.append(el("strong", null, yes ? (r.kind === "topic" ? "Topic approved" : "Approved") : (r.kind === "topic" ? "Topic declined" : "Declined")));
-    if (!yes && r.reason) { const p = el("div"); p.append(el("q", null, r.reason)); box.append(p); }
+    box.append(el("strong", null, yes ? (r.kind === "topic" ? "Topic approved" : r.stage ? (STAGE[r.stage] || "Gate") + " approved" : "Approved")
+      : changes ? "Changes requested" : (r.kind === "topic" ? "Topic declined" : r.stage ? "Stopped" : "Declined")));
+    const said = changes ? r.notes : (!yes ? r.reason : "");
+    if (said) { const p = el("div"); p.append(el("q", null, said)); box.append(p); }
+    if (changes && r.stage === "final_check" && tickedCount(r)) box.append(el("div", "who", `${tickedCount(r)} finding(s) ticked to apply`));
     const who = people[r.decided_by];
     box.append(el("div", "who", [who && who.isMe ? "You" : (who && who.name) || "A reviewer", fmtDate(r.decided_at)].filter(Boolean).join(" · ")));
     return box;
@@ -248,20 +389,24 @@ footer { font-size: 12px; color: var(--muted); }
       b.onclick = () => { open.set(r._id, { mode: "change" }); render(); };
       row.append(b); wrap.append(row); return wrap;
     }
-    if (s.mode === "decline") {
+    if (s.mode === "decline" || s.mode === "changes") {
+      const isChanges = s.mode === "changes";
+      const ticks = r.stage === "final_check" ? tickedCount(r) : 0;
       const id = "reason-" + r._id;
-      const lab = el("label", null, r.kind === "topic" ? "Why decline this topic?" : "What needs to change?");
+      const lab = el("label", null, isChanges ? (ticks ? `Apply ${ticks} ticked finding(s). Anything else to change? (optional)` : "What should the next version change?")
+        : r.stage ? "Why stop this piece? It won't run again unless someone restarts it." : r.kind === "topic" ? "Why decline this topic?" : "What needs to change?");
       lab.htmlFor = id;
       const ta = el("textarea"); ta.id = id; ta.value = s.text || "";
-      ta.placeholder = r.kind === "topic" ? "e.g. We covered this in March; pick a different angle." : "e.g. The second section overstates the uptime figure.";
+      ta.placeholder = isChanges ? "e.g. Lead with the cost angle, and cut the history section." : r.kind === "topic" ? "e.g. We covered this in March; pick a different angle." : "e.g. The second section overstates the uptime figure.";
       ta.oninput = () => { s.text = ta.value; };
       const row = el("div", "actions");
-      const send = el("button", "btn no solid", "Decline");
+      const send = el("button", "btn no solid", isChanges ? "Request changes" : r.stage ? "Stop" : "Decline");
       const back = el("button", "btn quiet", "Cancel");
       send.disabled = back.disabled = !!s.busy;
       send.onclick = () => {
-        if (!(s.text || "").trim()) { s.error = "Add a reason so the writer knows what to fix."; render(); return; }
-        decide(r, "no", s.text.trim());
+        const t = (s.text || "").trim();
+        if (!t && !(isChanges && ticks)) { s.error = isChanges ? "Add notes, or tick findings to apply." : "Add a reason so the writer knows what to fix."; render(); return; }
+        decide(r, isChanges ? "changes" : "no", t);
       };
       back.onclick = () => { open.set(r._id, { mode: filled ? "change" : undefined }); render(); };
       row.append(send, back);
@@ -271,12 +416,19 @@ footer { font-size: 12px; color: var(--muted); }
       return wrap;
     }
     const row = el("div", "actions");
-    const yes = el("button", "btn yes", r.kind === "topic" ? "Approve topic" : "Approve");
-    const no = el("button", "btn no", "Decline…");
+    const yes = el("button", "btn yes", r.kind === "topic" ? "Approve topic" : (APPROVE_LABEL[r.stage] || "Approve"));
+    const no = el("button", "btn no", r.stage ? "Stop…" : "Decline…");
     yes.disabled = no.disabled = !!s.busy;
     yes.onclick = () => decide(r, "yes", "");
     no.onclick = () => { open.set(r._id, { mode: "decline", text: r.reason || "" }); render(); };
-    row.append(yes, no);
+    row.append(yes);
+    if (r.stage) {
+      const ch = el("button", "btn", "Request changes…"); ch.disabled = !!s.busy;
+      ch.onclick = () => { open.set(r._id, { mode: "changes", text: r.notes || "" }); render(); };
+      row.append(ch);
+    }
+    row.append(no);
+    if (r.stage === "final_check" && tickedCount(r)) wrap.append(el("div", "synced", `Approving applies the ${tickedCount(r)} ticked finding(s) first.`));
     if (s.mode === "change") { const back = el("button", "btn quiet", "Keep current"); back.onclick = () => { open.delete(r._id); render(); }; row.append(back); }
     wrap.append(row);
     if (s.error) wrap.append(el("p", "err", s.error));
@@ -291,19 +443,21 @@ footer { font-size: 12px; color: var(--muted); }
       const cur = await ref.get();                 // pin the version this reviewer saw
       const d = cur.exists ? cur.data() : null;
       if (!d) throw { code: "gone" };
-      if (d.version !== r.version || d.synced_at || !(d.status === "in_review" || d.status === "approved" || d.status === "declined")) throw { code: "stale" };
+      if (d.version !== r.version || d.synced_at || !["in_review", "approved", "changes_requested", "declined"].includes(d.status)) throw { code: "stale" };
       const i = targetEntry(d);
       if (i < 0) throw { code: "stale" };
       const now = new Date().toISOString().replace(/\.\d+Z$/, "Z");
       const list = entriesOf(d).map(e => Object.assign({}, e));
-      Object.assign(list[i], { decision, reason: decision === "no" ? reason : "", decided_by: me || "", decided_at: now });
+      Object.assign(list[i], { decision, reason: decision === "yes" ? "" : reason, decided_by: me || "", decided_at: now });
       const declined = list.find(e => e.decision === "no");
+      const changes = !declined && list.find(e => e.decision === "changes");
       const next = Object.assign({}, d, { reviewer_decisions: list });
-      if (declined || list.every(e => e.decision === "yes")) {
-        Object.assign(next, { decision: declined ? "no" : "yes", reason: declined ? declined.reason : "",
-          status: declined ? "declined" : "approved", decided_by: me || "", decided_at: now });
+      if (declined || changes || list.every(e => e.decision === "yes")) {
+        Object.assign(next, { decision: declined ? "no" : changes ? "changes" : "yes", reason: declined ? declined.reason : "",
+          notes: changes ? changes.reason : "", status: declined ? "declined" : changes ? "changes_requested" : "approved",
+          decided_by: me || "", decided_at: now });
       } else {
-        delete next.decision; delete next.reason; delete next.decided_by; delete next.decided_at;
+        delete next.decision; delete next.reason; delete next.notes; delete next.decided_by; delete next.decided_at;
         next.status = "in_review";
       }
       await ref.set(next);

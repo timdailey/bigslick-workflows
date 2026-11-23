@@ -2,7 +2,7 @@
 
 The workflow layer on top of [Big Slick](https://github.com/frankdays/bigslick). Big Slick provides the curated marketing skills; this repo holds the first-party workflows that chain them into a content operation: plan, write, review and publish, for one company or a consultant with many clients.
 
-**Status:** v0.10.0. Onboarding and review are built and tested on a test client. content-plan-workflow (simulated on a real client) and longform-workflow are built; social and repurpose are still outlines.
+**Status:** v0.11.0. Onboarding and review are built and tested on a test client. content-plan-workflow (simulated on a real client) is built, and longform-workflow follows the ContentForge five-stage, four-gate process (not yet run on a client); social and repurpose are still outlines.
 
 ## Install
 

@@ -7,7 +7,7 @@ description: Reviews a draft through a subject-matter expert's lens, then for AI
 
 Runs on every long-form and LinkedIn draft. Every draft gets the claims, fit, humanize, persona-safety and channel checks. When an SME covers the draft, their expert lens runs too. Everything specific to a client or person comes from their Brand Context, and nothing in this skill is specific to one.
 
-To write an SME's profile instead of reviewing a draft, follow `references/profile-writer.md`.
+To write an SME's profile instead of reviewing a draft, follow `references/profile-writer.md`. When longform-workflow calls this at its Final Check, use **Final Check mode** at the end of this file.
 
 Before starting:
 
@@ -112,3 +112,13 @@ Return this with the draft, so the workflow can pass it to send-to-review:
 - **What's working:** two or three short notes, so the writer knows what to keep.
 
 This step never stops the workflow, whatever the verdict. The reviewer decides.
+
+## Final Check mode
+
+longform-workflow runs this at Stage 4, on a piece that has already been drafted, polished and approved at its Draft gate. It is a cold read: run it as a judge, in a fresh subagent given only the finished text, the Brand Context sections above and claims-check's latest result, never the earlier drafts or notes.
+
+- **Framing.** Tell the reviewer the piece is finished and this is its last review before publishing. Look for what would embarrass the author or the client if it shipped, not for ways to restyle it.
+- **Checks.** Run checks 1 to 4 and 6 to 7 as above. Skip check 5 (humanize): longform-workflow runs its own second smell test and keeps those findings apart, because humanizing and fixing a fact are different changes. Check 2 runs only when the item has an SME.
+- **Applies nothing.** Change no line of the text. Every issue is a proposal the reviewer can tick or leave.
+- **Itemized findings.** Return `findings` instead of `sme_flags`: one object per issue, `{"id": "F-1", "severity": "Blocker|Major|Minor", "check": "<check>", "line": "<the exact line>", "fix": "<why, and a safer wording>"}`. Number ids `F-1`, `F-2`, … in reading order, and keep the same id for the same issue if the previous Final Check found it (match on the line and check), so already-applied findings stay hidden. `line` is quoted exactly so the fix can be applied to that line and nothing else. Where the fix needs the author's own words, `fix` says what's needed instead of writing it.
+- **Verdict.** Return `sme_verdict` as in check 8, plus "What's working".

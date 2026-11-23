@@ -1,8 +1,8 @@
 # Big Slick Shared Definitions
 
-Version 1.3 · Nov 12, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
+Version 1.4 · Nov 23, 2026. The Google Doc "Big Slick Shared Definitions" in the BigSlick Harness folder is the master copy; this file mirrors it.
 
-Workflows never call each other. They hand off through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
+Workflows never call each other, with one exception: publish-approved hands long-form items decided at a gate back to longform-workflow in the same run (§15). Even then, the hand-off goes through Drive and the review page, so every skill must read and write the exact names below. A name that differs between two skills breaks a hand-off without any error. To change a name, change this spec first, then every skill that uses it, then bump `schema_version`.
 
 ## 1. Conventions
 
@@ -107,7 +107,7 @@ After updating it, show the user the checklist in the chat as a table (step, sta
 | cadence_social | number | posts per week, per author | content-plan-workflow (first plan), people |
 | authors | list | names, each matching a `Voice:` section in Brand Context | setup, people |
 | optional_connectors | list | values from §5 that this client uses | setup, people |
-| schema_version | text | `1.3` | setup |
+| schema_version | text | `1.4` | setup |
 | seo_location | text | The client's location: the country or region whose search results matter, as a DataForSEO location name, e.g. `United States`. Asked at setup; if blank, bigslick-onboarding asks before any research | setup, bigslick-onboarding, people |
 | seo_language | text | DataForSEO language name, e.g. `English`; defaults to the location's main language | setup, bigslick-onboarding, people |
 | seo_budget_per_run | number | most DataForSEO calls one run may make, e.g. `25` | setup, people |
@@ -211,7 +211,7 @@ bigslick-client reads the matching tab whenever a skill asks for `Claims library
 | content_type | `blog_post`, `guide`, `case_study`, `gated_asset`, `social_post`, `newsletter`, `email` |
 | channel | `blog`, `linkedin`, `x`, `community`, `newsletter`, `email` |
 | optional connectors | `gmail`, `slack`, `typefully`, `taplio`, `hubspot`, `granola`, `mailchimp`, `mailerlite`, `kit` |
-| decision | `yes`, `no` |
+| decision | `yes`, `changes` (long-form gates only), `no` |
 
 ## 6. Content Calendar (tab `Calendar`)
 
@@ -233,35 +233,39 @@ One row per content item. Never delete a row; set its status instead.
 | final_link | URL | the file in Approved | publish-approved |
 | published_url | URL | where it went live, once known | publish-approved, people |
 | status | value | §7 | each workflow, per §7 |
-| version | number | draft version, starts at 1 | long-form, social, repurpose |
-| approve | value | `yes`, `no` or blank: the fallback for reviewers without Claude access | people |
-| reason | text | required when `approve` is `no` | people |
+| version | number | draft version, starts at 1; a long-form piece gets a new version at every gate and every re-run | long-form, social, repurpose |
+| approve | value | `yes`, `changes`, `no` or blank: the fallback for reviewers without Claude access. `changes` applies to long-form gates only | people |
+| reason | text | required when `approve` is `no` or `changes`; for `changes`, the instructions for the re-run | people |
 | updated_at | timestamp | last change by a run | every workflow |
-| sme_approve | value | `yes`, `no` or blank: the fallback for an SME without Claude access (§8) | people |
-| sme_reason | text | required when `sme_approve` is `no` | people |
+| sme_approve | value | `yes`, `changes`, `no` or blank: the fallback for an SME without Claude access (§8) | people |
+| sme_reason | text | required when `sme_approve` is `no` or `changes` | people |
 
 ## 7. Statuses
 
-One `status` column, ten values. Topics and drafts have separate approvals, so "approved" is never ambiguous.
+One `status` column, fourteen values. Topics and drafts have separate approvals, so "approved" is never ambiguous. Long-form pieces (`blog_post`, `guide`) go through four gates instead of `drafted` → `in_review` → `approved`; every other content type keeps that path.
 
 | Status | Meaning | Set by | Next |
 | --- | --- | --- | --- |
 | `planned` | Topic proposed (send-to-review puts it on the review page; the calendar status stays `planned` until decided) | content-plan-workflow | `topic_approved`, `topic_declined` |
-| `topic_approved` | Topic accepted; ready to draft | publish-approved syncing a yes, or content plan when the person in chat is in `approver_in_chat` | `drafted` |
+| `topic_approved` | Topic accepted; ready to draft | publish-approved syncing a yes, content plan when the person in chat is in `approver_in_chat`, or longform-workflow restarting a declined piece at a person's request | `drafted`; long-form: `outline_review` |
 | `topic_declined` | Topic rejected | publish-approved syncing a no | end |
 | `drafted` | Draft saved, not yet sent for review | long-form, social, repurpose | `in_review` |
 | `in_review` | Waiting on a reviewer | send-to-review | `approved`, `declined` |
 | `approved` | Draft accepted | the review page, or publish-approved reading the `approve` column | `scheduled`, `ready_to_post` |
-| `declined` | Draft rejected, with a reason | the review page, or publish-approved reading the `approve` column | `drafted` (redraft, version + 1) |
-| `scheduled` | Queued in a connected scheduler | publish-approved | `published` |
+| `outline_review` | Long-form: outline waiting at Gate 1 | send-to-review | `draft_review`, `declined` |
+| `draft_review` | Long-form: draft and scorecard waiting at Gate 2 | send-to-review | `final_review`, `declined` |
+| `final_review` | Long-form: Final Check findings waiting at Gate 3 | send-to-review | `publish_review`, `declined` |
+| `publish_review` | Long-form: publish package waiting at Gate 4 | send-to-review | `ready_to_post`, `scheduled`, `declined` |
+| `declined` | Draft rejected, with a reason. For long-form, the reviewer stopped the piece at a gate | the review page, or publish-approved reading the `approve` column | `drafted` (redraft, version + 1); long-form: end, or `topic_approved` if a person restarts it in a chat |
+| `scheduled` | Queued in a connected scheduler, or scheduled in the CMS by the reviewer | publish-approved | `published` |
 | `ready_to_post` | Final in Approved, to post by hand | publish-approved | `published` |
 | `published` | Live | publish-approved, or a person | end |
 
-A workflow only moves a row along an arrow in this table. If a row isn't in the status a step expects, the step skips it and notes that in the run log.
+A "request changes" decision at a long-form gate leaves the row in its gate status; the re-run comes back to the same gate with version + 1. A workflow only moves a row along an arrow in this table. If a row isn't in the status a step expects, the step skips it and notes that in the run log.
 
 ## 8. Review page database
 
-Collection `reviews`, one document per item version. Document id: `<item_id>-v<version>`, e.g. `acme-0042-v2`; topics use `<item_id>-topic`.
+Collection `reviews`, one document per item version. Document id: `<item_id>-v<version>`, e.g. `acme-0042-v2`; topics use `<item_id>-topic`. A long-form piece writes one document per gate visit, each with its own version.
 
 | Field | Type | Values / format | Written by |
 | --- | --- | --- | --- |
@@ -274,13 +278,23 @@ Collection `reviews`, one document per item version. Document id: `<item_id>-v<v
 | title | text | | send-to-review |
 | author | text | | send-to-review |
 | publish_date | date | | send-to-review |
-| doc_link | URL | brief (topic) or draft | send-to-review |
+| doc_link | URL | brief (topic) or draft; at the `publish` stage, the Approved doc | send-to-review |
+| stage | value | `outline`, `draft`, `final_check`, `publish`; long-form gates only, absent otherwise | send-to-review |
+| summary | list | one line each: what the stage produced and what to decide (angle, thesis, slug, meta, PAA questions; remaining improvements; guard reverts; `judge: same-context` when no subagent ran) | send-to-review |
+| scores | map | `persona`, `five_lens`, `seo`, `smell` (0 to 100), each measured on this version; `draft` stage on | send-to-review |
+| humanize_iterations | number | 0, 1 or 2; `draft` stage | send-to-review |
+| exit_reason | value | `threshold`, `max_passes`; why humanize stopped; `draft` stage | send-to-review |
+| findings | list | `final_check` stage: one entry each with `id` (`F-n` SME, `H-n` humanize), `severity`, `check`, `line`, `fix`, `selected` (`true` when the reviewer ticks it) and `applied` (`true` once applied; the page hides these) | send-to-review, review page |
+| link_gate | value | `ok`, `broken`, `stale`: the source-link check on this version's text | send-to-review |
+| links | list | extra links, each `{label, url}`: the HTML file, schema, LinkedIn post, HubSpot draft; `publish` stage | send-to-review |
+| notes | text | the reviewer's instructions when the decision is `changes` | review page |
+| published_url | URL | the live URL, entered after a `publish` approval | review page, publish-approved |
 | claims_flags | list | claim problems found by claims-check, one line each; empty if none | send-to-review |
 | sme_verdict | value | `approve`, `approve_with_edits`, `revise`, `reject`; absent until sme-content-review has run | send-to-review |
 | sme_flags | list | issues found by sme-content-review, one line each with its severity (Blocker, Major, Minor); empty if none | send-to-review |
 | reviewer_decisions | list | one entry per required reviewer, each with `reviewer`, `decision`, `reason`, `decided_by` and `decided_at` | send-to-review, review page, publish-approved |
-| status | value | `in_review`, `approved`, `declined`, then `scheduled`, `ready_to_post`, `published` | send-to-review, review page, publish-approved |
-| decision | value | `yes`, `no`, or absent until decided | review page |
+| status | value | `in_review`, `approved`, `changes_requested` (long-form gates), `declined`, then `scheduled`, `ready_to_post`, `published` | send-to-review, review page, publish-approved |
+| decision | value | `yes`, `changes` (long-form gates), `no`, or absent until decided | review page |
 | reason | text | required when decision is `no` | review page |
 | decided_by | text | the reviewer's user id | review page |
 | decided_at | timestamp | | review page |
@@ -290,7 +304,7 @@ The review page writes the decision; publish-approved copies it to the calendar 
 
 sme-content-review runs on every long-form and LinkedIn draft. A piece under an SME's byline, or in an SME's topics where the review finds a Blocker or a Major on a technical claim, lists that SME as a reviewer on the item, so the SME's yes is the approval.
 
-send-to-review writes one `reviewer_decisions` entry with `reviewer` = `any`, which anyone in the registry `reviewers` column can fill, plus one entry with the SME's email when the piece lists an SME. `reason` is required on a `no`. The item-level `decision`, `reason`, `decided_by`, `decided_at` and `status` then record the outcome: `approved` once every entry is `yes`, `declined` as soon as any entry is `no`. SMEs approve like any other reviewer: on the review page, or in the calendar's `sme_approve` column (`approve` fills the `any` entry).
+send-to-review writes one `reviewer_decisions` entry with `reviewer` = `any`, which anyone in the registry `reviewers` column can fill, plus one entry with the SME's email when the piece lists an SME. `reason` is required on a `no`. The item-level `decision`, `reason`, `notes`, `decided_by`, `decided_at` and `status` then record the outcome: `approved` once every entry is `yes`, `declined` as soon as any entry is `no`, `changes_requested` as soon as any entry is `changes` (and none is `no`). SMEs approve like any other reviewer: on the review page, or in the calendar's `sme_approve` column (`approve` fills the `any` entry).
 
 ## 9. Required services and connector rule
 
@@ -353,3 +367,14 @@ Everything else is optional. The exact check, the fallback for each optional con
 - **Migrating a v1.2 client:** bigslick-setup does it the next time the user comes back to that client. It creates the Sheet from the templates, copies each table's rows into its tab, replaces each table in the doc with its pointer line (deleting the table's range in place, so the doc ID stays), fills `claims_sheet_id` and sets `schema_version` to `1.3`. Until then, bigslick-client reads the tables from the doc.
 - The calendar `author` can be the client's `client_name`, for a company byline written in the company voice (§6). The long-form workflow asks who the author is before every draft in a chat; a scheduled run skips a long-form row with no author.
 - Tavily, Perplexity and ConnectSafely are optional (§9). Outside-in research falls back to Claude's web search and page fetching plus DataForSEO, and author voices fall back to a browser, public posts, other writing, the author's own export or a short voice interview. A voice built from fewer samples says so in a `Voice confidence` line.
+
+## 15. Changes in v1.4
+
+- Long-form pieces follow the ContentForge process: five stages (Intake, Research and outline, Draft and review, Final Check, Publish) and four reviewer gates (Outline, Draft, Final Check, Publish). Big Slick's end-of-line client review is removed for long-form; the Final Check and Publish gates replace it. Social posts, newsletters and emails are unchanged.
+- §7 gains `outline_review`, `draft_review`, `final_review` and `publish_review`, for long-form only. `declined` ends a long-form piece unless a person restarts it in a chat.
+- Every gate offers approve, request changes or stop. `decision` gains `changes`, `status` gains `changes_requested`, and the review document gains `notes` (§8). The calendar's `approve` and `sme_approve` accept `changes` (§6).
+- The review document gains `stage`, `summary`, `scores`, `humanize_iterations`, `exit_reason`, `findings`, `link_gate`, `links` and `published_url` (§8).
+- send-to-review emails the registry `reviewers` at every gate when `gmail` or `slack` is active, plus the SME at the Outline and Final Check gates.
+- publish-approved hands long-form items decided at a gate back to longform-workflow in the same run, and moves a row to `published` once its live URL is entered.
+- Judging passes run in a fresh subagent that never saw the writing; rewrites may lose facts but never gain them (longform-workflow `references/judge-prompts.md` and `references/rewrite-guards.md`).
+- **Migrating a v1.3 client:** add the four new statuses and `changes` to the calendar's dropdowns (`templates/content-calendar-format.json`), republish the review page from `templates/review-page.html` over the existing URL, and set `schema_version` to `1.4`. A long-form row already `drafted` or `in_review` finishes on the old path; new rows start at Gate 1.
