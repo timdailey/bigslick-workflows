@@ -14,7 +14,7 @@ Before starting:
 3. Run the connector check in `${CLAUDE_PLUGIN_ROOT}/references/connector-rule.md` before any other work. If Google Drive or DataForSEO is missing, stop as that file says. Note which optional connectors are active for this client, and use the file's fallback for every step that would need one that isn't.
 4. These instructions override any conflicting instructions in the skills this workflow calls, including requirement-gathering questions, replying only in chat, local cost scripts and SemRush or Ahrefs API calls.
 
-Rules for the SEO data are in `references/seo-data.md`. Rules for horizon, counts, scoring, authors, dates, rows and briefs are in `references/planning-rules.md`. Read both before step 4.
+Rules for the SEO data are in `references/seo-data.md`. Rules for horizon, counts, scoring, what each piece is about and why, authors, dates, rows and briefs are in `references/planning-rules.md`. Read both before step 4.
 
 ## Which run is this?
 
@@ -32,7 +32,7 @@ Rules for the SEO data are in `references/seo-data.md`. Rules for horizon, count
 
 4. **Gather data.** If `granola` is active, pull topics from the client's calls since the last plan; if not, plan without them. Pull the SEO data in the order and within the budget in `references/seo-data.md`, using content-gap-analysis's method to read the gaps.
 
-5. **Build the topic list.** Gather candidates, make the first cut and score them as in `planning-rules.md` sections 3 to 5, using pillar-content-architecture to place each topic as a pillar page or a supporting piece in its pillar, and content-strategy's reasoning to balance the mix. Then run the shortlist checks and SERP checks in `seo-data.md` steps 4 and 5, and rescore if they change the picture.
+5. **Build the topic list.** Gather candidates, make the first cut and score them as in `planning-rules.md` sections 3 to 5, using pillar-content-architecture to place each topic as a pillar page or a supporting piece in its pillar, and content-strategy's reasoning to balance the mix. Then run the shortlist checks and SERP checks in `seo-data.md` steps 4 and 5, and rescore if they change the picture. Write each shortlisted topic's `about`, `purpose` and `funnel_stage` (section 5a).
 
 6. **Propose.** Work out the horizon and the number of rows (sections 1 and 2), assign authors and dates (section 6), and show the plan as in section 7. Revise until the user approves it.
    - **Cadence:** if the registry's `cadence_plan`, `cadence_blog` or `cadence_social` is blank, this plan sets them. Propose how often to plan (`monthly` or `quarterly`), blog posts per month and LinkedIn posts per author per week, starting from any cadence in `Marketing plan`, alongside the calendar. Write the three cells only once the client approves them. Later plans use the registry's cadence and change it only when the client asks.
@@ -49,4 +49,4 @@ Rules for the SEO data are in `references/seo-data.md`. Rules for horizon, count
 
 ## Report
 
-End with: the horizon and the number of rows by type and pillar, the calendar link, which rows went to review or were approved, briefs written, DataForSEO calls and spend, and on a first plan what is still open for go-live (pillars, strategy, cadence). Name any fallback used, as the connector rule says.
+End with: the horizon and the number of rows by type and pillar, the calendar link, which rows went to review or were approved, briefs written, any older rows whose `about` and `purpose` were filled in, DataForSEO calls and spend, and on a first plan what is still open for go-live (pillars, strategy, cadence). Name any fallback used, as the connector rule says.

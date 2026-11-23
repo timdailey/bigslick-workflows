@@ -21,7 +21,7 @@ A calendar row, a topic typed into the chat, or a repurposing request (source do
 ## Steps
 
 1. Load the client with bigslick-client, asking for these Brand Context sections only: `Voices` (keep only the author's `Voice:` section), `Style rules`, `Audience and ICP`, `Products and positioning`, `Content pillars` and `Claims library`.
-2. Draft the post using the platform rules below.
+2. Draft the post using the platform rules below. Make the post's point the row's `about`, for the audience and goal in its `purpose`.
 3. Run claims-check.
 4. For a LinkedIn post, run sme-content-review right after claims-check. Apply its `humanize` and `channel` fixes, and leave the rest for the reviewer.
 5. Save to Drafts using the file name format in shared definitions, link it from the calendar row and set status `drafted`.

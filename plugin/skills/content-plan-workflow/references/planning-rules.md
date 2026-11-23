@@ -61,6 +61,19 @@ Then balance the long-form picks:
 
 LinkedIn rows are angles, not keywords: a point of view, a lesson, a customer story, or a short take on that month's long-form topic. Spread each author's rows across their pillars and their own topics in `SME profiles`. Leave `keyword` blank.
 
+## 5a. What it's about and why
+
+Every row, long-form and LinkedIn, gets three fields before it goes in the plan. Write them from the scoring and the data, not from the title. Someone who reads only the calendar row should know what the piece will say, who it's for and why it's worth publishing.
+
+- **about** (1 or 2 sentences): the reader's question or problem, and the piece's answer, angle or main point. Name what makes it different from what already ranks (from the SERP check) where there is something. For LinkedIn, the point of view or story in one line.
+  - Weak: "A post about meeting-free mornings."
+  - Strong: "Why ops leads who block meeting-free mornings still lose them, and the three calendar rules that make the block stick. Ranking pages list benefits; this one covers what breaks it."
+- **purpose** (1 sentence): who it's for (a segment from `Audience and ICP`), what it does for the business (rank for a gap keyword, win an AI-search question from a rival, support a launch, build an author's authority, answer a sales objection, feed a pillar page), and the call to action it ends on.
+  - Example: "For ops managers comparing scheduling tools; wins the 'focus time' question rivals own in AI search and supports the March launch; ends on the template download."
+- **funnel_stage:** `awareness`, `consideration` or `decision`, the stage the balance rule in section 5 already uses. The call to action in `purpose` matches it, as the templates in longform-workflow's `references/templates.md` say.
+
+A topic the user names in chat gets the same three fields; if you can't tell its purpose, ask in the proposal rather than inventing one. Don't put claims in `about` or `purpose` that the Claims library doesn't back.
+
 ## 6. Authors and dates
 
 - **Long-form author:** a suggestion, not a decision: the long-form workflow asks the user who the piece is by before it drafts. Suggest the SME whose `SME profiles` topics cover the pillar if the piece is first-person (their view or experience) and they're in `authors`; otherwise the company, as `client_name`. Don't give one SME every row: check their review time in `SME profiles`.
@@ -71,18 +84,19 @@ LinkedIn rows are angles, not keywords: a point of view, a lesson, a customer st
 
 Show one table, in date order:
 
-| Date | Type | Channel | Title | Keyword | Pillar | Author | Why |
-|---|---|---|---|---|---|---|---|
+| Date | Type | Title | About | Purpose | Stage | Keyword | Pillar | Author | Why |
+|---|---|---|---|---|---|---|---|---|---|
 
-`Why` is one short line from the scoring, e.g. `Gap: 2 rivals rank, 880/mo, KD 24`. Below the table give, in a few lines: the horizon, the counts by pillar and type, the cadence (proposed or current), DataForSEO calls and spend, and anything held back (refresh candidates, content types that wait for V1, topics dropped for a red line).
+`About`, `Purpose` and `Stage` are the row's fields from section 5a, in full. `Why` is one short line from the scoring, e.g. `Gap: 2 rivals rank, 880/mo, KD 24`. Show the channel in `Type` (e.g. `Blog post`, `LinkedIn`). The user can change `about` or `purpose` like any other cell before approving. Below the table give, in a few lines: the horizon, the counts by pillar and type, the cadence (proposed or current), DataForSEO calls and spend, and anything held back (refresh candidates, content types that wait for V1, topics dropped for a red line).
 
 ## 8. Writing rows
 
 - **item_id:** `<client>-<4-digit number>`, starting at the highest existing number + 1, in date order.
-- Fill `publish_date`, `content_type`, `channel`, `title`, `keyword`, `pillar`, `author`, `status` = `planned`, `updated_at` = now in UTC. Leave every other column blank.
-- Append all rows in one write, in the 20-column order of §6.
+- Fill `publish_date`, `content_type`, `channel`, `title`, `keyword`, `pillar`, `author`, `status` = `planned`, `updated_at` = now in UTC, and `about`, `purpose` and `funnel_stage` (section 5a). Leave every other column blank.
+- Append all rows in one write, in the 23-column order of §6.
+- **Rows planned before v1.4** with `about` or `purpose` blank and status `planned` or `topic_approved`: fill them from the row's brief if it has one. In a chat, show them for the user to check with the new plan; in a scheduled run, write them and list the item_ids in the Run Log note.
 - Read the calendar again just before writing. If someone added rows since you read it, renumber from the new highest `item_id`.
 
 ## 9. Briefs
 
-For each long-form row in the first month of the horizon, write a brief with seo-content-brief's method and output format, using the SEO data from this run in place of its SemRush steps. Add to the top of each brief: the item_id, pillar, author, the questions from `AI visibility baseline` it should answer, and the SERP notes from `seo-data.md` step 5. Save it as a Google Doc in Briefs, named `<date> <title> (<item_id>)`, and put its link in `brief_link`. Later months get briefs when the next plan runs.
+For each long-form row in the first month of the horizon, write a brief with seo-content-brief's method and output format, using the SEO data from this run in place of its SemRush steps. Add to the top of each brief: the item_id, pillar, author, the row's `about`, `purpose` and `funnel_stage` (the brief expands them, and never contradicts them), the questions from `AI visibility baseline` it should answer, and the SERP notes from `seo-data.md` step 5. Save it as a Google Doc in Briefs, named `<date> <title> (<item_id>)`, and put its link in `brief_link`. Later months get briefs when the next plan runs.

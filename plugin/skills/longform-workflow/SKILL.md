@@ -55,26 +55,26 @@ Passes marked **(judge)** run as `references/judge-prompts.md` says: in a fresh 
 ## Stage 1. Intake (no gate)
 
 1. Take the item's row and brief. If there's no brief (a topic from the chat), write one first with content-plan-workflow's `references/planning-rules.md` section 9 and its `references/seo-data.md` (a keyword overview call for the topic's terms and one SERP check), save it to Briefs and link it from the row.
-2. Fill the intake fields from the row and brief: `target_keyword`, `title_hint`, `content_type` (`standard` or `listicle`, the ContentForge format; a `guide` is `standard`), `target_words`, `persona` (from `Audience and ICP`) and `author`.
+2. Fill the intake fields from the row and brief: `about`, `purpose`, `funnel_stage`, `target_keyword`, `title_hint`, `content_type` (`standard` or `listicle`, the ContentForge format; a `guide` is `standard`), `target_words`, `persona` (from `Audience and ICP`) and `author`.
 3. **Author.** Settle who the piece is by before any writing.
    - **In a chat, always ask,** even when the row names someone, in one short question. Offer the row's current `author` (marked as the plan's suggestion), each name in the registry `authors` column (each has a `Voice:` section), the company as `<client_name>` (the company voice from `Style rules`), or someone else. Add one line on what each means: a named author's voice is used and they should see the piece before it publishes; a company byline uses the house voice, with the pillar's SME reviewing.
    - **Someone else:** if they have no `Voice:` section, offer to capture it first with bigslick-onboarding's `references/author-voices.md`, or to write in the company voice now. Don't invent a voice.
    - Write the answer to the row's `author` cell (the name exactly as in `authors`, or `client_name`).
    - **SME.** If the author has a heading in `SME profiles`, they are the item's SME. Otherwise, the SME whose topics in `SME profiles` cover the pillar is. Record `sme_name` (blank if none). When there is one, the SME passes in Stages 2 and 4 run and the SME is emailed at Gates 1 and 3.
-4. Missing keyword, author or persona: ask in the chat. In a scheduled run, skip the item and log `needs <field>: <item_id>`.
+4. Missing keyword, author, persona, `about` or `purpose`: ask in the chat (offer a draft of `about` and `purpose` from the brief to confirm). In a scheduled run, skip the item and log `needs <field>: <item_id>`.
 5. If the brief is more than 60 days old, note it; Stage 2 re-checks the SERP.
 
 ## Stage 2. Research and outline → Gate 1
 
 1. **keyword_pick.** DataForSEO search volume, keyword difficulty and related keywords for the brief's terms, within `seo_budget_per_run`. Pick `primary_keyword` and up to 5 `secondary_keywords`.
 2. **serp_paa.** One SERP call: the top 10 results and the People Also Ask questions.
-3. **angle.** Angle, differentiating thesis, dominant format of the ranking pages, and key points. Write `slug` (keyword-focused, lowercase, hyphens, 3 to 6 words) and `meta_description` (140 to 155 characters, as `references/templates.md` says). Then check deterministically, not by judgment: the slug contains the primary keyword's main term, and the meta description contains the primary keyword. Fix and re-check until both pass.
+3. **angle.** Angle, differentiating thesis, dominant format of the ranking pages, and key points, built from the row's `about` and serving its `purpose`. If the SERP or fact research shows the `about` can't hold (the angle is already taken, or the facts don't support it), say so in the Gate 1 summary with a proposed new `about`, rather than quietly changing course. Write `slug` (keyword-focused, lowercase, hyphens, 3 to 6 words) and `meta_description` (140 to 155 characters, as `references/templates.md` says). Then check deterministically, not by judgment: the slug contains the primary keyword's main term, and the meta description contains the primary keyword. Fix and re-check until both pass.
 4. **fact_research.** Tavily first, then Perplexity, then Claude's web search, whichever is present. Build the `fact_pack`: one row per fact with claim, source URL and confidence (`high`, `medium`, `low`). Add the `approved` and `must_qualify` rows from the Claims library that fit the topic, with their `claim_id` and qualifier. Never put a competitor's number in as the client's.
 5. **outline_pass.** Write the outline to the content type's template in `references/templates.md`: each heading with its search intent and target words, a voice brief (the author's `Voice:` section in five lines), and a keyword plan (where the primary and secondary keywords go). Answer the brief's main question first, and give each AI-visibility question in the brief its own section that stands alone.
 6. **sme_review (judge).** Only when the item has an SME. Run sme-content-review on the outline, checks 2 (technical accuracy) and 4 (messaging and ICP fit) only, and keep its notes as `sme_notes`.
 7. **Contract.** `primary_keyword`, `angle`, `outline` and `fact_pack` must be present and non-empty. If not, follow the contract rule in `references/gates.md`.
-8. **Gate 1: Outline sign-off.** Save and send as `references/gates.md` says, with stage `outline` and calendar status `outline_review`. The Drafts file holds the angle, thesis, outline, fact pack with sources, slug, meta description, PAA questions and SME notes, so the reviewer can edit any of them. The SME is emailed too.
-   - Approve: Stage 3, using the Drafts file as the reviewer left it.
+8. **Gate 1: Outline sign-off.** Save and send as `references/gates.md` says, with stage `outline` and calendar status `outline_review`. The Drafts file and the review item's `summary` open with the row's `about` and `purpose`, then hold the angle, thesis, outline, fact pack with sources, slug, meta description, PAA questions and SME notes, so the reviewer can edit any of them. The SME is emailed too.
+   - Approve: Stage 3, using the Drafts file as the reviewer left it. If the approved outline carries a new `about`, write it to the calendar row.
    - Request changes: regenerate the outline (steps 3 and 5, then 6) from the notes, keeping the fact pack unless the notes say a fact is wrong.
 
 ## Stage 3. Draft and review → Gate 2
@@ -82,6 +82,7 @@ Passes marked **(judge)** run as `references/judge-prompts.md` says: in a fresh 
 One automated run, then one gate.
 
 1. **full_draft.** Write the whole piece from the approved outline, fact pack and voice brief, using write-blog for structure and on-page SEO only.
+   - **Purpose:** the piece does what the row's `purpose` says, for the audience it names, and ends on its call to action.
    - **Voice:** the author's `Voice:` section, or `Style rules` for the company. `Style rules` (house style, banned words, formatting) apply either way and win over the template.
    - **Answer first,** and answer each AI-visibility question in a passage that stands on its own, so AI search can quote it.
    - **Facts:** only from the fact pack and the Claims library. State figures, customer names and certifications only from `approved` Claims rows, or `must_qualify` rows with their qualifier. If the piece needs a fact you don't have, write a `[CHECK: what's needed]` marker. State `[confirmed]` and grade A facts plainly and hedge `[assumed]`, B and C facts. Never fill a `[TBD]`.

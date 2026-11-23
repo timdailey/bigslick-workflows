@@ -212,10 +212,11 @@ bigslick-client reads the matching tab whenever a skill asks for `Claims library
 | channel | `blog`, `linkedin`, `x`, `community`, `newsletter`, `email` |
 | optional connectors | `gmail`, `slack`, `typefully`, `taplio`, `hubspot`, `granola`, `mailchimp`, `mailerlite`, `kit` |
 | decision | `yes`, `changes` (long-form gates only), `no` |
+| funnel_stage | `awareness`, `consideration`, `decision` |
 
 ## 6. Content Calendar (tab `Calendar`)
 
-One row per content item. Never delete a row; set its status instead.
+One row per content item. Never delete a row; set its status instead. `about`, `purpose` and `funnel_stage` were added in v1.4, so they're the last three columns; every planned row fills them, so a person reading the calendar knows what each piece is for without opening a brief.
 
 | Column | Type | Format / values | Written by |
 | --- | --- | --- | --- |
@@ -239,6 +240,9 @@ One row per content item. Never delete a row; set its status instead.
 | updated_at | timestamp | last change by a run | every workflow |
 | sme_approve | value | `yes`, `changes`, `no` or blank: the fallback for an SME without Claude access (§8) | people |
 | sme_reason | text | required when `sme_approve` is `no` or `changes` | people |
+| about | text | what the piece is about, in 1 or 2 sentences: the reader's question or problem it answers, and its angle or main point. Never a restatement of the title | content plan, people |
+| purpose | text | why it's being published, in 1 sentence: who it's for, what it should do for the business (the goal), and what the reader should do next (the call to action) | content plan, people |
+| funnel_stage | value | `awareness`, `consideration`, `decision` (§5) | content plan, people |
 
 ## 7. Statuses
 
@@ -276,6 +280,9 @@ Collection `reviews`, one document per item version. Document id: `<item_id>-v<v
 | content_type | value | §5 | send-to-review |
 | channel | value | §5 | send-to-review |
 | title | text | | send-to-review |
+| about | text | the calendar row's `about` | send-to-review |
+| purpose | text | the calendar row's `purpose` | send-to-review |
+| funnel_stage | value | the calendar row's `funnel_stage` | send-to-review |
 | author | text | | send-to-review |
 | publish_date | date | | send-to-review |
 | doc_link | URL | brief (topic) or draft; at the `publish` stage, the Approved doc | send-to-review |
@@ -377,4 +384,5 @@ Everything else is optional. The exact check, the fallback for each optional con
 - send-to-review emails the registry `reviewers` at every gate when `gmail` or `slack` is active, plus the SME at the Outline and Final Check gates.
 - publish-approved hands long-form items decided at a gate back to longform-workflow in the same run, and moves a row to `published` once its live URL is entered.
 - Judging passes run in a fresh subagent that never saw the writing; rewrites may lose facts but never gain them (longform-workflow `references/judge-prompts.md` and `references/rewrite-guards.md`).
-- **Migrating a v1.3 client:** add the four new statuses and `changes` to the calendar's dropdowns (`templates/content-calendar-format.json`), republish the review page from `templates/review-page.html` over the existing URL, and set `schema_version` to `1.4`. A long-form row already `drafted` or `in_review` finishes on the old path; new rows start at Gate 1.
+- The Content Calendar gains `about`, `purpose` and `funnel_stage` as its last three columns (§6), and the review document carries them (§8). The content plan fills them for every row, the topic review shows them, and the long-form workflow holds the piece to them.
+- **Migrating a v1.3 client:** add the column headers `about`, `purpose` and `funnel_stage` at the end of the calendar, add the four new statuses and `changes` to the calendar's dropdowns (`templates/content-calendar-format.json`, which also sets the `funnel_stage` dropdown), republish the review page from `templates/review-page.html` over the existing URL, and set `schema_version` to `1.4`. A long-form row already `drafted` or `in_review` finishes on the old path; new rows start at Gate 1. For rows already planned but not yet drafted, the next content plan run fills `about`, `purpose` and `funnel_stage` from their briefs, or asks for them in a chat.

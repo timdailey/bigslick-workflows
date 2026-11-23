@@ -16,7 +16,7 @@ Until a prompt is pasted, run the pass from the interim rubric under its heading
 
 PROMPT PENDING: paste from ContentForge `review.js`.
 
-Interim rubric: read the draft against the brief, outline and SERP notes. Return `{"quick_wins": [], "seo_geo": [], "content_gaps": [], "h2_rewrites": [{"from": "", "to": ""}]}`, each item one specific, actionable line pointing at the exact passage.
+Interim rubric: read the draft against the row's `about` and `purpose`, the brief, outline and SERP notes. Flag anywhere the draft drifts from what it's about or doesn't serve its purpose or call to action. Return `{"quick_wins": [], "seo_geo": [], "content_gaps": [], "h2_rewrites": [{"from": "", "to": ""}]}`, each item one specific, actionable line pointing at the exact passage.
 
 ### Persona fit
 
